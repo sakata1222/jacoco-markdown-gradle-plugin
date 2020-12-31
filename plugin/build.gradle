@@ -7,34 +7,51 @@
  */
 
 plugins {
-    // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
-    id 'java-gradle-plugin'
+  // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
+  id 'java-gradle-plugin'
+  id 'checkstyle'
+  id "com.github.spotbugs" version "4.6.0"
 }
 
 repositories {
-    // Use JCenter for resolving dependencies.
-    jcenter()
+  // Use JCenter for resolving dependencies.
+  jcenter()
+}
+
+tasks.withType(JavaCompile) {
+  options.compilerArgs.addAll(["--release", "8", "-Xlint:all", "-Werror"])
+}
+
+checkstyle {
+  toolVersion = "8.38"
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+  reports {
+    xml.enabled = true
+    html.enabled = true
+  }
 }
 
 dependencies {
-    // Use JUnit test framework for unit tests
-    testImplementation 'junit:junit:4.13'
+  // Use JUnit test framework for unit tests
+  testImplementation 'junit:junit:4.13'
 }
 
 gradlePlugin {
-    // Define the plugin
-    plugins {
-        greeting {
-            id = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.greeting'
-            implementationClass = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownPlugin'
-        }
+  // Define the plugin
+  plugins {
+    greeting {
+      id = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.greeting'
+      implementationClass = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownPlugin'
     }
+  }
 }
 
 // Add a source set for the functional test suite
 sourceSets {
-    functionalTest {
-    }
+  functionalTest {
+  }
 }
 
 gradlePlugin.testSourceSets(sourceSets.functionalTest)
@@ -42,11 +59,11 @@ configurations.functionalTestImplementation.extendsFrom(configurations.testImple
 
 // Add a task to run the functional tests
 tasks.register('functionalTest', Test) {
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
+  testClassesDirs = sourceSets.functionalTest.output.classesDirs
+  classpath = sourceSets.functionalTest.runtimeClasspath
 }
 
 tasks.named('check') {
-    // Run the functional tests as part of `check`
-    dependsOn(tasks.functionalTest)
+  // Run the functional tests as part of `check`
+  dependsOn(tasks.functionalTest)
 }
