@@ -11,6 +11,7 @@ plugins {
   id 'java-gradle-plugin'
   id 'checkstyle'
   id "com.github.spotbugs" version "4.6.0"
+  id 'jacoco'
 }
 
 repositories {
@@ -34,15 +35,16 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 }
 
 dependencies {
-  // Use JUnit test framework for unit tests
-  testImplementation 'junit:junit:4.13'
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
+  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
+  testImplementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
 }
 
 gradlePlugin {
   // Define the plugin
   plugins {
-    greeting {
-      id = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.greeting'
+    jacocoMd {
+      id = 'com.github.sakata1222.jacoco-markdown'
       implementationClass = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownPlugin'
     }
   }
@@ -61,6 +63,18 @@ configurations.functionalTestImplementation.extendsFrom(configurations.testImple
 tasks.register('functionalTest', Test) {
   testClassesDirs = sourceSets.functionalTest.output.classesDirs
   classpath = sourceSets.functionalTest.runtimeClasspath
+  it.useJUnitPlatform()
+  it.finalizedBy jacocoTestReport
+}
+
+test {
+  useJUnitPlatform()
+  finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+  dependsOn test, functionalTest
+  mustRunAfter test, functionalTest
 }
 
 tasks.named('check') {
