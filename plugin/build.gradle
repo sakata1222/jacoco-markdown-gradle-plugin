@@ -56,12 +56,12 @@ gradlePlugin {
 pluginBundle {
   website = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
   vcsUrl = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
-  description = ''
-  tags = ['greetings', 'salutations']
+  description = 'Gradle plugin to parse jacoco report as a markdown'
+  tags = ['test', 'coverage']
 
   plugins {
     jacocoMd {
-      displayName = 'Gradle plugin for output jacoco report as a markdown'
+      displayName = 'jacoco markdown report plugin'
     }
   }
 }
