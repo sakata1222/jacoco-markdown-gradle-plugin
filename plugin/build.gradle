@@ -91,6 +91,10 @@ test {
 jacocoTestReport {
   dependsOn test, functionalTest
   mustRunAfter test, functionalTest
+  reports {
+    xml.enabled = true
+    html.enabled = true
+  }
 }
 
 tasks.named('check') {
