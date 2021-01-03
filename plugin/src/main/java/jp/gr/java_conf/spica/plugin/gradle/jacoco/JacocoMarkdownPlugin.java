@@ -1,6 +1,5 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
-import java.io.File;
 import java.util.Objects;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -18,7 +17,7 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
       throw new IllegalStateException(
           "Jacoco Markdown plugin depends on the jacoco plugin. Please apply jacoco plugin also.");
     }
-
+    project.getExtensions().create("jacocoMarkdown", JacocoMarkdownExtension.class);
     TaskContainer tasks = project.getTasks();
     tasks.withType(JacocoReport.class)
         .stream()
@@ -32,11 +31,9 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
               task -> {
                 task.setGroup(jacocoReport.getGroup());
                 task.dependsOn(jacocoReport);
-                File xmlFile = xml.getDestination();
-                File xmlDirectory = xmlFile.getParentFile();
-                task.configureJacocoXmlFileIfNull(xmlFile);
-                task.configureOutputJsonFileIfNull(new File(xmlDirectory, "jacocoSummary.json"));
-                task.configureOutputMdFileIfNull(new File(xmlDirectory, "jacocoSummary.md"));
+                task.configure(project.getExtensions().findByType(JacocoMarkdownExtension.class));
+                task.configureByJacocoXml(
+                    project.getLayout().file(project.provider(xml::getDestination)));
                 jacocoReport.finalizedBy(task);
               }
           );

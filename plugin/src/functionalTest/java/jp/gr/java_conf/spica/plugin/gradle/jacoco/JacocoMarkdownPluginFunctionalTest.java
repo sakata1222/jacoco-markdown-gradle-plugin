@@ -91,6 +91,33 @@ class JacocoMarkdownPluginFunctionalTest {
         );
   }
 
+  @Test
+  void extension_can_be_used() throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'\n"
+            + "}\n"
+            + "\n"
+            + "jacocoMarkdown {\n"
+            + "  diffEnabled = true\n"
+            + "  stdout = true\n"
+            + "}\n"
+            + "");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    BuildResult result = runner.build();
+
+    assertThat(result.getOutput())
+        .contains("jacocoTestReportMarkdown SKIPPED");
+  }
+
   private void writeString(Path path, String string) throws IOException {
     try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
       writer.write(string);
