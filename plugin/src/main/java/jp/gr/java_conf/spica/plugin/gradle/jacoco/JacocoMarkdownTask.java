@@ -12,8 +12,9 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
+import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.JacocoDifferenceReport;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.JacocoJsonReport;
@@ -21,6 +22,14 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.JacocoMarkdown;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.JacocoReport;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.JacocoXmlReport;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.file.ProjectLayout;
+import org.gradle.api.file.RegularFile;
+import org.gradle.api.file.RegularFileProperty;
+import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.provider.ListProperty;
+import org.gradle.api.provider.Property;
+import org.gradle.api.provider.Provider;
+import org.gradle.api.provider.ProviderFactory;
 import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
@@ -34,45 +43,75 @@ import org.xml.sax.SAXException;
 @CacheableTask
 public class JacocoMarkdownTask extends DefaultTask {
 
-  private static final List<String> DEFAULT_TARGET_TYPES = Arrays
-      .asList("INSTRUCTION", "BRANCH", "LINE");
-
   @InputFile
   @PathSensitive(PathSensitivity.RELATIVE)
-  private File jacocoXmlFile;
+  final RegularFileProperty jacocoXmlFile;
 
   @Input
-  private boolean diffEnabled = true;
+  final Property<Boolean> diffEnabled;
 
   @Optional
   @InputFile
   @PathSensitive(PathSensitivity.RELATIVE)
-  private File previousJson;
+  final RegularFileProperty previousJson;
 
   @Optional
   @Input
-  private List<String> targetTypes;
+  final ListProperty<String> targetTypes;
 
   @Input
-  private boolean stdout = true;
+  final Property<Boolean> stdout;
 
   @OutputFile
-  private File outputJson;
+  private RegularFileProperty outputJson;
 
   @OutputFile
-  private File outputMd;
+  private RegularFileProperty outputMd;
 
-  public JacocoMarkdownTask() {
-    this.onlyIf(t -> jacocoXmlFile.exists());
+  @Inject
+  public JacocoMarkdownTask(
+      ObjectFactory objectFactory,
+      ProviderFactory providerFactory,
+      ProjectLayout projectLayout) {
+    this.jacocoXmlFile = objectFactory.fileProperty();
+    this.diffEnabled = objectFactory.property(Boolean.class).convention(true);
+    this.targetTypes = objectFactory.listProperty(String.class)
+        .convention(Arrays.asList("INSTRUCTION", "BRANCH", "LINE"));
+    this.stdout = objectFactory.property(Boolean.class).convention(true);
+    final Supplier<File> xmlParent = () -> this.jacocoXmlFile
+        .map(RegularFile::getAsFile)
+        .get()
+        .getParentFile();
+    this.outputJson = objectFactory
+        .fileProperty()
+        .convention(
+            projectLayout.file(
+                providerFactory.provider(() -> new File(xmlParent.get(), "jacocoSummary.json"))));
+    this.previousJson = objectFactory.fileProperty().convention(outputJson);
+    this.outputMd = objectFactory.fileProperty()
+        .convention(
+            projectLayout.file(
+                providerFactory.provider(() -> new File(xmlParent.get(), "jacocoSummary.md"))));
+
+    this.onlyIf(t -> jacocoXmlFile.get().getAsFile().exists());
     this.setDescription("Summarize jacoco coverage report as a markdown");
+  }
+
+  void configure(JacocoMarkdownExtension extension) {
+    this.diffEnabled.convention(extension.diffEnabled.get());
+    this.stdout.convention(extension.stdout.get());
+  }
+
+  void configureByJacocoXml(Provider<RegularFile> jacocoXml) {
+    this.jacocoXmlFile.convention(jacocoXml);
   }
 
   @TaskAction
   public void run() throws IOException {
-    if (jacocoXmlFile == null || !jacocoXmlFile.exists()) {
-      throw new IllegalStateException(String.valueOf(jacocoXmlFile));
+    if (!jacocoXmlFile().exists()) {
+      throw new IllegalStateException(String.valueOf(jacocoXmlFile()));
     }
-    JacocoReport previousReport = diffEnabled ? readPreviousReport() : null;
+    JacocoReport previousReport = diffEnabled() ? readPreviousReport() : null;
     JacocoReport currentReport = readCurrentReport();
     writeReportAsJson(currentReport);
 
@@ -87,26 +126,40 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   private void output(JacocoMarkdown md) throws IOException {
     String mdString = md.toMarkdown();
-    if (stdout) {
+    if (stdout()) {
       System.out.println(mdString);
     }
-    try (Writer writer = Files.newBufferedWriter(outputMd.toPath(), StandardCharsets.UTF_8)) {
+    try (Writer writer = Files.newBufferedWriter(outputMd().toPath(), StandardCharsets.UTF_8)) {
       writer.write(mdString);
     }
   }
 
+  private File jacocoXmlFile() {
+    return jacocoXmlFile.getAsFile().get();
+  }
+
   private File previousJsonPath() {
-    if (Objects.nonNull(previousJson)) {
-      return previousJson;
-    }
-    return outputJson;
+    return previousJson.get().getAsFile();
   }
 
   private List<String> targetTypes() {
-    if (Objects.nonNull(targetTypes)) {
-      return targetTypes;
-    }
-    return DEFAULT_TARGET_TYPES;
+    return targetTypes.get();
+  }
+
+  private boolean diffEnabled() {
+    return diffEnabled.get();
+  }
+
+  private boolean stdout() {
+    return stdout.get();
+  }
+
+  File outputMd() {
+    return outputMd.getAsFile().get();
+  }
+
+  File outputJson() {
+    return outputJson.getAsFile().get();
   }
 
   private JacocoReport readPreviousReport() {
@@ -125,7 +178,7 @@ public class JacocoMarkdownTask extends DefaultTask {
       XmlParser parser = new XmlParser();
       parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
       parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-      Node root = parser.parse(jacocoXmlFile);
+      Node root = parser.parse(jacocoXmlFile());
       return new JacocoXmlReport(root);
     } catch (ParserConfigurationException | SAXException e) {
       throw new IOException(e);
@@ -133,54 +186,43 @@ public class JacocoMarkdownTask extends DefaultTask {
   }
 
   private void writeReportAsJson(JacocoReport report) throws IOException {
-    try (Writer writer = Files.newBufferedWriter(outputJson.toPath(), StandardCharsets.UTF_8)) {
+    try (Writer writer = Files.newBufferedWriter(outputJson().toPath(), StandardCharsets.UTF_8)) {
       writer.write(new JsonBuilder(report.summary()).toPrettyString());
     }
   }
 
-  void configureJacocoXmlFileIfNull(File jacocoXmlFile) {
-    if (Objects.isNull(this.jacocoXmlFile)) {
-      this.jacocoXmlFile = jacocoXmlFile;
-    }
-  }
-
-  void configureOutputJsonFileIfNull(File outputJson) {
-    if (Objects.isNull(this.outputJson)) {
-      this.outputJson = outputJson;
-    }
-  }
-
-  void configureOutputMdFileIfNull(File outputMd) {
-    if (Objects.isNull(this.outputMd)) {
-      this.outputMd = outputMd;
-    }
-  }
-
-  public boolean isDiffEnabled() {
+  @SuppressWarnings("unused")
+  public Property<Boolean> getDiffEnabled() {
     return diffEnabled;
   }
 
-  public File getJacocoXmlFile() {
+  @SuppressWarnings("unused")
+  public RegularFileProperty getJacocoXmlFile() {
     return jacocoXmlFile;
   }
 
-  public File getOutputJson() {
-    return outputJson;
+  @SuppressWarnings("unused")
+  public RegularFileProperty getPreviousJson() {
+    return previousJson;
   }
 
-  public File getOutputMd() {
-    return outputMd;
+  @SuppressWarnings("unused")
+  public ListProperty<String> getTargetTypes() {
+    return targetTypes;
   }
 
-  public File getPreviousJson() {
-    return previousJsonPath();
-  }
-
-  public boolean isStdout() {
+  @SuppressWarnings("unused")
+  public Property<Boolean> getStdout() {
     return stdout;
   }
 
-  public List<String> getTargetTypes() {
-    return targetTypes();
+  @SuppressWarnings("unused")
+  public RegularFileProperty getOutputJson() {
+    return outputJson;
+  }
+
+  @SuppressWarnings("unused")
+  public RegularFileProperty getOutputMd() {
+    return outputMd;
   }
 }

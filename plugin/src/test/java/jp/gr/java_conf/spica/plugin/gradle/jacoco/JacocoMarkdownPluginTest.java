@@ -91,11 +91,11 @@ class JacocoMarkdownPluginTest {
         + "|       LINE|        5/69|  92.75%|";
     assertThat(bos.toString(StandardCharsets.UTF_8.toString()))
         .contains(expectedMd);
-    assertThat(mdTask.getOutputMd())
+    assertThat(mdTask.outputMd())
         .exists()
         .hasContent(expectedMd);
 
-    assertThat(mdTask.getOutputJson())
+    assertThat(mdTask.outputJson())
         .exists()
         .hasContent(""
             + "{\n"
