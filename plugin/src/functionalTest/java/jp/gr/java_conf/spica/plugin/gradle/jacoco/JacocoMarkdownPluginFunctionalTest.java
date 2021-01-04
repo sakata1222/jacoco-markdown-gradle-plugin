@@ -52,6 +52,38 @@ class JacocoMarkdownPluginFunctionalTest {
   }
 
   @Test
+  void task_can_be_configurable() throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'\n"
+            + "}\n"
+            + "\n"
+            + "jacocoTestReportMarkdown {\n"
+            + "  jacocoXmlFile = file(\"hoge\")\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = false\n"
+            + "  previousJson = file(\"foo\")\n"
+            + "  targetTypes = [\"aaa\", \"bbb\", \"ccc\"]\n"
+            + "  outputJson = file(\"bar\")\n"
+            + "  outputMd = file(\"one\")\n"
+            + "}\n"
+            + "");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    BuildResult result = runner.build();
+
+    assertThat(result.getOutput())
+        .contains("jacocoTestReportMarkdown SKIPPED");
+  }
+
+  @Test
   void task_is_skipped_when_xml_does_not_exists() throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
