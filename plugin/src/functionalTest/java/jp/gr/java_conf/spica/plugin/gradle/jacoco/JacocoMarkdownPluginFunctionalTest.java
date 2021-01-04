@@ -52,6 +52,36 @@ class JacocoMarkdownPluginFunctionalTest {
   }
 
   @Test
+  void task_dependencies_are_created_when_auto_option_disabled() throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'"
+            + "}");
+    GradleRunner mdRunner = GradleRunner.create();
+    mdRunner.forwardOutput();
+    mdRunner.withPluginClasspath();
+    mdRunner.withArguments("jacocoTestReportMarkdown", "--dry-run");
+    mdRunner.withProjectDir(projectDir.toFile());
+    BuildResult mdResult = mdRunner.build();
+
+    assertThat(mdResult.getOutput())
+        .contains(":jacocoTestReport ");
+
+    GradleRunner jacocoRunner = GradleRunner.create();
+    jacocoRunner.forwardOutput();
+    jacocoRunner.withPluginClasspath();
+    jacocoRunner.withArguments("jacocoTestReport", "--dry-run");
+    jacocoRunner.withProjectDir(projectDir.toFile());
+    BuildResult jacocoResult = jacocoRunner.build();
+
+    assertThat(jacocoResult.getOutput())
+        .contains(":jacocoTestReportMarkdown ");
+  }
+
+  @Test
   void task_can_be_configurable() throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),

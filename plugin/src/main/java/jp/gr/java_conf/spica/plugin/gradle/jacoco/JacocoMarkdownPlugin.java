@@ -23,19 +23,19 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
         .forEach(jacocoReport -> {
           String name = jacocoReport.getName() + "Markdown";
           ConfigurableReport xml = jacocoReport.getReports().getXml();
-          xml.setEnabled(true);
-          tasks.register(
+          JacocoMarkdownTask mdTask = tasks.register(
               name,
               JacocoMarkdownTask.class,
               task -> {
-                task.setGroup(jacocoReport.getGroup());
-                task.dependsOn(jacocoReport);
                 task.configure(project.getExtensions().findByType(JacocoMarkdownExtension.class));
                 task.configureByJacocoXml(
                     project.getLayout().file(project.provider(xml::getDestination)));
-                jacocoReport.finalizedBy(task);
               }
-          );
+          ).get();
+          mdTask.setGroup(jacocoReport.getGroup());
+          mdTask.dependsOn(jacocoReport);
+          xml.setEnabled(true);
+          jacocoReport.finalizedBy(mdTask);
         });
   }
 }
