@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'jacoco-markdown'
-include('plugin')
+include('plugin', 'example')
