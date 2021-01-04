@@ -135,25 +135,6 @@ class JacocoMarkdownPluginFunctionalTest {
   }
 
   @Test
-  void throws_exception_when_jacoco_is_not_specified() throws IOException {
-    writeString(projectDir.resolve("settings.gradle"), "");
-    writeString(projectDir.resolve("build.gradle"),
-        "plugins {"
-            + "  id 'com.github.sakata1222.jacoco-markdown'"
-            + "}");
-
-    GradleRunner runner = GradleRunner.create();
-    runner.forwardOutput();
-    runner.withPluginClasspath();
-    runner.withArguments("tasks");
-    runner.withProjectDir(projectDir.toFile());
-    assertThatThrownBy(() -> runner.build())
-        .hasMessageContaining(
-            "Jacoco Markdown plugin depends on the jacoco plugin. Please apply jacoco plugin also."
-        );
-  }
-
-  @Test
   void extension_can_be_used() throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
