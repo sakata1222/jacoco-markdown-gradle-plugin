@@ -1,10 +1,7 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
-import java.util.Objects;
-import java.util.stream.Collectors;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.api.reporting.ConfigurableReport;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.testing.jacoco.plugins.JacocoPlugin;
@@ -14,36 +11,33 @@ import org.gradle.testing.jacoco.tasks.JacocoReport;
 public class JacocoMarkdownPlugin implements Plugin<Project> {
 
   public void apply(Project project) {
-    JacocoPlugin jacocoPlugin = project.getPlugins().findPlugin(JacocoPlugin.class);
-    if (Objects.isNull(jacocoPlugin)) {
-      throw new IllegalStateException(
-          "Jacoco Markdown plugin depends on the jacoco plugin."
-              + " Please apply jacoco plugin also."
-              + " Applied:" + project.getPlugins().stream()
-              .map(plugin -> plugin.getClass().getName()).collect(
-                  Collectors.joining(", "))
-              + " Tasks:" + project.getTasks().stream().map(Task::getName)
-              .collect(Collectors.joining(", ")));
-    }
     project.getExtensions().create("jacocoMarkdown", JacocoMarkdownExtension.class);
-    TaskContainer tasks = project.getTasks();
-    tasks.withType(JacocoReport.class)
-        .forEach(jacocoReport -> {
-          String name = jacocoReport.getName() + "Markdown";
-          ConfigurableReport xml = jacocoReport.getReports().getXml();
-          JacocoMarkdownTask mdTask = tasks.register(
-              name,
-              JacocoMarkdownTask.class,
-              task -> {
-                task.configure(project.getExtensions().findByType(JacocoMarkdownExtension.class));
-                task.configureByJacocoXml(
-                    project.getLayout().file(project.provider(xml::getDestination)));
-              }
-          ).get();
-          mdTask.setGroup(jacocoReport.getGroup());
-          mdTask.dependsOn(jacocoReport);
-          xml.setEnabled(true);
-          jacocoReport.finalizedBy(mdTask);
-        });
+    project.getPlugins().withType(
+        JacocoPlugin.class,
+        jacocoPlugin -> {
+          project.getLogger()
+              .debug("Jacoco plugin is detected, jacocoMarkdown task will be created");
+          TaskContainer tasks = project.getTasks();
+          tasks.withType(JacocoReport.class)
+              .forEach(jacocoReport -> {
+                String name = jacocoReport.getName() + "Markdown";
+                ConfigurableReport xml = jacocoReport.getReports().getXml();
+                JacocoMarkdownTask mdTask = tasks.register(
+                    name,
+                    JacocoMarkdownTask.class,
+                    task -> {
+                      task.configure(
+                          project.getExtensions().findByType(JacocoMarkdownExtension.class));
+                      task.configureByJacocoXml(
+                          project.getLayout().file(project.provider(xml::getDestination)));
+                    }
+                ).get();
+                mdTask.setGroup(jacocoReport.getGroup());
+                mdTask.dependsOn(jacocoReport);
+                xml.setEnabled(true);
+                jacocoReport.finalizedBy(mdTask);
+              });
+        }
+    );
   }
 }
