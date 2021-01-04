@@ -41,7 +41,7 @@ dependencies {
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
 }
 
-version = '0.0.2-SNAPSHOT'
+version = '0.1.0'
 group = 'com.github.sakata1222'
 
 gradlePlugin {
