@@ -1,7 +1,6 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -49,6 +48,36 @@ class JacocoMarkdownPluginFunctionalTest {
 
     assertThat(result.getOutput())
         .contains("jacocoTestReportMarkdown");
+  }
+
+  @Test
+  void task_can_run() throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'"
+            + "}");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"),
+        jacocoReportPath.resolve("jacocoTestReport.xml"));
+    BuildResult result = runner.build();
+
+    assertThat(result.getOutput()).contains(""
+        + "|Type       |Missed/Total|Coverage|\n"
+        + "|:---       |        ---:|    ---:|\n"
+        + "|INSTRUCTION|      15/245|  93.88%|\n"
+        + "|BRANCH     |        3/34|  91.18%|\n"
+        + "|LINE       |        5/69|  92.75%|\n");
   }
 
   @Test

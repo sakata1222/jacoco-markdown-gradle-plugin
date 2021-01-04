@@ -78,12 +78,21 @@ public class JacocoMarkdownTask extends DefaultTask {
         .map(RegularFile::getAsFile)
         .get()
         .getParentFile();
+    String outputJsonName = "jacocoSummary.json";
     this.outputJson = objectFactory
         .fileProperty()
         .convention(
             projectLayout.file(
-                providerFactory.provider(() -> new File(xmlParent.get(), "jacocoSummary.json"))));
-    this.previousJson = objectFactory.fileProperty().convention(outputJson);
+                providerFactory.provider(() -> new File(xmlParent.get(), outputJsonName))));
+    this.previousJson = objectFactory
+        .fileProperty()
+        .convention(
+            projectLayout.file(
+                providerFactory.provider(() -> {
+                  File output = new File(xmlParent.get(), outputJsonName);
+                  return output.exists() ? output : null;
+                })
+            ));
     this.outputMd = objectFactory.fileProperty()
         .convention(
             projectLayout.file(
@@ -129,7 +138,7 @@ public class JacocoMarkdownTask extends DefaultTask {
   }
 
   private File previousJsonPath() {
-    return previousJson.get().getAsFile();
+    return previousJson.map(RegularFile::getAsFile).getOrElse(outputJson());
   }
 
   private List<String> targetTypes() {
