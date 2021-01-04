@@ -20,7 +20,6 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
     project.getExtensions().create("jacocoMarkdown", JacocoMarkdownExtension.class);
     TaskContainer tasks = project.getTasks();
     tasks.withType(JacocoReport.class)
-        .stream()
         .forEach(jacocoReport -> {
           String name = jacocoReport.getName() + "Markdown";
           ConfigurableReport xml = jacocoReport.getReports().getXml();

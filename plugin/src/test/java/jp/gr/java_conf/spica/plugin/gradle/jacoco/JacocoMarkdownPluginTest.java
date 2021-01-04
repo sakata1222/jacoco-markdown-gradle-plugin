@@ -84,11 +84,11 @@ class JacocoMarkdownPluginTest {
       mdTask.run();
     }
     String expectedMd = ""
-        + "|       Type|Missed/Total|Coverage|\n"
-        + "|       :---|        ---:|    ---:|\n"
+        + "|Type       |Missed/Total|Coverage|\n"
+        + "|:---       |        ---:|    ---:|\n"
         + "|INSTRUCTION|      15/245|  93.88%|\n"
-        + "|     BRANCH|        3/34|  91.18%|\n"
-        + "|       LINE|        5/69|  92.75%|";
+        + "|BRANCH     |        3/34|  91.18%|\n"
+        + "|LINE       |        5/69|  92.75%|";
     assertThat(bos.toString(StandardCharsets.UTF_8.toString()))
         .contains(expectedMd);
     assertThat(mdTask.outputMd())
