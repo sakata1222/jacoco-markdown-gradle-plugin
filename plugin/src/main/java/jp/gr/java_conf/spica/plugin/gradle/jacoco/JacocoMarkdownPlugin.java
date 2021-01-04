@@ -1,8 +1,10 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.reporting.ConfigurableReport;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.testing.jacoco.plugins.JacocoPlugin;
@@ -15,7 +17,13 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
     JacocoPlugin jacocoPlugin = project.getPlugins().findPlugin(JacocoPlugin.class);
     if (Objects.isNull(jacocoPlugin)) {
       throw new IllegalStateException(
-          "Jacoco Markdown plugin depends on the jacoco plugin. Please apply jacoco plugin also.");
+          "Jacoco Markdown plugin depends on the jacoco plugin."
+              + " Please apply jacoco plugin also."
+              + " Applied:" + project.getPlugins().stream()
+              .map(plugin -> plugin.getClass().getName()).collect(
+                  Collectors.joining(", "))
+              + " Tasks:" + project.getTasks().stream().map(Task::getName)
+              .collect(Collectors.joining(", ")));
     }
     project.getExtensions().create("jacocoMarkdown", JacocoMarkdownExtension.class);
     TaskContainer tasks = project.getTasks();

@@ -58,7 +58,7 @@ pluginBundle {
   website = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
   vcsUrl = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
   description = 'Gradle plugin to parse jacoco report as a markdown'
-  tags = ['test', 'coverage']
+  tags = ['test', 'coverage', 'jacoco', 'markdown']
 
   plugins {
     jacocoMd {
