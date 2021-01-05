@@ -11,7 +11,8 @@ import org.gradle.testing.jacoco.tasks.JacocoReport;
 public class JacocoMarkdownPlugin implements Plugin<Project> {
 
   public void apply(Project project) {
-    project.getExtensions().create("jacocoMarkdown", JacocoMarkdownExtension.class);
+    JacocoMarkdownExtension extension = project.getExtensions()
+        .create("jacocoMarkdown", JacocoMarkdownExtension.class);
     project.getPlugins().withType(
         JacocoPlugin.class,
         jacocoPlugin -> {
@@ -26,8 +27,6 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
                     name,
                     JacocoMarkdownTask.class,
                     task -> {
-                      task.configure(
-                          project.getExtensions().findByType(JacocoMarkdownExtension.class));
                       task.configureByJacocoXml(
                           project.getLayout().file(project.provider(xml::getDestination)));
                     }
@@ -39,5 +38,7 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
               });
         }
     );
+    project.getTasks().withType(JacocoMarkdownTask.class)
+        .configureEach(task -> task.configure(extension));
   }
 }
