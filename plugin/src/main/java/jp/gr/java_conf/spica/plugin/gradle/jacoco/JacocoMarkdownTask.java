@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -41,7 +42,7 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   @InputFile
   @PathSensitive(PathSensitivity.RELATIVE)
-  final RegularFileProperty jacocoXmlFile;
+  final RegularFileProperty jacocoXml;
 
   @Input
   final Property<Boolean> diffEnabled;
@@ -69,28 +70,27 @@ public class JacocoMarkdownTask extends DefaultTask {
       ObjectFactory objectFactory,
       ProviderFactory providerFactory,
       ProjectLayout projectLayout) {
-    this.jacocoXmlFile = objectFactory.fileProperty();
+    this.jacocoXml = objectFactory.fileProperty();
     this.diffEnabled = objectFactory.property(Boolean.class).convention(true);
     this.stdout = objectFactory.property(Boolean.class).convention(true);
     this.targetTypes = objectFactory.listProperty(String.class)
         .convention(Arrays.asList("INSTRUCTION", "BRANCH", "LINE"));
-    final Supplier<File> xmlParent = () -> this.jacocoXmlFile
+    final Supplier<File> xmlParent = () -> this.jacocoXml
         .map(RegularFile::getAsFile)
         .get()
         .getParentFile();
-    String outputJsonName = "jacocoSummary.json";
     this.outputJson = objectFactory
         .fileProperty()
         .convention(
             projectLayout.file(
-                providerFactory.provider(() -> new File(xmlParent.get(), outputJsonName))));
+                providerFactory.provider(() -> new File(xmlParent.get(), "jacocoSummary.json"))));
     this.previousJson = objectFactory
         .fileProperty()
         .convention(
             projectLayout.file(
                 providerFactory.provider(() -> {
-                  File output = new File(xmlParent.get(), outputJsonName);
-                  return output.exists() ? output : null;
+                  File defaultPreviousJson = defaultPreviousJson();
+                  return defaultPreviousJson.exists() ? defaultPreviousJson : null;
                 })
             ));
     this.outputMd = objectFactory.fileProperty()
@@ -98,28 +98,25 @@ public class JacocoMarkdownTask extends DefaultTask {
             projectLayout.file(
                 providerFactory.provider(() -> new File(xmlParent.get(), "jacocoSummary.md"))));
 
-    this.onlyIf(t -> jacocoXmlFile.get().getAsFile().exists());
+    this.onlyIf(t -> jacocoXml.get().getAsFile().exists());
     this.setDescription("Summarize jacoco coverage report as a markdown");
   }
 
   void configure(JacocoMarkdownExtension extension) {
-    this.diffEnabled.convention(extension.diffEnabled.get());
-    this.stdout.convention(extension.stdout.get());
+    this.diffEnabled.convention(extension.diffEnabled);
+    this.stdout.convention(extension.stdout);
   }
 
   void configureByJacocoXml(Provider<RegularFile> jacocoXml) {
-    this.jacocoXmlFile.convention(jacocoXml);
+    this.jacocoXml.convention(jacocoXml);
   }
 
   @TaskAction
   public void run() throws IOException {
-    if (!jacocoXmlFile().exists()) {
-      throw new IllegalStateException(String.valueOf(jacocoXmlFile()));
-    }
     try (Writer mdWriter = Files.newBufferedWriter(outputMd().toPath(), StandardCharsets.UTF_8)) {
       CoverageExportService exportService = new CoverageExportService(
-          new JacocoCoveragesXmlRepository(new XmlParser(), jacocoXmlFile()),
-          new CoverageJsonRepository(previousJsonPath()),
+          new JacocoCoveragesXmlRepository(new XmlParser(), jacocoXml()),
+          new CoverageJsonRepository(previousJson()),
           new CoverageJsonRepository(outputJson()),
           new CoverageMarkdownReportService(),
           mdWriter,
@@ -128,17 +125,35 @@ public class JacocoMarkdownTask extends DefaultTask {
       exportService.export(
           new ExportRequest(diffEnabled(), stdout(), new CoverageTypes(targetTypes()))
       );
+      copyOutputJson();
     } catch (ParserConfigurationException | SAXException e) {
       throw new IllegalStateException(e);
     }
   }
 
-  private File jacocoXmlFile() {
-    return jacocoXmlFile.getAsFile().get();
+  private void copyOutputJson() throws IOException {
+    if (diffEnabled() && isDefaultPreviousJson()) {
+      Files.copy(
+          outputJson().toPath(),
+          defaultPreviousJson().toPath(),
+          StandardCopyOption.REPLACE_EXISTING);
+    }
   }
 
-  private File previousJsonPath() {
-    return previousJson.map(RegularFile::getAsFile).getOrElse(outputJson());
+  private File jacocoXml() {
+    return jacocoXml.getAsFile().get();
+  }
+
+  private File defaultPreviousJson() {
+    return new File(outputJson().getParentFile(), "previousJacocoSummary.json");
+  }
+
+  private boolean isDefaultPreviousJson() {
+    return previousJson().equals(defaultPreviousJson());
+  }
+
+  File previousJson() {
+    return previousJson.map(RegularFile::getAsFile).getOrElse(defaultPreviousJson());
   }
 
   private List<String> targetTypes() {
@@ -162,8 +177,8 @@ public class JacocoMarkdownTask extends DefaultTask {
   }
 
   @SuppressWarnings("unused")
-  public RegularFileProperty getJacocoXmlFile() {
-    return jacocoXmlFile;
+  public RegularFileProperty getJacocoXml() {
+    return jacocoXml;
   }
 
   @SuppressWarnings("unused")

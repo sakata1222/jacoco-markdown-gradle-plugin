@@ -32,6 +32,7 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     xml.enabled = true
     html.enabled = true
   }
+  excludeFilter = file("${rootDir}/config/spotbugs/exclude.xml")
 }
 
 dependencies {

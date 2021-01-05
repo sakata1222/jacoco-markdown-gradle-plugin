@@ -55,7 +55,7 @@ class JacocoMarkdownPluginFunctionalTest {
 
   @ParameterizedTest
   @CsvFileSource(resources = "/gradleVersions.csv")
-  void task_can_run(String gradleVersion) throws IOException {
+  void task_can_run_without_previous_json(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -83,6 +83,40 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|INSTRUCTION|      15/245|  93.88%|\n"
         + "|BRANCH     |        3/34|  91.18%|\n"
         + "|LINE       |        5/69|  92.75%|\n");
+  }
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void task_can_run_with_previous_json(String gradleVersion) throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'"
+            + "}");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"),
+        jacocoReportPath.resolve("jacocoTestReport.xml"));
+    Files.copy(this.getClass().getResourceAsStream("/previousJacocoSummary.json"),
+        jacocoReportPath.resolve("previousJacocoSummary.json"));
+    BuildResult result = runner.build();
+
+    assertThat(result.getOutput()).contains(""
+        + "|Type       |     Missed/Total|           Coverage|\n"
+        + "|:---       |             ---:|               ---:|\n"
+        + "|INSTRUCTION|~~20/255~~ 15/245|   ~~92.16~~ 93.88%|\n"
+        + "|BRANCH     |    ~~4/34~~ 3/34|   ~~88.24~~ 91.18%|\n"
+        + "|LINE       |(Not Changed)5/69|(Not Changed)92.75%|\n");
   }
 
   @ParameterizedTest
@@ -132,7 +166,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoTestReportMarkdown {\n"
-            + "  jacocoXmlFile = file(\"hoge\")\n"
+            + "  jacocoXml = file(\"hoge\")\n"
             + "  diffEnabled = false\n"
             + "  stdout = false\n"
             + "  previousJson = file(\"foo\")\n"
@@ -189,8 +223,8 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoMarkdown {\n"
-            + "  diffEnabled = true\n"
-            + "  stdout = true\n"
+            + "  diffEnabled false\n"
+            + "  stdout true\n"
             + "}\n"
             + "");
 
@@ -200,10 +234,21 @@ class JacocoMarkdownPluginFunctionalTest {
     runner.withPluginClasspath();
     runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
     runner.withProjectDir(projectDir.toFile());
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"),
+        jacocoReportPath.resolve("jacocoTestReport.xml"));
+    Files.copy(this.getClass().getResourceAsStream("/previousJacocoSummary.json"),
+        jacocoReportPath.resolve("previousJacocoSummary.json"));
     BuildResult result = runner.build();
 
-    assertThat(result.getOutput())
-        .contains("jacocoTestReportMarkdown SKIPPED");
+    assertThat(result.getOutput()).contains(""
+        + "|Type       |Missed/Total|Coverage|\n"
+        + "|:---       |        ---:|    ---:|\n"
+        + "|INSTRUCTION|      15/245|  93.88%|\n"
+        + "|BRANCH     |        3/34|  91.18%|\n"
+        + "|LINE       |        5/69|  92.75%|\n");
   }
 
   private void writeString(Path path, String string) throws IOException {

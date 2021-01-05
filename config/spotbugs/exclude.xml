@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<FindBugsFilter>
+  <Match>
+    <AND>
+      <Class name="jp.gr.java_conf.spica.plugin.gradle.jacoco"/>
+      <Method name="copyOutputJson"/>
+    </AND>
+    <Bug code="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+  </Match>
+</FindBugsFilter>

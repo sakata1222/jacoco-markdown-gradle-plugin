@@ -130,5 +130,47 @@ class JacocoMarkdownPluginTest {
             + "        \"covered\": 7\n"
             + "    }\n"
             + "}");
+    assertThat(mdTask.previousJson())
+        .exists()
+        .hasSameBinaryContentAs(mdTask.outputJson());
+    assertThat(mdTask.previousJson())
+        .isEqualTo(new File(mdTask.outputJson().getParent(), "previousJacocoSummary.json"));
+  }
+
+  @Test
+  public void plugin_task_does_not_copy_when_diff_disabled() throws IOException {
+    // Create a test project and apply the plugin
+    Project project = ProjectBuilder.builder()
+        .withProjectDir(Paths.get("build").resolve("test").toFile())
+        .build();
+    Arrays.asList(
+        "java",
+        "jacoco",
+        "com.github.sakata1222.jacoco-markdown"
+    ).forEach(project.getPlugins()::apply);
+    project.getExtensions().findByType(JacocoMarkdownExtension.class)
+        .setDiffEnabled(false);
+
+    // Verify the result
+    Task task = project.getTasks().findByName("jacocoTestReportMarkdown");
+    assertThat(task)
+        .isNotNull()
+        .isInstanceOf(JacocoMarkdownTask.class);
+    JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
+
+    JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
+    File xml = jacocoTask.getReports().getXml().getDestination();
+    Files.createDirectories(xml.getParentFile().toPath());
+    try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
+        InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
+      IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+    }
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (PrintStream pw = new PrintStream(bos, false, StandardCharsets.UTF_8.toString())) {
+      System.setOut(pw);
+      mdTask.run();
+    }
+    assertThat(mdTask.previousJson())
+        .doesNotExist();
   }
 }
