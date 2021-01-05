@@ -12,7 +12,8 @@ import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 /**
  * A simple functional test for the 'jp.gr.java_conf.spica.plugin.gradle.jacoco.greeting' plugin.
@@ -29,8 +30,9 @@ class JacocoMarkdownPluginFunctionalTest {
     Files.createDirectories(projectDir);
   }
 
-  @Test
-  void task_is_created() throws IOException {
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void task_is_created(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -40,6 +42,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}");
 
     GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
     runner.forwardOutput();
     runner.withPluginClasspath();
     runner.withArguments("tasks");
@@ -50,8 +53,9 @@ class JacocoMarkdownPluginFunctionalTest {
         .contains("jacocoTestReportMarkdown");
   }
 
-  @Test
-  void task_can_run() throws IOException {
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void task_can_run(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -61,6 +65,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}");
 
     GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
     runner.forwardOutput();
     runner.withPluginClasspath();
     runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
@@ -80,8 +85,11 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|LINE       |        5/69|  92.75%|\n");
   }
 
-  @Test
-  void task_dependencies_are_created_when_auto_option_disabled() throws IOException {
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void task_dependencies_are_created_when_auto_option_disabled(
+      String gradleVersion
+  ) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -90,6 +98,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "  id 'com.github.sakata1222.jacoco-markdown'"
             + "}");
     GradleRunner mdRunner = GradleRunner.create();
+    mdRunner.withGradleVersion(gradleVersion);
     mdRunner.forwardOutput();
     mdRunner.withPluginClasspath();
     mdRunner.withArguments("jacocoTestReportMarkdown", "--dry-run");
@@ -100,6 +109,7 @@ class JacocoMarkdownPluginFunctionalTest {
         .contains(":jacocoTestReport ");
 
     GradleRunner jacocoRunner = GradleRunner.create();
+    jacocoRunner.withGradleVersion(gradleVersion);
     jacocoRunner.forwardOutput();
     jacocoRunner.withPluginClasspath();
     jacocoRunner.withArguments("jacocoTestReport", "--dry-run");
@@ -110,8 +120,9 @@ class JacocoMarkdownPluginFunctionalTest {
         .contains(":jacocoTestReportMarkdown ");
   }
 
-  @Test
-  void task_can_be_configurable() throws IOException {
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void task_can_be_configurable(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -132,6 +143,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "");
 
     GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
     runner.forwardOutput();
     runner.withPluginClasspath();
     runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
@@ -142,8 +154,9 @@ class JacocoMarkdownPluginFunctionalTest {
         .contains("jacocoTestReportMarkdown SKIPPED");
   }
 
-  @Test
-  void task_is_skipped_when_xml_does_not_exists() throws IOException {
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void task_is_skipped_when_xml_does_not_exists(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -153,6 +166,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}");
 
     GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
     runner.forwardOutput();
     runner.withPluginClasspath();
     runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
@@ -163,8 +177,9 @@ class JacocoMarkdownPluginFunctionalTest {
         .contains("jacocoTestReportMarkdown SKIPPED");
   }
 
-  @Test
-  void extension_can_be_used() throws IOException {
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void extension_can_be_used(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -180,6 +195,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "");
 
     GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
     runner.forwardOutput();
     runner.withPluginClasspath();
     runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
