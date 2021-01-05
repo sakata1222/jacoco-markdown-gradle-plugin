@@ -1,5 +1,9 @@
 # jacoco-markdown-gradle-plugin
 
+[![build](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/actions?query=workflow%3A%22Java+CI+with+Gradle%22)
+[![codecov](https://codecov.io/gh/sakata1222/jacoco-markdown-gradle-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/sakata1222/jacoco-markdown-gradle-plugin)
+[![portal](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fgithub%2Fsakata1222%2Fjacoco-markdown%2Fcom.github.sakata1222.jacoco-markdown.gradle.plugin%2Fmaven-metadata.xml&label=Gradle+Plugin+Portal&logo=Gradle)](https://plugins.gradle.org/plugin/com.github.sakata1222.jacoco-markdown)
+
 Gradle plugin to parse jacoco report as a markdown.
 
 ```shell
