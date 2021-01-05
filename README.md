@@ -59,3 +59,13 @@ Configuration of an auto created task:
 - Name is `<name-of-jacoco-report>Markdown`
 - The task depends on a JacocoReport task
 - A jacocoReport task finalizedBy the task
+- A markdown file will be output in `<jacoco-report-directory>/jacocoSummary.md`
+
+#### Customize
+
+```groovy
+jacocoMarkdown {
+  stdout false // default true
+  diffEnabled false // default true
+}
+```

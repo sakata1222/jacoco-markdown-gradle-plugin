@@ -42,7 +42,7 @@ dependencies {
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
 }
 
-version = '0.1.4'
+version = '0.2.0'
 group = 'com.github.sakata1222'
 
 gradlePlugin {
