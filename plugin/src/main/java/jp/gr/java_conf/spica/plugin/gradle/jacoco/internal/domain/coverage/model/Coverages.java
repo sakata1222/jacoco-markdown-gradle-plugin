@@ -1,27 +1,22 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.utils.CustomCollectors;
 
 public class Coverages {
 
   private final Map<String, Coverage> coverageMap;
 
   public Coverages(List<Coverage> coverageList) {
-    this((Map<String, Coverage>)
-        coverageList.stream()
-            .collect(Collectors.toMap(
-                Coverage::getType,
-                Function.identity(),
-                (c1, c2) -> {
-                  throw new IllegalArgumentException(c1 + ", " + c2);
-                },
-                LinkedHashMap::new
-            ))
+    this(coverageList.stream()
+        .collect(CustomCollectors.toUniqueLinkedHashMap(
+            Coverage::getType,
+            Function.identity()
+        ))
     );
   }
 
@@ -42,15 +37,11 @@ public class Coverages {
 
   public CoveragesDifference diff(Coverages previous) {
     Map<String, CoverageDifference> typeToDifferences = coverageMap.entrySet().stream()
-        .collect(Collectors.toMap(
+        .collect(CustomCollectors.toUniqueLinkedHashMap(
             Map.Entry::getKey,
             e -> new CoverageDifference(
                 previous.coverageMap.getOrDefault(e.getKey(), null),
-                e.getValue()),
-            (c1, c2) -> {
-              throw new IllegalArgumentException(c1 + ", " + c2);
-            },
-            LinkedHashMap::new
+                e.getValue())
         ));
     return new CoveragesDifference(typeToDifferences);
   }

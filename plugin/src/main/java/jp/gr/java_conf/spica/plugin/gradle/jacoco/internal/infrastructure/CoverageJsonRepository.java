@@ -8,13 +8,13 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesReadRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesWriteRepository;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.utils.CustomCollectors;
 
 public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
     IOwnCoveragesWriteRepository {
@@ -50,14 +50,11 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
   }
 
   private Map<String, CoverageJson> toMap(Coverages coverages) {
-    return coverages.typeToCoverage().entrySet().stream().collect(Collectors.toMap(
-        Map.Entry::getKey,
-        e -> new CoverageJson(e.getValue()),
-        (c1, c2) -> {
-          throw new IllegalArgumentException();
-        },
-        LinkedHashMap::new
-    ));
+    return coverages.typeToCoverage().entrySet().stream()
+        .collect(CustomCollectors.toUniqueLinkedHashMap(
+            Map.Entry::getKey,
+            e -> new CoverageJson(e.getValue())
+        ));
   }
 
   private Coverages fromMap(Map<String, Map<String, Object>> map) {
@@ -73,10 +70,6 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
     private String type;
     private int covered;
     private int missed;
-
-    @SuppressWarnings("unused")
-    public CoverageJson() {
-    }
 
     public CoverageJson(Coverage coverage) {
       this.type = coverage.getType();
