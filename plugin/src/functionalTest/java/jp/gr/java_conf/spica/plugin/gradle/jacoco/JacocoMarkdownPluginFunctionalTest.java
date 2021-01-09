@@ -220,7 +220,8 @@ class JacocoMarkdownPluginFunctionalTest {
             + "  id 'com.github.sakata1222.jacoco-markdown'"
             + "}\n"
             + "\n"
-            + "task myJacocoMarkdown(type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {\n"
+            + "task myJacocoMarkdown("
+            + "type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {\n"
             + "  jacocoReportTask jacocoTestReport\n"
             + "}\n");
 
@@ -306,6 +307,42 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|INSTRUCTION|      15/245|  93.88%|\n"
         + "|BRANCH     |        3/34|  91.18%|\n"
         + "|LINE       |        5/69|  92.75%|\n");
+  }
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void disable_by_extention(String gradleVersion) throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'\n"
+            + "}\n"
+            + "\n"
+            + "jacocoMarkdown {\n"
+            + "  enabled false\n"
+            + "  diffEnabled false\n"
+            + "  stdout true\n"
+            + "}\n"
+            + "");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"),
+        jacocoReportPath.resolve("jacocoTestReport.xml"));
+    Files.copy(this.getClass().getResourceAsStream("/previousJacocoSummary.json"),
+        jacocoReportPath.resolve("previousJacocoSummary.json"));
+    BuildResult result = runner.build();
+
+    assertThat(result.getOutput()).contains("Task :jacocoTestReportMarkdown SKIPPED");
   }
 
   private void writeString(Path path, String string) throws IOException {

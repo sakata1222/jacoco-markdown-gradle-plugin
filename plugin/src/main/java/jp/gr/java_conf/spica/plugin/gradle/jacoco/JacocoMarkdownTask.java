@@ -48,6 +48,9 @@ public class JacocoMarkdownTask extends DefaultTask {
   final RegularFileProperty jacocoXml;
 
   @Input
+  final Property<Boolean> enabled;
+
+  @Input
   final Property<Boolean> diffEnabled;
 
   @Input
@@ -74,6 +77,7 @@ public class JacocoMarkdownTask extends DefaultTask {
       ProviderFactory providerFactory,
       ProjectLayout projectLayout) {
     this.jacocoXml = objectFactory.fileProperty();
+    this.enabled = objectFactory.property(Boolean.class).convention(true);
     this.diffEnabled = objectFactory.property(Boolean.class).convention(true);
     this.stdout = objectFactory.property(Boolean.class).convention(true);
     this.targetTypes = objectFactory.listProperty(String.class)
@@ -102,6 +106,9 @@ public class JacocoMarkdownTask extends DefaultTask {
                 providerFactory.provider(() -> new File(xmlParent.get(), "jacocoSummary.md"))));
 
     this.onlyIf(t -> {
+      if (!getEnabled()) {
+        return false;
+      }
       boolean exists = jacocoXml().exists();
       if (!exists) {
         getLogger()
@@ -113,6 +120,7 @@ public class JacocoMarkdownTask extends DefaultTask {
   }
 
   void configure(JacocoMarkdownExtension extension) {
+    this.enabled.convention(extension.enabled);
     this.diffEnabled.convention(extension.diffEnabled);
     this.stdout.convention(extension.stdout);
   }
@@ -192,6 +200,16 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   public RegularFileProperty getJacocoXml() {
     return jacocoXml;
+  }
+
+  @Override
+  public void setEnabled(boolean enabled) {
+    this.enabled.set(enabled);
+  }
+
+  @Override
+  public boolean getEnabled() {
+    return this.enabled.get();
   }
 
   public void setDiffEnabled(boolean diffEnabled) {

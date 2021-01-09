@@ -65,6 +65,7 @@ class JacocoMarkdownTaskTest {
   void configured_by_default() throws IOException {
     assertThat(task.getJacocoXml().getAsFile().get())
         .isEqualTo(jacocoTest.resolve("jacocoTestReport.xml").toFile());
+    assertThat(task.getEnabled()).isTrue();
     assertThat(task.getDiffEnabled().get()).isTrue();
     assertThat(task.getStdout().get()).isTrue();
     assertThat(task.getPreviousJson().isPresent()).isFalse();
@@ -90,6 +91,9 @@ class JacocoMarkdownTaskTest {
     task.setJacocoXml(projectRoot.resolve("a.xml").toFile());
     assertThat(task.getJacocoXml().getAsFile().get())
         .isEqualTo(projectRoot.resolve("a.xml").toFile());
+
+    task.setEnabled(false);
+    assertThat(task.getEnabled()).isFalse();
 
     task.setDiffEnabled(false);
     assertThat(task.getDiffEnabled().get()).isFalse();
@@ -173,7 +177,6 @@ class JacocoMarkdownTaskTest {
     assertThat(task.previousJson()).doesNotExist();
   }
 
-
   @Test
   void only_if_returns_false() {
     assertThat(task.getOnlyIf().isSatisfiedBy(task)).isFalse();
@@ -186,5 +189,15 @@ class JacocoMarkdownTaskTest {
     Files.write(xml, "".getBytes(StandardCharsets.UTF_8));
 
     assertThat(task.getOnlyIf().isSatisfiedBy(task)).isTrue();
+  }
+
+  @Test
+  void only_if_returns_false_when_it_disable() throws IOException {
+    JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
+    Path xml = jacocoTask.getReports().getXml().getDestination().toPath();
+    Files.write(xml, "".getBytes(StandardCharsets.UTF_8));
+
+    task.setEnabled(false);
+    assertThat(task.getOnlyIf().isSatisfiedBy(task)).isFalse();
   }
 }

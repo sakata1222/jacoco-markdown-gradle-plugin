@@ -173,4 +173,65 @@ class JacocoMarkdownPluginTest {
     assertThat(mdTask.previousJson())
         .doesNotExist();
   }
+
+  @Test
+  public void plugin_default_task_stdout_can_be_disabled_by_extension() throws IOException {
+    // Create a test project and apply the plugin
+    Project project = ProjectBuilder.builder()
+        .withProjectDir(projectRoot.toFile())
+        .build();
+    Arrays.asList(
+        "java",
+        "jacoco",
+        "com.github.sakata1222.jacoco-markdown"
+    ).forEach(project.getPlugins()::apply);
+    JacocoMarkdownExtension extension = project.getExtensions()
+        .findByType(JacocoMarkdownExtension.class);
+    extension.setStdout(false);
+
+    // Verify the result
+    Task task = project.getTasks().findByName("jacocoTestReportMarkdown");
+    assertThat(task)
+        .isNotNull()
+        .isInstanceOf(JacocoMarkdownTask.class);
+    JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
+
+    JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
+    File xml = jacocoTask.getReports().getXml().getDestination();
+    Files.createDirectories(xml.getParentFile().toPath());
+    try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
+        InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
+      IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+    }
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (PrintStream pw = new PrintStream(bos, false, StandardCharsets.UTF_8.toString())) {
+      System.setOut(pw);
+      mdTask.run();
+    }
+    assertThat(bos.toString(StandardCharsets.UTF_8.toString())).isEqualTo("");
+  }
+
+  @Test
+  public void plugin_default_task_can_be_disabled_by_extension() throws IOException {
+    // Create a test project and apply the plugin
+    Project project = ProjectBuilder.builder()
+        .withProjectDir(projectRoot.toFile())
+        .build();
+    Arrays.asList(
+        "java",
+        "jacoco",
+        "com.github.sakata1222.jacoco-markdown"
+    ).forEach(project.getPlugins()::apply);
+    JacocoMarkdownExtension extension = project.getExtensions()
+        .findByType(JacocoMarkdownExtension.class);
+    extension.setEnabled(false);
+
+    // Verify the result
+    Task task = project.getTasks().findByName("jacocoTestReportMarkdown");
+    assertThat(task)
+        .isNotNull()
+        .isInstanceOf(JacocoMarkdownTask.class);
+    JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
+    assertThat(mdTask.getOnlyIf().isSatisfiedBy(mdTask)).isFalse();
+  }
 }
