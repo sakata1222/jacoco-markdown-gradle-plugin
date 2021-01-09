@@ -51,21 +51,47 @@ check the latest version.
 First, configure the jacoco plugin based on the [jacoco plugin guide](
 https://docs.gradle.org/current/userguide/jacoco_plugin.html).
 
-**A task to output coverage report as a markdown will be created automatically, and dependencies are
+#### Default task
+
+**A task to output coverage report as a markdown will be created by default, and dependencies are
 also configured automatically.**
 
-Configuration of an auto created task:
+Configuration of the default task:
 
-- Name is `<name-of-jacoco-report>Markdown`
-- The task depends on a JacocoReport task
-- A jacocoReport task finalizedBy the task
+- Name is `<name-of-default-jacoco-report>Markdown` (i.e. jacocoTestReportMarkdown)
+- The task depends on a default JacocoReport task
+- A default JacocoReport task finalizedBy the task
 - A markdown file will be output in `<jacoco-report-directory>/jacocoSummary.md`
+
+#### Define a new task
+
+```groovy
+task myJacocoMarkdown(type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {
+  jacocoReportTask your_JacocoReport_task // auto configuration for the JacocoReportTask
+}
+```
 
 #### Customize
 
+For default task:
+
 ```groovy
 jacocoMarkdown {
-  stdout false // default true
   diffEnabled false // default true
+  stdout false // default true
+}
+```
+
+For a specific task:
+
+```groovy
+myJacocoMarkdown {
+  jacocoXml file("path-to-jacoco-xml")
+  diffEnabled false
+  stdout false
+  previousJson file("path-to-a-base-json-to-show-the-coverage-changes")
+  targetTypes(["INSTRUCTION", "BRANCH", "LINE", "COMPLEXITY", "METHOD", "CLASS"])
+  outputJson file("path-to-output-json")
+  outputMd file("path-to-markdown")
 }
 ```
