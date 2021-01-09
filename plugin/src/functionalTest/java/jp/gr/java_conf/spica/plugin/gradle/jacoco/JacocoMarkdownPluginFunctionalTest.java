@@ -158,6 +158,16 @@ class JacocoMarkdownPluginFunctionalTest {
   @CsvFileSource(resources = "/gradleVersions.csv")
   void task_can_be_configurable(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Path xml = jacocoReportPath.resolve("myJacocoTestReport.xml");
+    String xmlString = xml.toAbsolutePath().normalize().toString().replace("\\", "/");
+    Path previousJson = jacocoReportPath.resolve("myPreviousJacocoSummary.json");
+    String previousJsonString = previousJson.toAbsolutePath().toString().replace("\\", "/");
+    Path outputJson = jacocoReportPath.resolve("output.json");
+    String outputJsonString = outputJson.toAbsolutePath().normalize().toString().replace("\\", "/");
+    Path outputMd = jacocoReportPath.resolve("output.md");
+    String outputMdString = outputMd.toAbsolutePath().normalize().toString().replace("\\", "/");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
             + "  id 'java'\n"
@@ -166,13 +176,13 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoTestReportMarkdown {\n"
-            + "  jacocoXml = file(\"hoge\")\n"
+            + "  jacocoXml = file(\"" + xmlString + "\")\n"
             + "  diffEnabled = false\n"
-            + "  stdout = false\n"
-            + "  previousJson = file(\"foo\")\n"
-            + "  targetTypes = [\"aaa\", \"bbb\", \"ccc\"]\n"
-            + "  outputJson = file(\"bar\")\n"
-            + "  outputMd = file(\"one\")\n"
+            + "  stdout = true\n"
+            + "  previousJson = file(\"" + previousJsonString + "\")\n"
+            + "  targetTypes = [\"INSTRUCTION\", \"BRANCH\", \"ccc\"]\n"
+            + "  outputJson = file(\"" + outputJsonString + "\")\n"
+            + "  outputMd = file(\"" + outputMdString + "\")\n"
             + "}\n"
             + "");
 
@@ -182,10 +192,57 @@ class JacocoMarkdownPluginFunctionalTest {
     runner.withPluginClasspath();
     runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
     runner.withProjectDir(projectDir.toFile());
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"), xml);
+    Files.copy(this.getClass().getResourceAsStream("/previousJacocoSummary.json"),
+        previousJson);
     BuildResult result = runner.build();
 
-    assertThat(result.getOutput())
-        .contains("jacocoTestReportMarkdown SKIPPED");
+    String expected = ""
+        + "|Type       |Missed/Total|Coverage|\n"
+        + "|:---       |        ---:|    ---:|\n"
+        + "|INSTRUCTION|      15/245|  93.88%|\n"
+        + "|BRANCH     |        3/34|  91.18%|\n";
+
+    assertThat(result.getOutput()).contains(expected);
+    assertThat(outputJson).exists();
+    assertThat(outputMd).hasContent(expected);
+  }
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void task_can_be_configurable_by_jacocoReportTask(String gradleVersion) throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'"
+            + "}\n"
+            + "\n"
+            + "task myJacocoMarkdown(type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {\n"
+            + "  jacocoReportTask jacocoTestReport\n"
+            + "}\n");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("myJacocoMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"),
+        jacocoReportPath.resolve("jacocoTestReport.xml"));
+    BuildResult result = runner.build();
+
+    assertThat(result.getOutput()).contains(""
+        + "|Type       |Missed/Total|Coverage|\n"
+        + "|:---       |        ---:|    ---:|\n"
+        + "|INSTRUCTION|      15/245|  93.88%|\n"
+        + "|BRANCH     |        3/34|  91.18%|\n"
+        + "|LINE       |        5/69|  92.75%|\n");
   }
 
   @ParameterizedTest

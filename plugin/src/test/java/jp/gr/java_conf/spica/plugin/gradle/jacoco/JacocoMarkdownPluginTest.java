@@ -12,7 +12,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -27,13 +26,14 @@ import org.junit.jupiter.api.Test;
 
 class JacocoMarkdownPluginTest {
 
-  private final Path projectDir = Paths.get("build").resolve("test");
+  private static Path projectRoot;
 
   private static PrintStream out;
   private static PrintStream err;
 
   @BeforeAll
-  static void beforeAll() {
+  static void beforeAll() throws IOException {
+    projectRoot = Files.createTempDirectory("jacocoMdTest");
     out = System.out;
     err = System.err;
   }
@@ -46,17 +46,17 @@ class JacocoMarkdownPluginTest {
 
   @BeforeEach
   void beforeEach() throws IOException {
-    if (Files.isDirectory(projectDir)) {
-      FileUtils.deleteDirectory(projectDir.toFile());
+    if (Files.isDirectory(projectRoot)) {
+      FileUtils.deleteDirectory(projectRoot.toFile());
     }
-    Files.createDirectories(projectDir);
+    Files.createDirectories(projectRoot);
   }
 
   @Test
   public void plugin_registers_a_task() throws IOException {
     // Create a test project and apply the plugin
     Project project = ProjectBuilder.builder()
-        .withProjectDir(Paths.get("build").resolve("test").toFile())
+        .withProjectDir(projectRoot.toFile())
         .build();
     Arrays.asList(
         "java",
@@ -141,7 +141,7 @@ class JacocoMarkdownPluginTest {
   public void plugin_task_does_not_copy_when_diff_disabled() throws IOException {
     // Create a test project and apply the plugin
     Project project = ProjectBuilder.builder()
-        .withProjectDir(Paths.get("build").resolve("test").toFile())
+        .withProjectDir(projectRoot.toFile())
         .build();
     Arrays.asList(
         "java",

@@ -19,6 +19,7 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.Cov
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.CoverageJsonRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.JacocoCoveragesXmlRepository;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.Project;
 import org.gradle.api.file.ProjectLayout;
 import org.gradle.api.file.RegularFile;
 import org.gradle.api.file.RegularFileProperty;
@@ -27,6 +28,7 @@ import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.provider.ProviderFactory;
+import org.gradle.api.reporting.ConfigurableReport;
 import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
@@ -35,6 +37,7 @@ import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.testing.jacoco.tasks.JacocoReport;
 import org.xml.sax.SAXException;
 
 @CacheableTask
@@ -98,7 +101,14 @@ public class JacocoMarkdownTask extends DefaultTask {
             projectLayout.file(
                 providerFactory.provider(() -> new File(xmlParent.get(), "jacocoSummary.md"))));
 
-    this.onlyIf(t -> jacocoXml.get().getAsFile().exists());
+    this.onlyIf(t -> {
+      boolean exists = jacocoXml().exists();
+      if (!exists) {
+        getLogger()
+            .warn("Jacoco XML({}) does not exist, Skip the task.", jacocoXml().getAbsoluteFile());
+      }
+      return exists;
+    });
     this.setDescription("Summarize jacoco coverage report as a markdown");
   }
 
@@ -176,38 +186,74 @@ public class JacocoMarkdownTask extends DefaultTask {
     return outputJson.getAsFile().get();
   }
 
-  @SuppressWarnings("unused")
+  public void setJacocoXml(File jacocoXml) {
+    this.jacocoXml.set(jacocoXml);
+  }
+
   public RegularFileProperty getJacocoXml() {
     return jacocoXml;
   }
 
-  @SuppressWarnings("unused")
+  public void setDiffEnabled(boolean diffEnabled) {
+    this.diffEnabled.set(diffEnabled);
+  }
+
   public Property<Boolean> getDiffEnabled() {
     return diffEnabled;
   }
 
-  @SuppressWarnings("unused")
+  public void setStdout(boolean stdout) {
+    this.stdout.set(stdout);
+  }
+
   public Property<Boolean> getStdout() {
     return stdout;
   }
 
-  @SuppressWarnings("unused")
+  public void setPreviousJson(File previousJson) {
+    this.previousJson.set(previousJson);
+  }
+
   public RegularFileProperty getPreviousJson() {
     return previousJson;
   }
 
-  @SuppressWarnings("unused")
+  public void setTargetTypes(List<String> targetTypes) {
+    this.targetTypes.set(targetTypes);
+  }
+
   public ListProperty<String> getTargetTypes() {
     return targetTypes;
   }
 
-  @SuppressWarnings("unused")
+  public void setOutputJson(File outputJson) {
+    this.outputJson.set(outputJson);
+  }
+
   public RegularFileProperty getOutputJson() {
     return outputJson;
   }
 
-  @SuppressWarnings("unused")
+  public void setOutputMd(File outputMd) {
+    this.outputMd.set(outputMd);
+  }
+
   public RegularFileProperty getOutputMd() {
     return outputMd;
+  }
+
+  void autoConfigureByJacocoReportTask(JacocoReport jacocoReport) {
+    this.setGroup(jacocoReport.getGroup());
+    this.dependsOn(jacocoReport);
+    ConfigurableReport xml = jacocoReport.getReports().getXml();
+    Project project = getProject();
+    this.jacocoXml.convention(
+        project.getLayout().file(project.provider(xml::getDestination)));
+    xml.setEnabled(true);
+    jacocoReport.finalizedBy(this);
+  }
+
+  public void jacocoReportTask(JacocoReport jacocoReport) {
+    autoConfigureByJacocoReportTask(jacocoReport);
   }
 }
