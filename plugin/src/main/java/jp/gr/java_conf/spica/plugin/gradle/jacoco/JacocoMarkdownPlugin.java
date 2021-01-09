@@ -31,10 +31,7 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
                           project.getLayout().file(project.provider(xml::getDestination)));
                     }
                 ).get();
-                mdTask.setGroup(jacocoReport.getGroup());
-                mdTask.dependsOn(jacocoReport);
-                xml.setEnabled(true);
-                jacocoReport.finalizedBy(mdTask);
+                mdTask.autoConfigureByJacocoReportTask(jacocoReport);
               });
         }
     );
