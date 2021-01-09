@@ -12,7 +12,7 @@ plugins {
   id 'jacoco'
   // Apply the application plugin to add support for building a CLI application.
   id 'application'
-  id "com.github.sakata1222.jacoco-markdown" version "0.1.3"
+  id "com.github.sakata1222.jacoco-markdown" version "0.3.0"
 }
 
 repositories {
@@ -46,3 +46,12 @@ test {
 jacocoTestReport {
   dependsOn test // tests are required to run before generating the report
 }
+
+jacocoTestReportMarkdown {
+  stdout false
+}
+
+task myJacocoMarkdown(type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {
+  jacocoReportTask jacocoTestReport
+}
+

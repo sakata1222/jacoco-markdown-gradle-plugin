@@ -6,21 +6,25 @@ import org.gradle.api.provider.Property;
 
 public class JacocoMarkdownExtension {
 
+  final Property<Boolean> enabled;
   final Property<Boolean> diffEnabled;
   final Property<Boolean> stdout;
 
   @Inject
   public JacocoMarkdownExtension(ObjectFactory objectFactory) {
+    this.enabled = objectFactory.property(Boolean.class).convention(true);
     this.diffEnabled = objectFactory.property(Boolean.class).convention(true);
     this.stdout = objectFactory.property(Boolean.class).convention(true);
   }
 
-  @SuppressWarnings("unused")
+  public void setEnabled(boolean enabled) {
+    this.enabled.set(enabled);
+  }
+
   public void setDiffEnabled(boolean diffEnabled) {
     this.diffEnabled.set(diffEnabled);
   }
 
-  @SuppressWarnings("unused")
   public void setStdout(boolean stdout) {
     this.stdout.set(stdout);
   }
