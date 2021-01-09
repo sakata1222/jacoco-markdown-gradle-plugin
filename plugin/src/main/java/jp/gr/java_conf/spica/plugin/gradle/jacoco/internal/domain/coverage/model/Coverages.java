@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -54,22 +53,5 @@ public class Coverages {
             LinkedHashMap::new
         ));
     return new CoveragesDifference(typeToDifferences);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Coverages coverages = (Coverages) o;
-    return Objects.equals(coverageMap, coverages.coverageMap);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(coverageMap);
   }
 }

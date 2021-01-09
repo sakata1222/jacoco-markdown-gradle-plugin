@@ -1,6 +1,5 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model;
 
-import java.util.Objects;
 
 public class Coverage {
 
@@ -36,23 +35,5 @@ public class Coverage {
 
   public int getMissed() {
     return missed;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Coverage coverage = (Coverage) o;
-    return covered == coverage.covered && missed == coverage.missed && Objects
-        .equals(type, coverage.type);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(type, covered, missed);
   }
 }

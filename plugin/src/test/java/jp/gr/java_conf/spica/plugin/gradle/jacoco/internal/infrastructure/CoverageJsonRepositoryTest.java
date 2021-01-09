@@ -1,5 +1,6 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure;
 
+import static jp.gr.java_conf.spica.plugin.gradle.jacoco.test.assertions.CustomAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
@@ -41,8 +42,7 @@ class CoverageJsonRepositoryTest {
         )
     );
     assertThat(coverages)
-        .isEqualTo(expected)
-        .hasSameHashCodeAs(expected);
+        .isEqualTo(expected);
   }
 
   @Test
