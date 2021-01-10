@@ -37,7 +37,7 @@ class CoveragesAssertTest {
         new Coverage("type2", 11, 21),
         new Coverage("type3", 13, 22)
     ));
-    assertThatThrownBy(() -> coveragesAssert.isEqualTo(valuesAreDifferent)) 
+    assertThatThrownBy(() -> coveragesAssert.isEqualTo(valuesAreDifferent))
         .isInstanceOf(AssertionError.class)
         .hasMessage(
             "Assertion for the type(type3) failed."
