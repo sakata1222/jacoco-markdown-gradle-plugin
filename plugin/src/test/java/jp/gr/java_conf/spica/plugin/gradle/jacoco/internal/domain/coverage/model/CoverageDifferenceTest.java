@@ -8,11 +8,10 @@ class CoverageDifferenceTest {
 
   @Test
   void can_not_create_different_types_difference() {
+    Coverage typeA = new Coverage("typeA", 10, 10);
+    Coverage typeB = new Coverage("typeB", 10, 10);
     assertThatThrownBy(() ->
-        new CoverageDifference(
-            new Coverage("typeA", 10, 10),
-            new Coverage("typeB", 10, 10)
-        )
+        new CoverageDifference(typeA, typeB)
     ).isInstanceOf(IllegalArgumentException.class);
   }
 }

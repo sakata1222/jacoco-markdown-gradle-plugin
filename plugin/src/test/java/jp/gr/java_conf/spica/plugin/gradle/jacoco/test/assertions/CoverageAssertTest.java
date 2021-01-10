@@ -40,10 +40,13 @@ class CoverageAssertTest {
         e ->
             dynamicTest(
                 "Expected error msg:" + e.getValue(),
-                () -> assertThatThrownBy(() ->
-                    coverageAssert.isEqualTo(e.getKey()))
-                    .isInstanceOf(AssertionError.class)
-                    .hasMessage(e.getValue())
+                () -> {
+                  Coverage mismatchExpected = e.getKey();
+                  assertThatThrownBy(() ->
+                      coverageAssert.isEqualTo(mismatchExpected))
+                      .isInstanceOf(AssertionError.class)
+                      .hasMessage(e.getValue());
+                }
             )
     );
   }

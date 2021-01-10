@@ -21,32 +21,26 @@ class CoveragesAssertTest {
 
   @Test
   void isEqualTo_fail_when_keys_are_different() {
-    assertThatThrownBy(() -> coveragesAssert.isEqualTo(
-        new Coverages(
-            Arrays.asList(
-                new Coverage("type1", 10, 20),
-                new Coverage("type2", 11, 21),
-                new Coverage("type4", 12, 22)
-            )
-        )
-    )).isInstanceOf(AssertionError.class);
+    Coverages typeAreDifferent = new Coverages(Arrays.asList(
+        new Coverage("type1", 10, 20),
+        new Coverage("type2", 11, 21),
+        new Coverage("type4", 12, 22)
+    ));
+    assertThatThrownBy(() -> coveragesAssert.isEqualTo(typeAreDifferent))
+        .isInstanceOf(AssertionError.class);
   }
 
   @Test
   void isEqualTo_fail_when_value_is_different() {
-    assertThatThrownBy(() -> coveragesAssert.isEqualTo(
-        new Coverages(
-            Arrays.asList(
-                new Coverage("type1", 10, 20),
-                new Coverage("type2", 11, 21),
-                new Coverage("type3", 13, 22)
-            )
-        )
-    ))
+    Coverages valuesAreDifferent = new Coverages(Arrays.asList(
+        new Coverage("type1", 10, 20),
+        new Coverage("type2", 11, 21),
+        new Coverage("type3", 13, 22)
+    ));
+    assertThatThrownBy(() -> coveragesAssert.isEqualTo(valuesAreDifferent)) 
         .isInstanceOf(AssertionError.class)
         .hasMessage(
             "Assertion for the type(type3) failed."
                 + " Expected \"covered\" is \"13\", but actual is \"12\"");
   }
-
 }
