@@ -40,12 +40,13 @@ class CustomCollectorsTest {
   @Test
   void toUniqueLinkedHashMap_throws_when_keys_are_duplicated() {
     AtomicInteger counter = new AtomicInteger(0);
+    Function<String, String> keyMapper = Function.identity();
+    Stream<String> stream = Stream.of("aaa", "bbb", "aaa");
     assertThatThrownBy(() ->
-        Stream.of("aaa", "bbb", "aaa")
-            .collect(CustomCollectors.toUniqueLinkedHashMap(
-                Function.identity(),
-                s -> s.toUpperCase(Locale.ENGLISH) + counter.getAndIncrement()
-            ))
+        stream.collect(CustomCollectors.toUniqueLinkedHashMap(
+            keyMapper,
+            s -> s.toUpperCase(Locale.ENGLISH) + counter.getAndIncrement()
+        ))
     )
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Duplicated keys are detected. Values of the duplicated key:AAA0, AAA2");

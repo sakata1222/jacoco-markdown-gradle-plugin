@@ -208,7 +208,7 @@ class JacocoMarkdownPluginTest {
       System.setOut(pw);
       mdTask.run();
     }
-    assertThat(bos.toString(StandardCharsets.UTF_8.toString())).isEqualTo("");
+    assertThat(bos.toString(StandardCharsets.UTF_8.toString())).isEmpty();
   }
 
   @Test
