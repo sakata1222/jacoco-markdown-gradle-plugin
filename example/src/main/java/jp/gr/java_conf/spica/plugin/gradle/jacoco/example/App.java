@@ -3,7 +3,14 @@
  */
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.example;
 
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class App {
+
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(MethodHandles.lookup().lookupClass());
 
   public String getGreeting(
       String[] args
@@ -18,6 +25,6 @@ public class App {
   }
 
   public static void main(String[] args) {
-    System.out.println(new App().getGreeting(args));
+    LOGGER.info(new App().getGreeting(args));
   }
 }

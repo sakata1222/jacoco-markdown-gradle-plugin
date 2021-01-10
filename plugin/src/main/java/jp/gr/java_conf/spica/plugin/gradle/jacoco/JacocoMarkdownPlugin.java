@@ -26,10 +26,8 @@ public class JacocoMarkdownPlugin implements Plugin<Project> {
                 JacocoMarkdownTask mdTask = tasks.register(
                     name,
                     JacocoMarkdownTask.class,
-                    task -> {
-                      task.configureByJacocoXml(
-                          project.getLayout().file(project.provider(xml::getDestination)));
-                    }
+                    task -> task.configureByJacocoXml(
+                        project.getLayout().file(project.provider(xml::getDestination)))
                 ).get();
                 mdTask.autoConfigureByJacocoReportTask(jacocoReport);
               });
