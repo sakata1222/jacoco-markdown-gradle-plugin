@@ -131,11 +131,12 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   @TaskAction
   public void run() throws IOException {
-    try (Writer mdWriter = Files.newBufferedWriter(outputMd().toPath(), StandardCharsets.UTF_8)) {
+    try (Writer mdWriter = Files
+        .newBufferedWriter(outputMdAsFile().toPath(), StandardCharsets.UTF_8)) {
       CoverageExportService exportService = new CoverageExportService(
           new JacocoCoveragesXmlRepository(new XmlParser(), jacocoXml()),
-          new CoverageJsonRepository(previousJson()),
-          new CoverageJsonRepository(outputJson()),
+          new CoverageJsonRepository(resolvePreviousJson()),
+          new CoverageJsonRepository(outputJsonAsFile()),
           new CoverageMarkdownReportService(),
           mdWriter,
           System.out
@@ -152,7 +153,7 @@ public class JacocoMarkdownTask extends DefaultTask {
   private void copyOutputJson() throws IOException {
     if (diffEnabled() && isDefaultPreviousJson()) {
       Files.copy(
-          outputJson().toPath(),
+          outputJsonAsFile().toPath(),
           defaultPreviousJson().toPath(),
           StandardCopyOption.REPLACE_EXISTING);
     }
@@ -163,14 +164,14 @@ public class JacocoMarkdownTask extends DefaultTask {
   }
 
   private File defaultPreviousJson() {
-    return new File(outputJson().getParentFile(), "previousJacocoSummary.json");
+    return new File(outputJsonAsFile().getParentFile(), "previousJacocoSummary.json");
   }
 
   private boolean isDefaultPreviousJson() {
-    return previousJson().equals(defaultPreviousJson());
+    return resolvePreviousJson().equals(defaultPreviousJson());
   }
 
-  File previousJson() {
+  File resolvePreviousJson() {
     return previousJson.map(RegularFile::getAsFile).getOrElse(defaultPreviousJson());
   }
 
@@ -186,11 +187,11 @@ public class JacocoMarkdownTask extends DefaultTask {
     return stdout.get();
   }
 
-  File outputMd() {
+  File outputMdAsFile() {
     return outputMd.getAsFile().get();
   }
 
-  File outputJson() {
+  File outputJsonAsFile() {
     return outputJson.getAsFile().get();
   }
 

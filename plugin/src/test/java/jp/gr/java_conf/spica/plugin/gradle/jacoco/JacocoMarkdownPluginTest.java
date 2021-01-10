@@ -53,7 +53,7 @@ class JacocoMarkdownPluginTest {
   }
 
   @Test
-  public void plugin_registers_a_task() throws IOException {
+  void plugin_registers_a_task() throws IOException {
     // Create a test project and apply the plugin
     Project project = ProjectBuilder.builder()
         .withProjectDir(projectRoot.toFile())
@@ -91,11 +91,11 @@ class JacocoMarkdownPluginTest {
         + "|LINE       |        5/69|  92.75%|";
     assertThat(bos.toString(StandardCharsets.UTF_8.toString()))
         .contains(expectedMd);
-    assertThat(mdTask.outputMd())
+    assertThat(mdTask.outputMdAsFile())
         .exists()
         .hasContent(expectedMd);
 
-    assertThat(mdTask.outputJson())
+    assertThat(mdTask.outputJsonAsFile())
         .exists()
         .hasContent(""
             + "{\n"
@@ -130,15 +130,15 @@ class JacocoMarkdownPluginTest {
             + "        \"covered\": 7\n"
             + "    }\n"
             + "}");
-    assertThat(mdTask.previousJson())
+    assertThat(mdTask.resolvePreviousJson())
         .exists()
-        .hasSameBinaryContentAs(mdTask.outputJson());
-    assertThat(mdTask.previousJson())
-        .isEqualTo(new File(mdTask.outputJson().getParent(), "previousJacocoSummary.json"));
+        .hasSameBinaryContentAs(mdTask.outputJsonAsFile());
+    assertThat(mdTask.resolvePreviousJson())
+        .isEqualTo(new File(mdTask.outputJsonAsFile().getParent(), "previousJacocoSummary.json"));
   }
 
   @Test
-  public void plugin_task_does_not_copy_when_diff_disabled() throws IOException {
+  void plugin_task_does_not_copy_when_diff_disabled() throws IOException {
     // Create a test project and apply the plugin
     Project project = ProjectBuilder.builder()
         .withProjectDir(projectRoot.toFile())
@@ -170,12 +170,12 @@ class JacocoMarkdownPluginTest {
       System.setOut(pw);
       mdTask.run();
     }
-    assertThat(mdTask.previousJson())
+    assertThat(mdTask.resolvePreviousJson())
         .doesNotExist();
   }
 
   @Test
-  public void plugin_default_task_stdout_can_be_disabled_by_extension() throws IOException {
+  void plugin_default_task_stdout_can_be_disabled_by_extension() throws IOException {
     // Create a test project and apply the plugin
     Project project = ProjectBuilder.builder()
         .withProjectDir(projectRoot.toFile())
@@ -212,7 +212,7 @@ class JacocoMarkdownPluginTest {
   }
 
   @Test
-  public void plugin_default_task_can_be_disabled_by_extension() throws IOException {
+  void plugin_default_task_can_be_disabled_by_extension() throws IOException {
     // Create a test project and apply the plugin
     Project project = ProjectBuilder.builder()
         .withProjectDir(projectRoot.toFile())

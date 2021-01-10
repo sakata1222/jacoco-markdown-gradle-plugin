@@ -152,11 +152,11 @@ class JacocoMarkdownTaskTest {
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
       IOUtils.copy(is, writer, StandardCharsets.UTF_8);
     }
-    assertThat(task.previousJson()).doesNotExist();
+    assertThat(task.resolvePreviousJson()).doesNotExist();
 
     task.run();
 
-    assertThat(task.previousJson()).exists();
+    assertThat(task.resolvePreviousJson()).exists();
   }
 
   @Test
@@ -170,11 +170,11 @@ class JacocoMarkdownTaskTest {
     }
     Path previousJson = projectRoot.resolve("previous.json");
     task.setPreviousJson(previousJson.toFile());
-    assertThat(task.previousJson()).doesNotExist();
+    assertThat(task.resolvePreviousJson()).doesNotExist();
 
     task.run();
 
-    assertThat(task.previousJson()).doesNotExist();
+    assertThat(task.resolvePreviousJson()).doesNotExist();
   }
 
   @Test
