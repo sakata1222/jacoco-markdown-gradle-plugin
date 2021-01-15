@@ -1,8 +1,9 @@
 # jacoco-markdown-gradle-plugin
 
+[![portal](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fgithub%2Fsakata1222%2Fjacoco-markdown%2Fcom.github.sakata1222.jacoco-markdown.gradle.plugin%2Fmaven-metadata.xml&label=Gradle+Plugin+Portal&logo=Gradle)](https://plugins.gradle.org/plugin/com.github.sakata1222.jacoco-markdown)
+
 [![build](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/actions?query=workflow%3A%22Java+CI+with+Gradle%22)
 [![codecov](https://codecov.io/gh/sakata1222/jacoco-markdown-gradle-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/sakata1222/jacoco-markdown-gradle-plugin)
-[![portal](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fgithub%2Fsakata1222%2Fjacoco-markdown%2Fcom.github.sakata1222.jacoco-markdown.gradle.plugin%2Fmaven-metadata.xml&label=Gradle+Plugin+Portal&logo=Gradle)](https://plugins.gradle.org/plugin/com.github.sakata1222.jacoco-markdown)
 
 [![sonar-reliability-rating](https://sonarcloud.io/api/project_badges/measure?project=sakata1222_jacoco-markdown-gradle-plugin&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=sakata1222_jacoco-markdown-gradle-plugin)
 [![sonar-security-rating](https://sonarcloud.io/api/project_badges/measure?project=sakata1222_jacoco-markdown-gradle-plugin&metric=security_rating)](https://sonarcloud.io/dashboard?id=sakata1222_jacoco-markdown-gradle-plugin)
