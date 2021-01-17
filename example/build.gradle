@@ -12,7 +12,7 @@ plugins {
   id 'jacoco'
   // Apply the application plugin to add support for building a CLI application.
   id 'application'
-  id "com.github.sakata1222.jacoco-markdown" version "0.3.1"
+  id "com.github.sakata1222.jacoco-markdown" version "0.3.2"
 }
 
 repositories {

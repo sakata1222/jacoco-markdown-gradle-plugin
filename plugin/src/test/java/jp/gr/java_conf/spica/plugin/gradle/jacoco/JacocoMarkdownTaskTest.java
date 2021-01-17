@@ -75,6 +75,8 @@ class JacocoMarkdownTaskTest {
         .as("When previousJson exists, the file is used automatically")
         .isEqualTo(defaultPreviousJson);
     assertThat(task.getTargetTypes().get()).containsExactly("INSTRUCTION", "BRANCH", "LINE");
+    assertThat(task.getEnableOutputJson().get()).isTrue();
+    assertThat(task.getEnableOutputMd().get()).isTrue();
     assertThat(task.getOutputJson().getAsFile().get())
         .isEqualTo(jacocoTest.resolve("jacocoSummary.json").toFile());
     assertThat(task.getOutputMd().getAsFile().get())
@@ -107,6 +109,12 @@ class JacocoMarkdownTaskTest {
 
     task.setTargetTypes(Arrays.asList("INSTRUCTION", "BRANCH"));
     assertThat(task.getTargetTypes().get()).containsExactly("INSTRUCTION", "BRANCH");
+
+    task.setEnableOutputJson(false);
+    assertThat(task.getEnableOutputJson().get()).isFalse();
+
+    task.setEnableOutputMd(false);
+    assertThat(task.getEnableOutputMd().get()).isFalse();
 
     task.setOutputJson(projectRoot.resolve("output.json").toFile());
     assertThat(task.getOutputJson().getAsFile().get())
@@ -144,7 +152,7 @@ class JacocoMarkdownTaskTest {
   }
 
   @Test
-  void run_copies_previous_json_when_previous_is_not_default() throws IOException {
+  void run_copies_previous_json_when_previous_is_default() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
     File xml = jacocoTask.getReports().getXml().getDestination();
     Files.createDirectories(xml.getParentFile().toPath());
@@ -160,6 +168,23 @@ class JacocoMarkdownTaskTest {
   }
 
   @Test
+  void run_does_not_copies_previous_json_when_diff_disabled() throws IOException {
+    JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
+    File xml = jacocoTask.getReports().getXml().getDestination();
+    Files.createDirectories(xml.getParentFile().toPath());
+    try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
+        InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
+      IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+    }
+    task.setDiffEnabled(false);
+    assertThat(task.resolvePreviousJson()).doesNotExist();
+
+    task.run();
+
+    assertThat(task.resolvePreviousJson()).doesNotExist();
+  }
+
+  @Test
   void run_does_not_copy_previous_json_when_previous_is_not_default() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
     File xml = jacocoTask.getReports().getXml().getDestination();
@@ -170,6 +195,23 @@ class JacocoMarkdownTaskTest {
     }
     Path previousJson = projectRoot.resolve("previous.json");
     task.setPreviousJson(previousJson.toFile());
+    assertThat(task.resolvePreviousJson()).doesNotExist();
+
+    task.run();
+
+    assertThat(task.resolvePreviousJson()).doesNotExist();
+  }
+
+  @Test
+  void run_does_not_copy_previous_json_when_output_disabled() throws IOException {
+    JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
+    File xml = jacocoTask.getReports().getXml().getDestination();
+    Files.createDirectories(xml.getParentFile().toPath());
+    try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
+        InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
+      IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+    }
+    task.setEnableOutputJson(false);
     assertThat(task.resolvePreviousJson()).doesNotExist();
 
     task.run();

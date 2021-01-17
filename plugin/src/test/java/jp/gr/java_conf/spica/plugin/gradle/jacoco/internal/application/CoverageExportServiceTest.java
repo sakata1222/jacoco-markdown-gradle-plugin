@@ -1,5 +1,7 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
@@ -22,7 +24,6 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesWriteRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdown;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageMarkdownReportService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CoverageExportServiceTest {
@@ -55,12 +56,87 @@ class CoverageExportServiceTest {
         markdownWriter,
         stdout
     );
-    ExportRequest request = new ExportRequest(true, true, types);
+    ExportRequest request = new ExportRequest(true, true, types, true, true);
 
     service.export(request);
 
-    verify(stdout, times(1)).println(eq("difference-report"));
-    verify(markdownWriter, times(1)).write(eq("difference-report"));
+    verify(writeRepository, times(1)).writeAll(jacoco);
+    verify(stdout, times(1)).println("difference-report");
+    verify(markdownWriter, times(1)).write("difference-report");
+  }
+
+  @Test
+  void export_does_not_write_json_file()
+      throws IOException {
+    IJacocoCoverageRepository jacocoRepository = mock(IJacocoCoverageRepository.class);
+    IOwnCoveragesReadRepository readRepository = mock(IOwnCoveragesReadRepository.class);
+    IOwnCoveragesWriteRepository writeRepository = mock(IOwnCoveragesWriteRepository.class);
+    CoverageMarkdownReportService reportService = mock(CoverageMarkdownReportService.class);
+    Writer markdownWriter = mock(Writer.class);
+    PrintStream stdout = mock(PrintStream.class);
+
+    CoverageTypes types = new CoverageTypes(Arrays.asList("foo"));
+    Coverages jacoco = mock(Coverages.class);
+    when(jacocoRepository.readAll()).thenReturn(jacoco);
+    Coverages previous = mock(Coverages.class);
+    when(readRepository.readAll()).thenReturn(previous);
+    CoverageMarkdown md = mock(CoverageMarkdown.class);
+    when(reportService.differenceReport(eq(types), same(previous), same(jacoco)))
+        .thenReturn(md);
+    when(md.toMarkdown()).thenReturn("difference-report");
+
+    CoverageExportService service = new CoverageExportService(
+        jacocoRepository,
+        readRepository,
+        writeRepository,
+        reportService,
+        markdownWriter,
+        stdout
+    );
+    ExportRequest request = new ExportRequest(true, true, types, false, true);
+
+    service.export(request);
+
+    verify(writeRepository, never()).writeAll(any());
+    verify(stdout, times(1)).println("difference-report");
+    verify(markdownWriter, times(1)).write("difference-report");
+  }
+
+  @Test
+  void export_does_not_write_md_file()
+      throws IOException {
+    IJacocoCoverageRepository jacocoRepository = mock(IJacocoCoverageRepository.class);
+    IOwnCoveragesReadRepository readRepository = mock(IOwnCoveragesReadRepository.class);
+    IOwnCoveragesWriteRepository writeRepository = mock(IOwnCoveragesWriteRepository.class);
+    CoverageMarkdownReportService reportService = mock(CoverageMarkdownReportService.class);
+    Writer markdownWriter = mock(Writer.class);
+    PrintStream stdout = mock(PrintStream.class);
+
+    CoverageTypes types = new CoverageTypes(Arrays.asList("foo"));
+    Coverages jacoco = mock(Coverages.class);
+    when(jacocoRepository.readAll()).thenReturn(jacoco);
+    Coverages previous = mock(Coverages.class);
+    when(readRepository.readAll()).thenReturn(previous);
+    CoverageMarkdown md = mock(CoverageMarkdown.class);
+    when(reportService.differenceReport(eq(types), same(previous), same(jacoco)))
+        .thenReturn(md);
+    when(md.toMarkdown()).thenReturn("difference-report");
+
+    CoverageExportService service = new CoverageExportService(
+        jacocoRepository,
+        readRepository,
+        writeRepository,
+        reportService,
+        markdownWriter,
+        stdout
+    );
+    ExportRequest request = new ExportRequest(true, true, types, true, false);
+
+    service.export(request);
+
+    verify(writeRepository, times(1)).writeAll(jacoco);
+    verify(stdout, times(1)).println("difference-report");
+    verify(markdownWriter, never()).write(anyString());
   }
 
   @Test
@@ -90,11 +166,12 @@ class CoverageExportServiceTest {
         stdout
     );
 
-    ExportRequest request = new ExportRequest(false, false, types);
+    ExportRequest request = new ExportRequest(false, false, types, true, true);
     service.export(request);
 
+    verify(writeRepository, times(1)).writeAll(jacoco);
     verify(stdout, never()).println(anyString());
-    verify(markdownWriter, times(1)).write(eq("current-report"));
+    verify(markdownWriter, times(1)).write("current-report");
   }
 
   @Test
@@ -125,8 +202,8 @@ class CoverageExportServiceTest {
         stdout
     );
 
-    ExportRequest request = new ExportRequest(false, false, types);
-    Assertions.assertThatThrownBy(() -> service.export(request))
+    ExportRequest request = new ExportRequest(false, false, types, true, true);
+    assertThatThrownBy(() -> service.export(request))
         .isInstanceOf(UncheckedIOException.class);
   }
 

@@ -7,12 +7,16 @@ public class ExportRequest {
   private final boolean diffEnabled;
   private final boolean stdout;
   private final CoverageTypes targetTypes;
+  private final boolean outputJson;
+  private final boolean outputMd;
 
   public ExportRequest(boolean diffEnabled, boolean stdout,
-      CoverageTypes targetTypes) {
+      CoverageTypes targetTypes, boolean outputJson, boolean outputMd) {
     this.diffEnabled = diffEnabled;
     this.stdout = stdout;
     this.targetTypes = targetTypes;
+    this.outputJson = outputJson;
+    this.outputMd = outputMd;
   }
 
   public boolean diffEnabled() {
@@ -25,5 +29,13 @@ public class ExportRequest {
 
   public CoverageTypes getTargetTypes() {
     return targetTypes;
+  }
+
+  public boolean outputJson() {
+    return outputJson;
+  }
+
+  public boolean outputMd() {
+    return outputMd;
   }
 }
