@@ -65,6 +65,12 @@ public class JacocoMarkdownTask extends DefaultTask {
   @Input
   final ListProperty<String> targetTypes;
 
+  @Input
+  final Property<Boolean> enableOutputJson;
+
+  @Input
+  final Property<Boolean> enableOutputMd;
+
   @OutputFile
   final RegularFileProperty outputJson;
 
@@ -82,6 +88,8 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.stdout = objectFactory.property(Boolean.class).convention(true);
     this.targetTypes = objectFactory.listProperty(String.class)
         .convention(Arrays.asList("INSTRUCTION", "BRANCH", "LINE"));
+    this.enableOutputJson = objectFactory.property(Boolean.class).convention(true);
+    this.enableOutputMd = objectFactory.property(Boolean.class).convention(true);
     final Supplier<File> xmlParent = () -> this.jacocoXml
         .map(RegularFile::getAsFile)
         .get()
@@ -142,7 +150,12 @@ public class JacocoMarkdownTask extends DefaultTask {
           System.out
       );
       exportService.export(
-          new ExportRequest(diffEnabled(), stdout(), new CoverageTypes(targetTypes()))
+          new ExportRequest(
+              diffEnabled(),
+              stdout(),
+              new CoverageTypes(targetTypes()),
+              enableOutputJson(),
+              enableOutputMd())
       );
       copyOutputJson();
     } catch (ParserConfigurationException | SAXException e) {
@@ -151,7 +164,7 @@ public class JacocoMarkdownTask extends DefaultTask {
   }
 
   private void copyOutputJson() throws IOException {
-    if (diffEnabled() && isDefaultPreviousJson()) {
+    if (diffEnabled() && isDefaultPreviousJson() && outputJsonAsFile().exists()) {
       Files.copy(
           outputJsonAsFile().toPath(),
           defaultPreviousJson().toPath(),
@@ -185,6 +198,14 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   private boolean stdout() {
     return stdout.get();
+  }
+
+  private boolean enableOutputJson() {
+    return enableOutputJson.get();
+  }
+
+  private boolean enableOutputMd() {
+    return enableOutputMd.get();
   }
 
   File outputMdAsFile() {
@@ -243,6 +264,22 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   public ListProperty<String> getTargetTypes() {
     return targetTypes;
+  }
+
+  public void setEnableOutputJson(boolean enableOutputJson) {
+    this.enableOutputJson.set(enableOutputJson);
+  }
+
+  public Property<Boolean> getEnableOutputJson() {
+    return enableOutputJson;
+  }
+
+  public void setEnableOutputMd(boolean enableOutputMd) {
+    this.enableOutputMd.set(enableOutputMd);
+  }
+
+  public Property<Boolean> getEnableOutputMd() {
+    return enableOutputMd;
   }
 
   public void setOutputJson(File outputJson) {

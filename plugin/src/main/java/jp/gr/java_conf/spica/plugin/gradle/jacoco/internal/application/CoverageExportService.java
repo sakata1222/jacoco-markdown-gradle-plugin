@@ -38,10 +38,15 @@ public class CoverageExportService {
   public void export(ExportRequest request) {
     Coverages currentCoverages = jacocoCoverageRepository.readAll();
     CoverageMarkdown markdown = buildMd(request, currentCoverages);
-    currentCoverageWriteRepository.writeAll(currentCoverages);
+    if (request.outputJson()) {
+      currentCoverageWriteRepository.writeAll(currentCoverages);
+    }
     String formattedMd = markdown.toMarkdown();
     if (request.stdout()) {
       stdout.println(formattedMd);
+    }
+    if (!request.outputMd()) {
+      return;
     }
     try {
       markdownWriter.write(formattedMd);
