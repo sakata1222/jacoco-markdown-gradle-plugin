@@ -18,12 +18,11 @@ public class CoveragesAssert extends AbstractAssert<CoveragesAssert, Coverages> 
     Map<String, Coverage> expectedCoverages = expected.typeToCoverage();
     assertThat(actualCoverages.keySet())
         .isEqualTo(expectedCoverages.keySet());
-    actualCoverages.entrySet().forEach(entry -> {
-          Coverage e = expectedCoverages.get(entry.getKey());
-          new CoverageAssert(entry.getValue())
-              .isEqualTo(e);
-        }
-    );
+    actualCoverages.forEach((key, value) -> {
+      Coverage e = expectedCoverages.get(key);
+      new CoverageAssert(value)
+          .isEqualTo(e);
+    });
     return this;
   }
 }

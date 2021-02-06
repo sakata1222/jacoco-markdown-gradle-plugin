@@ -67,9 +67,9 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
 
   static class CoverageJson {
 
-    private String type;
-    private int covered;
-    private int missed;
+    private final String type;
+    private final int covered;
+    private final int missed;
 
     public CoverageJson(Coverage coverage) {
       this.type = coverage.getType();
