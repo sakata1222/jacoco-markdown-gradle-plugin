@@ -17,6 +17,7 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Collections;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IJacocoCoverageRepository;
@@ -38,7 +39,7 @@ class CoverageExportServiceTest {
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
-    CoverageTypes types = new CoverageTypes(Arrays.asList("foo"));
+    CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
     Coverages jacoco = mock(Coverages.class);
     when(jacocoRepository.readAll()).thenReturn(jacoco);
     Coverages previous = mock(Coverages.class);
@@ -75,7 +76,7 @@ class CoverageExportServiceTest {
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
-    CoverageTypes types = new CoverageTypes(Arrays.asList("foo"));
+    CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
     Coverages jacoco = mock(Coverages.class);
     when(jacocoRepository.readAll()).thenReturn(jacoco);
     Coverages previous = mock(Coverages.class);
@@ -112,7 +113,7 @@ class CoverageExportServiceTest {
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
-    CoverageTypes types = new CoverageTypes(Arrays.asList("foo"));
+    CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
     Coverages jacoco = mock(Coverages.class);
     when(jacocoRepository.readAll()).thenReturn(jacoco);
     Coverages previous = mock(Coverages.class);
@@ -149,7 +150,7 @@ class CoverageExportServiceTest {
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
-    CoverageTypes types = new CoverageTypes(Arrays.asList("foo"));
+    CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
     Coverages jacoco = mock(Coverages.class);
     when(jacocoRepository.readAll()).thenReturn(jacoco);
     CoverageMarkdown md = mock(CoverageMarkdown.class);
@@ -184,7 +185,7 @@ class CoverageExportServiceTest {
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
-    CoverageTypes types = new CoverageTypes(Arrays.asList("foo"));
+    CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
     Coverages jacoco = mock(Coverages.class);
     when(jacocoRepository.readAll()).thenReturn(jacoco);
     CoverageMarkdown md = mock(CoverageMarkdown.class);

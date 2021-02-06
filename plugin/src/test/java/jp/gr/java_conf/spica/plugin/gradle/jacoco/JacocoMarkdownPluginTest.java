@@ -212,7 +212,7 @@ class JacocoMarkdownPluginTest {
   }
 
   @Test
-  void plugin_default_task_can_be_disabled_by_extension() throws IOException {
+  void plugin_default_task_can_be_disabled_by_extension() {
     // Create a test project and apply the plugin
     Project project = ProjectBuilder.builder()
         .withProjectDir(projectRoot.toFile())
