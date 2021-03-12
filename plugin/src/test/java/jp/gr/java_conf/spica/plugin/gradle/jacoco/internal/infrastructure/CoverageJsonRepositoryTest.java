@@ -7,7 +7,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.test.TestPaths;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,13 +25,12 @@ class CoverageJsonRepositoryTest {
     TestPaths.removeTemp();
   }
 
-
   @Test
   void readAll() {
     CoverageJsonRepository repository = new CoverageJsonRepository(
         TestPaths.testData().resolve("jacocoSummary.json").toFile());
-    Coverages coverages = repository.readAll();
-    Coverages expected = new Coverages(
+    CoverageSummary coverages = repository.readAll();
+    CoverageSummary expected = new CoverageSummary(
         Arrays.asList(
             new Coverage("INSTRUCTION", 230, 15),
             new Coverage("BRANCH", 31, 3),
@@ -49,7 +48,7 @@ class CoverageJsonRepositoryTest {
   void writeAll() {
     File output = TestPaths.temp().resolve("jacocoSummary.json").toFile();
     CoverageJsonRepository repository = new CoverageJsonRepository(output);
-    repository.writeAll(new Coverages(
+    repository.writeAll(new CoverageSummary(
         Arrays.asList(
             new Coverage("INSTRUCTION", 230, 15),
             new Coverage("BRANCH", 31, 3),

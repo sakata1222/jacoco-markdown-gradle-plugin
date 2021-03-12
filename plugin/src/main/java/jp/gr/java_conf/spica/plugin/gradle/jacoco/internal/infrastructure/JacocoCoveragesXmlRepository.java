@@ -8,7 +8,8 @@ import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageReport;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IJacocoCoverageRepository;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
@@ -36,7 +37,7 @@ public class JacocoCoveragesXmlRepository implements IJacocoCoverageRepository {
   }
 
   @Override
-  public Coverages readAll() {
+  public CoverageReport readAll() {
     try {
       Node root = xmlParser.parse(jacocoXmlFile);
       @SuppressWarnings("unchecked")
@@ -46,7 +47,10 @@ public class JacocoCoveragesXmlRepository implements IJacocoCoverageRepository {
               Integer.parseInt(node.get("@covered").toString()),
               Integer.parseInt(node.get("@missed").toString())))
           .collect(Collectors.toList());
-      return new Coverages(coverages);
+      return new CoverageReport(
+          new CoverageSummary(coverages),
+          null
+      );
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     } catch (SAXException e) {

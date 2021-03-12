@@ -9,7 +9,7 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.utils.CustomCollector
 
 public class Coverages {
 
-  private final Map<String, Coverage> coverageMap;
+  private final Map<String, Coverage> typeToCoverage;
 
   public Coverages(List<Coverage> coverageList) {
     this(coverageList.stream()
@@ -20,27 +20,27 @@ public class Coverages {
     );
   }
 
-  public Coverages(Map<String, Coverage> coverageMap) {
-    this.coverageMap = Collections.unmodifiableMap(coverageMap);
+  public Coverages(Map<String, Coverage> typeToCoverage) {
+    this.typeToCoverage = Collections.unmodifiableMap(typeToCoverage);
   }
 
   public Map<String, Coverage> typeToCoverage() {
-    return coverageMap;
+    return typeToCoverage;
   }
 
   public List<Coverage> filter(CoverageTypes types) {
-    return coverageMap.entrySet().stream()
+    return typeToCoverage.entrySet().stream()
         .filter(e -> types.contains(e.getKey()))
         .map(Map.Entry::getValue)
         .collect(Collectors.toList());
   }
 
   public CoveragesDifference diff(Coverages previous) {
-    Map<String, CoverageDifference> typeToDifferences = coverageMap.entrySet().stream()
+    Map<String, CoverageDifference> typeToDifferences = typeToCoverage.entrySet().stream()
         .collect(CustomCollectors.toUniqueLinkedHashMap(
             Map.Entry::getKey,
             e -> new CoverageDifference(
-                previous.coverageMap.getOrDefault(e.getKey(), null),
+                previous.typeToCoverage.getOrDefault(e.getKey(), null),
                 e.getValue())
         ));
     return new CoveragesDifference(typeToDifferences);

@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.stream.Collectors;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesReadRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesWriteRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.utils.CustomCollectors;
@@ -32,7 +32,7 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
   }
 
   @Override
-  public void writeAll(Coverages coverages) {
+  public void writeAll(CoverageSummary coverages) {
     try (Writer writer = Files.newBufferedWriter(jsonFile.toPath(), StandardCharsets.UTF_8)) {
       writer.write(new JsonBuilder(toMap(coverages)).toPrettyString());
     } catch (IOException e) {
@@ -42,14 +42,14 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
 
   @Override
   @SuppressWarnings("unchecked")
-  public Coverages readAll() {
+  public CoverageSummary readAll() {
     if (!jsonFile.exists()) {
       return null;
     }
     return fromMap((Map<String, Map<String, Object>>) jsonSlurper.parse(jsonFile));
   }
 
-  private Map<String, CoverageJson> toMap(Coverages coverages) {
+  private Map<String, CoverageJson> toMap(CoverageSummary coverages) {
     return coverages.typeToCoverage().entrySet().stream()
         .collect(CustomCollectors.toUniqueLinkedHashMap(
             Map.Entry::getKey,
@@ -57,8 +57,8 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
         ));
   }
 
-  private Coverages fromMap(Map<String, Map<String, Object>> map) {
-    return new Coverages(map.values().stream()
+  private CoverageSummary fromMap(Map<String, Map<String, Object>> map) {
+    return new CoverageSummary(map.values().stream()
         .map(CoverageJson::new)
         .map(CoverageJson::toCoverage)
         .collect(Collectors.toList())

@@ -1,5 +1,6 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.test.assertions;
 
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
 
 public class CustomAssertions {
@@ -9,5 +10,9 @@ public class CustomAssertions {
 
   public static CoveragesAssert assertThat(Coverages actual) {
     return new CoveragesAssert(actual);
+  }
+
+  public static CoverageSummaryAssert assertThat(CoverageSummary actual) {
+    return new CoverageSummaryAssert(actual);
   }
 }

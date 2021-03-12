@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CoverageMarkdown {
+public class CoverageMarkdownTable {
 
   private final List<CoverageMarkdownRow> rows;
 
-  public CoverageMarkdown() {
+  public CoverageMarkdownTable() {
     this.rows = new ArrayList<>();
     rows.add(CoverageMarkdownRow.header());
     rows.add(CoverageMarkdownRow.separator());

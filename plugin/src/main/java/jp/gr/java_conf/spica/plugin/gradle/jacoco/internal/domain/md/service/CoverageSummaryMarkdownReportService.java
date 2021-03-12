@@ -1,18 +1,18 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service;
 
 import java.util.Objects;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoveragesDifference;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdown;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdownRow;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdownTable;
 
-public class CoverageMarkdownReportService {
+public class CoverageSummaryMarkdownReportService {
 
-  public CoverageMarkdown currentReport(
+  public CoverageMarkdownTable currentReport(
       CoverageTypes reportTargets,
-      Coverages current) {
-    CoverageMarkdown md = new CoverageMarkdown();
+      CoverageSummary current) {
+    CoverageMarkdownTable md = new CoverageMarkdownTable();
     current.filter(reportTargets)
         .stream()
         .map(CoverageMarkdownRow::currentReport)
@@ -20,14 +20,14 @@ public class CoverageMarkdownReportService {
     return md;
   }
 
-  public CoverageMarkdown differenceReport(
+  public CoverageMarkdownTable differenceReport(
       CoverageTypes reportTargets,
-      Coverages previous,
-      Coverages current) {
+      CoverageSummary previous,
+      CoverageSummary current) {
     if (Objects.isNull(previous)) {
       return currentReport(reportTargets, current);
     }
-    CoverageMarkdown md = new CoverageMarkdown();
+    CoverageMarkdownTable md = new CoverageMarkdownTable();
     CoveragesDifference difference = current.diff(previous);
     difference.filter(reportTargets)
         .stream()

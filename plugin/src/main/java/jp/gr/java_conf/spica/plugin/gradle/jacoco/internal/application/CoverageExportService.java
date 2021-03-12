@@ -4,19 +4,20 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageReport;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IJacocoCoverageRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesReadRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesWriteRepository;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdown;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageMarkdownReportService;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdownTable;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageSummaryMarkdownReportService;
 
 public class CoverageExportService {
 
   private final IJacocoCoverageRepository jacocoCoverageRepository;
   private final IOwnCoveragesReadRepository previousCoverageReadRepository;
   private final IOwnCoveragesWriteRepository currentCoverageWriteRepository;
-  private final CoverageMarkdownReportService reportService;
+  private final CoverageSummaryMarkdownReportService summryReportService;
   private final Writer markdownWriter;
   private final PrintStream stdout;
 
@@ -24,22 +25,22 @@ public class CoverageExportService {
       IJacocoCoverageRepository jacocoCoverageRepository,
       IOwnCoveragesReadRepository previousCoverageReadRepository,
       IOwnCoveragesWriteRepository currentCoverageWriteRepository,
-      CoverageMarkdownReportService reportService,
+      CoverageSummaryMarkdownReportService summryReportService,
       Writer markdownWriter,
       PrintStream stdout) {
     this.jacocoCoverageRepository = jacocoCoverageRepository;
     this.previousCoverageReadRepository = previousCoverageReadRepository;
     this.currentCoverageWriteRepository = currentCoverageWriteRepository;
-    this.reportService = reportService;
+    this.summryReportService = summryReportService;
     this.markdownWriter = markdownWriter;
     this.stdout = stdout;
   }
 
   public void export(ExportRequest request) {
-    Coverages currentCoverages = jacocoCoverageRepository.readAll();
-    CoverageMarkdown markdown = buildMd(request, currentCoverages);
+    CoverageReport currentCoverages = jacocoCoverageRepository.readAll();
+    CoverageMarkdownTable markdown = buildMd(request, currentCoverages);
     if (request.outputJson()) {
-      currentCoverageWriteRepository.writeAll(currentCoverages);
+      currentCoverageWriteRepository.writeAll(currentCoverages.summary());
     }
     String formattedMd = markdown.toMarkdown();
     if (request.stdout()) {
@@ -55,12 +56,14 @@ public class CoverageExportService {
     }
   }
 
-  private CoverageMarkdown buildMd(ExportRequest request, Coverages current) {
+  private CoverageMarkdownTable buildMd(ExportRequest request, CoverageReport current) {
     if (!request.diffEnabled()) {
-      return reportService.currentReport(request.getTargetTypes(), current);
+      return summryReportService.currentReport(request.getTargetTypes(), current.summary());
     }
-    Coverages previous = previousCoverageReadRepository.readAll();
-    return reportService.differenceReport(request.getTargetTypes(), previous, current);
+    CoverageSummary previous = previousCoverageReadRepository.readAll();
+    return summryReportService.differenceReport(
+        request.getTargetTypes(),
+        previous, current.summary()
+    );
   }
-
 }

@@ -2,5 +2,5 @@ package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.mode
 
 public interface IJacocoCoverageRepository {
 
-  Coverages readAll();
+  CoverageReport readAll();
 }

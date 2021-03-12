@@ -15,7 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.CoverageExportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.ExportRequest;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageMarkdownReportService;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageSummaryMarkdownReportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.CoverageJsonRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.JacocoCoveragesXmlRepository;
 import org.gradle.api.DefaultTask;
@@ -145,7 +145,7 @@ public class JacocoMarkdownTask extends DefaultTask {
           new JacocoCoveragesXmlRepository(new XmlParser(), jacocoXml()),
           new CoverageJsonRepository(resolvePreviousJson()),
           new CoverageJsonRepository(outputJsonAsFile()),
-          new CoverageMarkdownReportService(),
+          new CoverageSummaryMarkdownReportService(),
           mdWriter,
           System.out
       );

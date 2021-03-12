@@ -16,15 +16,15 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.Collections;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageReport;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IJacocoCoverageRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesReadRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IOwnCoveragesWriteRepository;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdown;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageMarkdownReportService;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdownTable;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageSummaryMarkdownReportService;
 import org.junit.jupiter.api.Test;
 
 class CoverageExportServiceTest {
@@ -35,17 +35,21 @@ class CoverageExportServiceTest {
     IJacocoCoverageRepository jacocoRepository = mock(IJacocoCoverageRepository.class);
     IOwnCoveragesReadRepository readRepository = mock(IOwnCoveragesReadRepository.class);
     IOwnCoveragesWriteRepository writeRepository = mock(IOwnCoveragesWriteRepository.class);
-    CoverageMarkdownReportService reportService = mock(CoverageMarkdownReportService.class);
+    CoverageSummaryMarkdownReportService reportService = mock(
+        CoverageSummaryMarkdownReportService.class
+    );
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
     CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
-    Coverages jacoco = mock(Coverages.class);
-    when(jacocoRepository.readAll()).thenReturn(jacoco);
-    Coverages previous = mock(Coverages.class);
-    when(readRepository.readAll()).thenReturn(previous);
-    CoverageMarkdown md = mock(CoverageMarkdown.class);
-    when(reportService.differenceReport(eq(types), same(previous), same(jacoco)))
+    CoverageReport jacocoReport = mock(CoverageReport.class);
+    CoverageSummary currentSummary = mock(CoverageSummary.class);
+    when(jacocoReport.summary()).thenReturn(currentSummary);
+    when(jacocoRepository.readAll()).thenReturn(jacocoReport);
+    CoverageSummary previousSummary = mock(CoverageSummary.class);
+    when(readRepository.readAll()).thenReturn(previousSummary);
+    CoverageMarkdownTable md = mock(CoverageMarkdownTable.class);
+    when(reportService.differenceReport(eq(types), same(previousSummary), same(currentSummary)))
         .thenReturn(md);
     when(md.toMarkdown()).thenReturn("difference-report");
 
@@ -61,7 +65,7 @@ class CoverageExportServiceTest {
 
     service.export(request);
 
-    verify(writeRepository, times(1)).writeAll(jacoco);
+    verify(writeRepository, times(1)).writeAll(currentSummary);
     verify(stdout, times(1)).println("difference-report");
     verify(markdownWriter, times(1)).write("difference-report");
   }
@@ -72,17 +76,22 @@ class CoverageExportServiceTest {
     IJacocoCoverageRepository jacocoRepository = mock(IJacocoCoverageRepository.class);
     IOwnCoveragesReadRepository readRepository = mock(IOwnCoveragesReadRepository.class);
     IOwnCoveragesWriteRepository writeRepository = mock(IOwnCoveragesWriteRepository.class);
-    CoverageMarkdownReportService reportService = mock(CoverageMarkdownReportService.class);
+    CoverageSummaryMarkdownReportService reportService = mock(
+        CoverageSummaryMarkdownReportService.class
+    );
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
     CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
-    Coverages jacoco = mock(Coverages.class);
-    when(jacocoRepository.readAll()).thenReturn(jacoco);
-    Coverages previous = mock(Coverages.class);
-    when(readRepository.readAll()).thenReturn(previous);
-    CoverageMarkdown md = mock(CoverageMarkdown.class);
-    when(reportService.differenceReport(eq(types), same(previous), same(jacoco)))
+    CoverageReport jacocoCoverage = mock(CoverageReport.class);
+    CoverageSummary currentSummary = mock(CoverageSummary.class);
+    when(jacocoCoverage.summary()).thenReturn(currentSummary);
+    when(jacocoRepository.readAll()).thenReturn(jacocoCoverage);
+
+    CoverageSummary previousSummary = mock(CoverageSummary.class);
+    when(readRepository.readAll()).thenReturn(previousSummary);
+    CoverageMarkdownTable md = mock(CoverageMarkdownTable.class);
+    when(reportService.differenceReport(eq(types), same(previousSummary), same(currentSummary)))
         .thenReturn(md);
     when(md.toMarkdown()).thenReturn("difference-report");
 
@@ -109,17 +118,21 @@ class CoverageExportServiceTest {
     IJacocoCoverageRepository jacocoRepository = mock(IJacocoCoverageRepository.class);
     IOwnCoveragesReadRepository readRepository = mock(IOwnCoveragesReadRepository.class);
     IOwnCoveragesWriteRepository writeRepository = mock(IOwnCoveragesWriteRepository.class);
-    CoverageMarkdownReportService reportService = mock(CoverageMarkdownReportService.class);
+    CoverageSummaryMarkdownReportService reportService = mock(
+        CoverageSummaryMarkdownReportService.class
+    );
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
     CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
-    Coverages jacoco = mock(Coverages.class);
-    when(jacocoRepository.readAll()).thenReturn(jacoco);
-    Coverages previous = mock(Coverages.class);
-    when(readRepository.readAll()).thenReturn(previous);
-    CoverageMarkdown md = mock(CoverageMarkdown.class);
-    when(reportService.differenceReport(eq(types), same(previous), same(jacoco)))
+    CoverageReport jacocoReport = mock(CoverageReport.class);
+    CoverageSummary currentSummary = mock(CoverageSummary.class);
+    when(jacocoReport.summary()).thenReturn(currentSummary);
+    when(jacocoRepository.readAll()).thenReturn(jacocoReport);
+    CoverageSummary previousSummary = mock(CoverageSummary.class);
+    when(readRepository.readAll()).thenReturn(previousSummary);
+    CoverageMarkdownTable md = mock(CoverageMarkdownTable.class);
+    when(reportService.differenceReport(eq(types), same(previousSummary), same(currentSummary)))
         .thenReturn(md);
     when(md.toMarkdown()).thenReturn("difference-report");
 
@@ -135,7 +148,7 @@ class CoverageExportServiceTest {
 
     service.export(request);
 
-    verify(writeRepository, times(1)).writeAll(jacoco);
+    verify(writeRepository, times(1)).writeAll(currentSummary);
     verify(stdout, times(1)).println("difference-report");
     verify(markdownWriter, never()).write(anyString());
   }
@@ -146,15 +159,19 @@ class CoverageExportServiceTest {
     IJacocoCoverageRepository jacocoRepository = mock(IJacocoCoverageRepository.class);
     IOwnCoveragesReadRepository readRepository = mock(IOwnCoveragesReadRepository.class);
     IOwnCoveragesWriteRepository writeRepository = mock(IOwnCoveragesWriteRepository.class);
-    CoverageMarkdownReportService reportService = mock(CoverageMarkdownReportService.class);
+    CoverageSummaryMarkdownReportService reportService = mock(
+        CoverageSummaryMarkdownReportService.class
+    );
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
     CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
-    Coverages jacoco = mock(Coverages.class);
-    when(jacocoRepository.readAll()).thenReturn(jacoco);
-    CoverageMarkdown md = mock(CoverageMarkdown.class);
-    when(reportService.currentReport(eq(types), same(jacoco)))
+    CoverageReport jacocoReport = mock(CoverageReport.class);
+    CoverageSummary currentSummary = mock(CoverageSummary.class);
+    when(jacocoReport.summary()).thenReturn(currentSummary);
+    when(jacocoRepository.readAll()).thenReturn(jacocoReport);
+    CoverageMarkdownTable md = mock(CoverageMarkdownTable.class);
+    when(reportService.currentReport(eq(types), same(currentSummary)))
         .thenReturn(md);
     when(md.toMarkdown()).thenReturn("current-report");
 
@@ -170,7 +187,7 @@ class CoverageExportServiceTest {
     ExportRequest request = new ExportRequest(false, false, types, true, true);
     service.export(request);
 
-    verify(writeRepository, times(1)).writeAll(jacoco);
+    verify(writeRepository, times(1)).writeAll(currentSummary);
     verify(stdout, never()).println(anyString());
     verify(markdownWriter, times(1)).write("current-report");
   }
@@ -181,15 +198,19 @@ class CoverageExportServiceTest {
     IJacocoCoverageRepository jacocoRepository = mock(IJacocoCoverageRepository.class);
     IOwnCoveragesReadRepository readRepository = mock(IOwnCoveragesReadRepository.class);
     IOwnCoveragesWriteRepository writeRepository = mock(IOwnCoveragesWriteRepository.class);
-    CoverageMarkdownReportService reportService = mock(CoverageMarkdownReportService.class);
+    CoverageSummaryMarkdownReportService reportService = mock(
+        CoverageSummaryMarkdownReportService.class
+    );
     Writer markdownWriter = mock(Writer.class);
     PrintStream stdout = mock(PrintStream.class);
 
     CoverageTypes types = new CoverageTypes(Collections.singletonList("foo"));
-    Coverages jacoco = mock(Coverages.class);
-    when(jacocoRepository.readAll()).thenReturn(jacoco);
-    CoverageMarkdown md = mock(CoverageMarkdown.class);
-    when(reportService.currentReport(eq(types), same(jacoco)))
+    CoverageReport jacocoReport = mock(CoverageReport.class);
+    CoverageSummary currentSummary = mock(CoverageSummary.class);
+    when(jacocoReport.summary()).thenReturn(currentSummary);
+    when(jacocoRepository.readAll()).thenReturn(jacocoReport);
+    CoverageMarkdownTable md = mock(CoverageMarkdownTable.class);
+    when(reportService.currentReport(eq(types), same(currentSummary)))
         .thenReturn(md);
     when(md.toMarkdown()).thenReturn("current-report");
     doThrow(new IOException()).when(markdownWriter).write(anyString());
@@ -207,5 +228,4 @@ class CoverageExportServiceTest {
     assertThatThrownBy(() -> service.export(request))
         .isInstanceOf(UncheckedIOException.class);
   }
-
 }
