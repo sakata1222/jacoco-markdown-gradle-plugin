@@ -4,34 +4,34 @@ import java.util.Objects;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoveragesDifference;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdownRow;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdownTable;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageSummaryMarkdownRowBuilder;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageSummaryMarkdownTable;
 
 public class CoverageSummaryMarkdownReportService {
 
-  public CoverageMarkdownTable currentReport(
+  public CoverageSummaryMarkdownTable currentReport(
       CoverageTypes reportTargets,
       CoverageSummary current) {
-    CoverageMarkdownTable md = new CoverageMarkdownTable();
+    CoverageSummaryMarkdownTable md = new CoverageSummaryMarkdownTable();
     current.filter(reportTargets)
         .stream()
-        .map(CoverageMarkdownRow::currentReport)
+        .map(CoverageSummaryMarkdownRowBuilder::currentReport)
         .forEach(md::addRow);
     return md;
   }
 
-  public CoverageMarkdownTable differenceReport(
+  public CoverageSummaryMarkdownTable differenceReport(
       CoverageTypes reportTargets,
       CoverageSummary previous,
       CoverageSummary current) {
     if (Objects.isNull(previous)) {
       return currentReport(reportTargets, current);
     }
-    CoverageMarkdownTable md = new CoverageMarkdownTable();
+    CoverageSummaryMarkdownTable md = new CoverageSummaryMarkdownTable();
     CoveragesDifference difference = current.diff(previous);
     difference.filter(reportTargets)
         .stream()
-        .map(CoverageMarkdownRow::differenceReport)
+        .map(CoverageSummaryMarkdownRowBuilder::differenceReport)
         .forEach(md::addRow);
     return md;
   }

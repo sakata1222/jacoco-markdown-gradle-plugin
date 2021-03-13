@@ -68,6 +68,8 @@ class JacocoMarkdownTaskTest {
     assertThat(task.getEnabled()).isTrue();
     assertThat(task.getDiffEnabled().get()).isTrue();
     assertThat(task.getStdout().get()).isTrue();
+    assertThat(task.getClassListEnabled().get()).isTrue();
+    assertThat(task.getClassListLimit().get()).isEqualTo(5);
     assertThat(task.getPreviousJson().isPresent()).isFalse();
     File defaultPreviousJson = jacocoTest.resolve("previousJacocoSummary.json").toFile();
     Files.write(defaultPreviousJson.toPath(), "".getBytes(StandardCharsets.UTF_8));
@@ -102,6 +104,12 @@ class JacocoMarkdownTaskTest {
 
     task.setStdout(false);
     assertThat(task.getStdout().get()).isFalse();
+
+    task.setClassListEnabled(false);
+    assertThat(task.getClassListEnabled().get()).isFalse();
+
+    task.setClassListLimit(10);
+    assertThat(task.getClassListLimit().get()).isEqualTo(10);
 
     task.setPreviousJson(projectRoot.resolve("previous.json").toFile());
     assertThat(task.getPreviousJson().getAsFile().get())
@@ -168,7 +176,7 @@ class JacocoMarkdownTaskTest {
   }
 
   @Test
-  void run_does_not_copies_previous_json_when_diff_disabled() throws IOException {
+  void run_does_not_copy_previous_json_when_diff_disabled() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
     File xml = jacocoTask.getReports().getXml().getDestination();
     Files.createDirectories(xml.getParentFile().toPath());

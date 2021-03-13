@@ -6,7 +6,7 @@ import java.util.Arrays;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageMarkdownTable;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model.CoverageSummaryMarkdownTable;
 import org.junit.jupiter.api.Test;
 
 class CoverageSummaryMarkdownReportServiceTest {
@@ -22,7 +22,7 @@ class CoverageSummaryMarkdownReportServiceTest {
     );
     CoverageTypes types = new CoverageTypes(Arrays.asList("type1", "type3"));
     CoverageSummaryMarkdownReportService service = new CoverageSummaryMarkdownReportService();
-    CoverageMarkdownTable md = service.currentReport(types, coverages);
+    CoverageSummaryMarkdownTable md = service.currentReport(types, coverages);
     assertThat(md.toMarkdown()).isEqualTo(""
         + "|Type |Missed/Total|Coverage|\n"
         + "|:--- |        ---:|    ---:|\n"
@@ -47,7 +47,7 @@ class CoverageSummaryMarkdownReportServiceTest {
     );
     CoverageTypes types = new CoverageTypes(Arrays.asList("type1", "type2", "type3"));
     CoverageSummaryMarkdownReportService service = new CoverageSummaryMarkdownReportService();
-    CoverageMarkdownTable md = service.differenceReport(types, previous, current);
+    CoverageSummaryMarkdownTable md = service.differenceReport(types, previous, current);
     assertThat(md.toMarkdown()).isEqualTo(""
         + "|Type |      Missed/Total|           Coverage|\n"
         + "|:--- |              ---:|               ---:|\n"

@@ -8,11 +8,6 @@ public class CoverageSummary {
   private final Coverages summaryCoverages;
 
   public CoverageSummary(
-      Map<String, Coverage> typeToCoverage) {
-    this(new Coverages(typeToCoverage));
-  }
-
-  public CoverageSummary(
       Coverages summaryCoverages) {
     this.summaryCoverages = summaryCoverages;
   }
