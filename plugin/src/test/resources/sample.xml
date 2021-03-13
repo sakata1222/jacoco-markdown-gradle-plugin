@@ -161,70 +161,6 @@
       <counter type="METHOD" missed="1" covered="2"/>
       <counter type="CLASS" missed="0" covered="1"/>
     </class>
-    <class name="jp/gr/java_conf/saka/github/actions/sandbox/utilities/SplitUtils"
-      sourcefilename="SplitUtils.java">
-      <method name="&lt;init&gt;" desc="()V" line="8">
-        <counter type="INSTRUCTION" missed="3" covered="0"/>
-        <counter type="LINE" missed="1" covered="0"/>
-        <counter type="COMPLEXITY" missed="1" covered="0"/>
-        <counter type="METHOD" missed="1" covered="0"/>
-      </method>
-      <method name="split"
-        desc="(Ljava/lang/String;)Ljp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList;"
-        line="10">
-        <counter type="INSTRUCTION" missed="0" covered="47"/>
-        <counter type="BRANCH" missed="1" covered="3"/>
-        <counter type="LINE" missed="0" covered="13"/>
-        <counter type="COMPLEXITY" missed="1" covered="2"/>
-        <counter type="METHOD" missed="0" covered="1"/>
-      </method>
-      <method name="addIfValid"
-        desc="(Ljava/lang/String;Ljp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList;)V"
-        line="31">
-        <counter type="INSTRUCTION" missed="0" covered="7"/>
-        <counter type="BRANCH" missed="0" covered="2"/>
-        <counter type="LINE" missed="0" covered="3"/>
-        <counter type="COMPLEXITY" missed="0" covered="2"/>
-        <counter type="METHOD" missed="0" covered="1"/>
-      </method>
-      <method name="isTokenValid" desc="(Ljava/lang/String;)Z" line="37">
-        <counter type="INSTRUCTION" missed="0" covered="7"/>
-        <counter type="BRANCH" missed="0" covered="2"/>
-        <counter type="LINE" missed="0" covered="1"/>
-        <counter type="COMPLEXITY" missed="0" covered="2"/>
-        <counter type="METHOD" missed="0" covered="1"/>
-      </method>
-      <counter type="INSTRUCTION" missed="3" covered="61"/>
-      <counter type="BRANCH" missed="1" covered="7"/>
-      <counter type="LINE" missed="1" covered="17"/>
-      <counter type="COMPLEXITY" missed="2" covered="6"/>
-      <counter type="METHOD" missed="1" covered="3"/>
-      <counter type="CLASS" missed="0" covered="1"/>
-    </class>
-    <class name="jp/gr/java_conf/saka/github/actions/sandbox/utilities/JoinUtils"
-      sourcefilename="JoinUtils.java">
-      <method name="&lt;init&gt;" desc="()V" line="8">
-        <counter type="INSTRUCTION" missed="3" covered="0"/>
-        <counter type="LINE" missed="1" covered="0"/>
-        <counter type="COMPLEXITY" missed="1" covered="0"/>
-        <counter type="METHOD" missed="1" covered="0"/>
-      </method>
-      <method name="join"
-        desc="(Ljp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList;)Ljava/lang/String;"
-        line="10">
-        <counter type="INSTRUCTION" missed="0" covered="28"/>
-        <counter type="BRANCH" missed="0" covered="4"/>
-        <counter type="LINE" missed="0" covered="6"/>
-        <counter type="COMPLEXITY" missed="0" covered="3"/>
-        <counter type="METHOD" missed="0" covered="1"/>
-      </method>
-      <counter type="INSTRUCTION" missed="3" covered="28"/>
-      <counter type="BRANCH" missed="0" covered="4"/>
-      <counter type="LINE" missed="1" covered="6"/>
-      <counter type="COMPLEXITY" missed="1" covered="3"/>
-      <counter type="METHOD" missed="1" covered="1"/>
-      <counter type="CLASS" missed="0" covered="1"/>
-    </class>
     <sourcefile name="StringUtils.java">
       <line nr="8" mi="3" ci="0" mb="0" cb="0"/>
       <line nr="10" mi="0" ci="3" mb="0" cb="0"/>
@@ -284,45 +220,6 @@
     <counter type="CLASS" missed="0" covered="3"/>
   </package>
   <package name="jp/gr/java_conf/saka/github/actions/sandbox/app">
-    <class name="jp/gr/java_conf/saka/github/actions/sandbox/app/App" sourcefilename="App.java">
-      <method name="&lt;init&gt;" desc="()V" line="12">
-        <counter type="INSTRUCTION" missed="3" covered="0"/>
-        <counter type="LINE" missed="1" covered="0"/>
-        <counter type="COMPLEXITY" missed="1" covered="0"/>
-        <counter type="METHOD" missed="1" covered="0"/>
-      </method>
-      <method name="main" desc="([Ljava/lang/String;)V" line="15">
-        <counter type="INSTRUCTION" missed="0" covered="8"/>
-        <counter type="LINE" missed="0" covered="3"/>
-        <counter type="COMPLEXITY" missed="0" covered="1"/>
-        <counter type="METHOD" missed="0" covered="1"/>
-      </method>
-      <counter type="INSTRUCTION" missed="3" covered="8"/>
-      <counter type="LINE" missed="1" covered="3"/>
-      <counter type="COMPLEXITY" missed="1" covered="1"/>
-      <counter type="METHOD" missed="1" covered="1"/>
-      <counter type="CLASS" missed="0" covered="1"/>
-    </class>
-    <class name="jp/gr/java_conf/saka/github/actions/sandbox/app/MessageUtils"
-      sourcefilename="MessageUtils.java">
-      <method name="&lt;init&gt;" desc="()V" line="6">
-        <counter type="INSTRUCTION" missed="3" covered="0"/>
-        <counter type="LINE" missed="1" covered="0"/>
-        <counter type="COMPLEXITY" missed="1" covered="0"/>
-        <counter type="METHOD" missed="1" covered="0"/>
-      </method>
-      <method name="getMessage" desc="()Ljava/lang/String;" line="8">
-        <counter type="INSTRUCTION" missed="0" covered="2"/>
-        <counter type="LINE" missed="0" covered="1"/>
-        <counter type="COMPLEXITY" missed="0" covered="1"/>
-        <counter type="METHOD" missed="0" covered="1"/>
-      </method>
-      <counter type="INSTRUCTION" missed="3" covered="2"/>
-      <counter type="LINE" missed="1" covered="1"/>
-      <counter type="COMPLEXITY" missed="1" covered="1"/>
-      <counter type="METHOD" missed="1" covered="1"/>
-      <counter type="CLASS" missed="0" covered="1"/>
-    </class>
     <sourcefile name="App.java">
       <line nr="12" mi="3" ci="0" mb="0" cb="0"/>
       <line nr="15" mi="0" ci="3" mb="0" cb="0"/>

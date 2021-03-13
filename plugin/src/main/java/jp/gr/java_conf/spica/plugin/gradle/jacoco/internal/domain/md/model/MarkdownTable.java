@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CoverageMarkdownTable {
+public class MarkdownTable {
 
-  private final List<CoverageMarkdownRow> rows;
+  private final List<MarkdownTableRow> rows;
+  private final List<MarkdownTableColAlignment> alignments;
 
-  public CoverageMarkdownTable() {
+  MarkdownTable(MarkdownTableRow header, List<MarkdownTableColAlignment> alignments) {
     this.rows = new ArrayList<>();
-    rows.add(CoverageMarkdownRow.header());
-    rows.add(CoverageMarkdownRow.separator());
+    this.alignments = alignments;
+    rows.add(header);
+    rows.add(MarkdownTableColAlignment.toRow(alignments));
   }
 
-  public void addRow(CoverageMarkdownRow row) {
-    rows.add(row);
+  public void addRow(MarkdownTableRow tableRow) {
+    rows.add(tableRow);
   }
 
   public String toMarkdown() {
@@ -24,7 +26,7 @@ public class CoverageMarkdownTable {
       maxColLengths[j] = maxLengthOfNthCol(j);
     }
     return rows.stream()
-        .map(row -> row.toFormattedMarkdownLine(maxColLengths))
+        .map(row -> row.toFormattedMarkdownLine(alignments, maxColLengths))
         .collect(Collectors.joining("\n")) + "\n";
   }
 

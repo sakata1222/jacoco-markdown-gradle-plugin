@@ -77,12 +77,23 @@ class JacocoMarkdownPluginFunctionalTest {
         jacocoReportPath.resolve("jacocoTestReport.xml"));
     BuildResult result = runner.build();
 
-    assertThat(result.getOutput()).contains(""
+    // BEGIN LONG LINE
+    assertThat(result.getOutput().replace("\r\n", "\n")).contains(""
         + "|Type       |Missed/Total|Coverage|\n"
         + "|:---       |        ---:|    ---:|\n"
         + "|INSTRUCTION|      15/245|  93.88%|\n"
         + "|BRANCH     |        3/34|  91.18%|\n"
-        + "|LINE       |        5/69|  92.75%|\n");
+        + "|LINE       |        5/69|  92.75%|\n"
+        + "\n"
+        + "Worst missed branches classes\n"
+        + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
+        + "|:---                                                             |            ---:|        ---:|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/app/MessageUtils     |     3/5(40.00%)|           -|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/app/App              |    3/11(72.73%)|           -|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/JoinUtils  |    3/31(90.32%)|           -|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/SplitUtils |    3/64(95.31%)|           -|");
+    // END LONG LINE
   }
 
   @ParameterizedTest
@@ -179,6 +190,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "  jacocoXml = file(\"" + xmlString + "\")\n"
             + "  diffEnabled = false\n"
             + "  stdout = true\n"
+            + "  classListEnabled = false\n"
             + "  previousJson = file(\"" + previousJsonString + "\")\n"
             + "  targetTypes = [\"INSTRUCTION\", \"BRANCH\", \"ccc\"]\n"
             + "  outputJson = file(\"" + outputJsonString + "\")\n"
@@ -311,7 +323,7 @@ class JacocoMarkdownPluginFunctionalTest {
 
   @ParameterizedTest
   @CsvFileSource(resources = "/gradleVersions.csv")
-  void disable_by_extention(String gradleVersion) throws IOException {
+  void disable_by_extension(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"

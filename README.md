@@ -31,6 +31,10 @@ Gradle versions:
 - 6.x
 - 5.6.4 (the latest 5.x)
 
+Java versions:
+
+- 8 or later
+
 ## Usage
 
 ### Apply plugin
@@ -41,9 +45,9 @@ jacoco plugin and this plugin.
 
 ```groovy
 plugins {
-  id 'java'
-  id 'jacoco'
-  id "com.github.sakata1222.jacoco-markdown" version "X.Y.Z"
+    id 'java'
+    id 'jacoco'
+    id "com.github.sakata1222.jacoco-markdown" version "X.Y.Z"
 }
 ```
 
@@ -72,7 +76,7 @@ Configuration of the default task:
 
 ```groovy
 task myJacocoMarkdown(type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {
-  jacocoReportTask your_JacocoReport_task // auto configuration for the JacocoReportTask
+    jacocoReportTask your_JacocoReport_task // auto configuration for the JacocoReportTask
 }
 ```
 
@@ -82,8 +86,8 @@ For default task:
 
 ```groovy
 jacocoMarkdown {
-  diffEnabled false // default true
-  stdout false // default true
+    diffEnabled false // default true
+    stdout false // default true
 }
 ```
 
@@ -91,12 +95,12 @@ For a specific task:
 
 ```groovy
 myJacocoMarkdown {
-  jacocoXml file("path-to-jacoco-xml")
-  diffEnabled false
-  stdout false
-  previousJson file("path-to-a-base-json-to-show-the-coverage-changes")
-  targetTypes(["INSTRUCTION", "BRANCH", "LINE", "COMPLEXITY", "METHOD", "CLASS"])
-  outputJson file("path-to-output-json")
-  outputMd file("path-to-markdown")
+    jacocoXml file("path-to-jacoco-xml")
+    diffEnabled false
+    stdout false
+    previousJson file("path-to-a-base-json-to-show-the-coverage-changes")
+    targetTypes(["INSTRUCTION", "BRANCH", "LINE", "COMPLEXITY", "METHOD", "CLASS"])
+    outputJson file("path-to-output-json")
+    outputMd file("path-to-markdown")
 }
 ```

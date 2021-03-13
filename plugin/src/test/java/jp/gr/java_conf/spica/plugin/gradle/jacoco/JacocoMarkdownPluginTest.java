@@ -83,13 +83,20 @@ class JacocoMarkdownPluginTest {
       System.setOut(pw);
       mdTask.run();
     }
+    // BEGIN LONG LINE
     String expectedMd = ""
         + "|Type       |Missed/Total|Coverage|\n"
         + "|:---       |        ---:|    ---:|\n"
         + "|INSTRUCTION|      15/245|  93.88%|\n"
         + "|BRANCH     |        3/34|  91.18%|\n"
-        + "|LINE       |        5/69|  92.75%|";
-    assertThat(bos.toString(StandardCharsets.UTF_8.toString()))
+        + "|LINE       |        5/69|  92.75%|\n"
+        + "\n"
+        + "Worst missed branches classes\n"
+        + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
+        + "|:---                                                             |            ---:|        ---:|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n";
+    // END LONG LINE
+    assertThat(bos.toString(StandardCharsets.UTF_8.toString()).replace("\r\n", "\n"))
         .contains(expectedMd);
     assertThat(mdTask.outputMdAsFile())
         .exists()
@@ -209,6 +216,93 @@ class JacocoMarkdownPluginTest {
       mdTask.run();
     }
     assertThat(bos.toString(StandardCharsets.UTF_8.toString())).isEmpty();
+  }
+
+  @Test
+  void plugin_default_task_class_list_enabled_can_be_disabled_by_extension() throws IOException {
+    // Create a test project and apply the plugin
+    Project project = ProjectBuilder.builder()
+        .withProjectDir(projectRoot.toFile())
+        .build();
+    Arrays.asList(
+        "java",
+        "jacoco",
+        "com.github.sakata1222.jacoco-markdown"
+    ).forEach(project.getPlugins()::apply);
+    JacocoMarkdownExtension extension = project.getExtensions()
+        .findByType(JacocoMarkdownExtension.class);
+    extension.setClassListEnabled(false);
+
+    // Verify the result
+    Task task = project.getTasks().findByName("jacocoTestReportMarkdown");
+    assertThat(task)
+        .isNotNull()
+        .isInstanceOf(JacocoMarkdownTask.class);
+    JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
+
+    JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
+    File xml = jacocoTask.getReports().getXml().getDestination();
+    Files.createDirectories(xml.getParentFile().toPath());
+    try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
+        InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
+      IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+    }
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (PrintStream pw = new PrintStream(bos, false, StandardCharsets.UTF_8.toString())) {
+      System.setOut(pw);
+      mdTask.run();
+    }
+    assertThat(bos.toString(StandardCharsets.UTF_8.toString()))
+        .contains("|Missed/Total|Coverage|")
+        .doesNotContainIgnoringCase("class");
+  }
+
+  @Test
+  void plugin_default_task_class_limit_can_be_disabled_by_extension() throws IOException {
+    // Create a test project and apply the plugin
+    Project project = ProjectBuilder.builder()
+        .withProjectDir(projectRoot.toFile())
+        .build();
+    Arrays.asList(
+        "java",
+        "jacoco",
+        "com.github.sakata1222.jacoco-markdown"
+    ).forEach(project.getPlugins()::apply);
+    JacocoMarkdownExtension extension = project.getExtensions()
+        .findByType(JacocoMarkdownExtension.class);
+    extension.setClassListLimit(1);
+
+    // Verify the result
+    Task task = project.getTasks().findByName("jacocoTestReportMarkdown");
+    assertThat(task)
+        .isNotNull()
+        .isInstanceOf(JacocoMarkdownTask.class);
+    JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
+
+    JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
+    File xml = jacocoTask.getReports().getXml().getDestination();
+    Files.createDirectories(xml.getParentFile().toPath());
+    try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
+        InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
+      IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+    }
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (PrintStream pw = new PrintStream(bos, false, StandardCharsets.UTF_8.toString())) {
+      System.setOut(pw);
+      mdTask.run();
+    }
+
+    // BEGIN LONG LINE
+    assertThat(bos.toString(StandardCharsets.UTF_8.toString()).replace("\r\n", "\n"))
+        .contains("|Missed/Total|Coverage|")
+        .endsWith(""
+            + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
+            + "|:---                                                             |            ---:|        ---:|\n"
+            + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n"
+            + "\n"
+        );
+
+    // END LONG LINE
   }
 
   @Test
