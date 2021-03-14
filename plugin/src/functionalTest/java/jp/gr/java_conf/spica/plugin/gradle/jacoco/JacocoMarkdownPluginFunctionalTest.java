@@ -221,6 +221,55 @@ class JacocoMarkdownPluginFunctionalTest {
     assertThat(outputMd).hasContent(expected);
   }
 
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void class_list_condition_can_be_configurable(String gradleVersion) throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'\n"
+            + "}\n"
+            + "\n"
+            + "jacocoTestReportMarkdown {\n"
+            + "  classListEnabled = true\n"
+            + "  classListLimit = 2"
+            + "}\n"
+            + "");
+    GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"),
+        jacocoReportPath.resolve("jacocoTestReport.xml"));
+    BuildResult result = runner.build();
+
+    // BEGIN LONG LINE
+    assertThat(result.getOutput().replace("\r\n", "\n")).contains(""
+        + "|Type       |Missed/Total|Coverage|\n"
+        + "|:---       |        ---:|    ---:|\n"
+        + "|INSTRUCTION|      15/245|  93.88%|\n"
+        + "|BRANCH     |        3/34|  91.18%|\n"
+        + "|LINE       |        5/69|  92.75%|\n"
+        + "\n"
+        + "Worst missed branches classes\n"
+        + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
+        + "|:---                                                             |            ---:|        ---:|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/app/MessageUtils     |     3/5(40.00%)|           -|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n")
+    .doesNotContain(
+        "jp/gr/java_conf/saka/github/actions/sandbox/app/App"
+    );
+    // END LONG LINE
+  }
+
   @ParameterizedTest
   @CsvFileSource(resources = "/gradleVersions.csv")
   void task_can_be_configurable_by_jacocoReportTask(String gradleVersion) throws IOException {
