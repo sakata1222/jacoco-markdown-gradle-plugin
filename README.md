@@ -20,6 +20,11 @@ $ ./gradlew build
 |INSTRUCTION|~~8/18~~ 8/24|    ~~55.56~~ 66.67%|
 |BRANCH     |  ~~0/2~~ 0/4|(Not Changed)100.00%|
 |LINE       |  ~~2/6~~ 2/8|    ~~66.67~~ 75.00%|
+
+Class list with less coverage (Worst 5)
+|Class                                                 |Instructions(C0)|Branches(C1)|
+|:---                                                  |            ---:|        ---:|
+|jp/gr/java_conf/spica/plugin/gradle/jacoco/example/App|    8/29(72.41%)|0/4(100.00%)|
 ```
 
 The markdown is output by a file, so you can put the coverage on a Pull Request by using some CI
