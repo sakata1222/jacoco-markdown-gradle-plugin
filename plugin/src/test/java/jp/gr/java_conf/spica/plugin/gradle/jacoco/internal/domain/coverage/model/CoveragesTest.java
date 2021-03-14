@@ -12,31 +12,31 @@ class CoveragesTest {
   void branchMissedComparator() {
     Coverages c1 = new Coverages(
         Arrays.asList(
-            new Coverage(Coverages.BRANCHES, 10, 2),
+            new Coverage(Coverages.BRANCH, 10, 2),
             new Coverage(Coverages.INSTRUCTION, 10, 1)
         )
     );
     Coverages c2 = new Coverages(
         Arrays.asList(
-            new Coverage(Coverages.BRANCHES, 11, 2),
+            new Coverage(Coverages.BRANCH, 11, 2),
             new Coverage(Coverages.INSTRUCTION, 10, 1)
         )
     );
     Coverages c3 = new Coverages(
         Arrays.asList(
-            new Coverage(Coverages.BRANCHES, 10, 1),
+            new Coverage(Coverages.BRANCH, 10, 1),
             new Coverage(Coverages.INSTRUCTION, 10, 1)
         )
     );
     Coverages c4 = new Coverages(
         Arrays.asList(
-            new Coverage(Coverages.BRANCHES, 10, 1),
+            new Coverage(Coverages.BRANCH, 10, 1),
             new Coverage(Coverages.INSTRUCTION, 10, 2)
         )
     );
     Coverages c5 = new Coverages(
         Arrays.asList(
-            new Coverage(Coverages.BRANCHES, 10, 1),
+            new Coverage(Coverages.BRANCH, 10, 1),
             new Coverage(Coverages.INSTRUCTION, 11, 2)
         )
     );

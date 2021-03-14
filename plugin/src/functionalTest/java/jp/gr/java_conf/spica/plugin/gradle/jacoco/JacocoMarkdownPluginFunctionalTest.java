@@ -88,11 +88,11 @@ class JacocoMarkdownPluginFunctionalTest {
         + "Class list with less coverage (Worst 5)\n"
         + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
         + "|:---                                                             |            ---:|        ---:|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList      |  0/119(100.00%)|2/22(90.91%)|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/SplitUtils |    3/64(95.31%)| 1/8(87.50%)|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/JoinUtils  |    3/31(90.32%)|0/4(100.00%)|\n"
         + "|jp/gr/java_conf/saka/github/actions/sandbox/app/MessageUtils     |     3/5(40.00%)|           -|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/app/App              |    3/11(72.73%)|           -|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/JoinUtils  |    3/31(90.32%)|           -|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/SplitUtils |    3/64(95.31%)|           -|");
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|");
     // END LONG LINE
   }
 
@@ -261,10 +261,10 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|LINE       |        5/69|  92.75%|\n"
         + "\n"
         + "Class list with less coverage (Worst 2)\n"
-        + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
-        + "|:---                                                             |            ---:|        ---:|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/app/MessageUtils     |     3/5(40.00%)|           -|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n"
+        + "|Class                                                           |Instructions(C0)|Branches(C1)|\n"
+        + "|:---                                                            |            ---:|        ---:|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList     |  0/119(100.00%)|2/22(90.91%)|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/SplitUtils|    3/64(95.31%)| 1/8(87.50%)|\n"
     ).doesNotContain(
         "jp/gr/java_conf/saka/github/actions/sandbox/app/App"
     );
@@ -375,11 +375,11 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|LINE       |        5/69|  92.75%|\n"
         + "\n"
         + "Class list with less coverage (Worst 3)\n"
-        + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
-        + "|:---                                                             |            ---:|        ---:|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/app/MessageUtils     |     3/5(40.00%)|           -|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/app/App              |    3/11(72.73%)|           -|")
+        + "|Class                                                           |Instructions(C0)|Branches(C1)|\n"
+        + "|:---                                                            |            ---:|        ---:|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList     |  0/119(100.00%)|2/22(90.91%)|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/SplitUtils|    3/64(95.31%)| 1/8(87.50%)|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/JoinUtils |    3/31(90.32%)|0/4(100.00%)|")
         .doesNotContain(
             "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/JoinUtils  |    3/31(90.32%)|           -|");
     // END LONG INE

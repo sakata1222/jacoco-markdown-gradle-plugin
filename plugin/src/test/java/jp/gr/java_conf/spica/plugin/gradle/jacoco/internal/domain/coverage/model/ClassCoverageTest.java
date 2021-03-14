@@ -15,7 +15,7 @@ class ClassCoverageTest {
         new ClassName("foo.bar"),
         new Coverages(
             Arrays.asList(
-                new Coverage(Coverages.BRANCHES, 10, 2),
+                new Coverage(Coverages.BRANCH, 10, 2),
                 new Coverage(Coverages.INSTRUCTION, 10, 1)
             )
         )
@@ -24,7 +24,7 @@ class ClassCoverageTest {
         new ClassName("foo.bar2"),
         new Coverages(
             Arrays.asList(
-                new Coverage(Coverages.BRANCHES, 9, 1),
+                new Coverage(Coverages.BRANCH, 9, 1),
                 new Coverage(Coverages.INSTRUCTION, 10, 1)
             )
         )

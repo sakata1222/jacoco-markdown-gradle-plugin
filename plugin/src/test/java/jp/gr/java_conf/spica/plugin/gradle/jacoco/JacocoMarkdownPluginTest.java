@@ -95,6 +95,7 @@ class JacocoMarkdownPluginTest {
         + "Class list with less coverage (Worst 5)\n"
         + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
         + "|:---                                                             |            ---:|        ---:|\n"
+        + "|jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList      |  0/119(100.00%)|2/22(90.91%)|\n"
         + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n";
     // END LONG LINE
     assertThat(bos.toString(StandardCharsets.UTF_8.toString()).replace("\r\n", "\n"))
@@ -303,9 +304,9 @@ class JacocoMarkdownPluginTest {
     assertThat(bos.toString(StandardCharsets.UTF_8.toString()).replace("\r\n", "\n"))
         .contains("|Missed/Total|Coverage|")
         .endsWith(""
-            + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
-            + "|:---                                                             |            ---:|        ---:|\n"
-            + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n"
+            + "|Class                                                      |Instructions(C0)|Branches(C1)|\n"
+            + "|:---                                                       |            ---:|        ---:|\n"
+            + "|jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList|  0/119(100.00%)|2/22(90.91%)|\n"
             + "\n"
         );
 

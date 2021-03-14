@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.1.0] - Unreleased
+## [1.1.1] - 2021-03-14
+
+### Fix
+
+- Branch coverage is not displayed in the class list.
+
+## [1.1.0] - 2021-03-14
 
 ### Added
 
