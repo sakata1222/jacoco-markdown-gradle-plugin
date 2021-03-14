@@ -33,7 +33,7 @@ public class ClassCoverage {
   }
 
   public Optional<Coverage> getBranchesCoverage() {
-    return coverages.getBranches();
+    return coverages.getBranch();
   }
 
   public boolean hasMissedOnOC0C1() {

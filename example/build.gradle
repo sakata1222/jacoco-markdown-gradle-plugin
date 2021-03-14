@@ -7,53 +7,53 @@
  */
 
 plugins {
-  // Apply the java plugin to add support for Java
-  id 'java'
-  id 'jacoco'
-  // Apply the application plugin to add support for building a CLI application.
-  id 'application'
-  id "com.github.sakata1222.jacoco-markdown" version "1.0.0"
+    // Apply the java plugin to add support for Java
+    id 'java'
+    id 'jacoco'
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+    id "com.github.sakata1222.jacoco-markdown" version "1.1.0"
 }
 
 repositories {
-  // Use jcenter for resolving dependencies.
-  // You can declare any Maven/Ivy/file repository here.
-  jcenter()
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
 }
 
 dependencies {
-  // This dependency is used by the application.
-  implementation 'com.google.guava:guava:29.0-jre'
-  implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha1'
-  implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha5'
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha1'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha5'
 
-  // Use JUnit Jupiter API for testing.
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
 
-  // Use JUnit Jupiter Engine for testing.
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
 }
 
 application {
-  // Define the main class for the application.
-  getMainClass().set('jp.gr.java_conf.spica.plugin.gradle.jacoco.example.App')
+    // Define the main class for the application.
+    getMainClass().set('jp.gr.java_conf.spica.plugin.gradle.jacoco.example.App')
 }
 
 test {
-  // Use junit platform for unit tests
-  useJUnitPlatform()
-  finalizedBy jacocoTestReport // report is always generated after tests run
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
 jacocoTestReport {
-  dependsOn test // tests are required to run before generating the report
+    dependsOn test // tests are required to run before generating the report
 }
 
 jacocoTestReportMarkdown {
-  enabled false
+    enabled false
 }
 
 task myJacocoMarkdown(type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {
-  jacocoReportTask jacocoTestReport
+    jacocoReportTask jacocoTestReport
 }
 

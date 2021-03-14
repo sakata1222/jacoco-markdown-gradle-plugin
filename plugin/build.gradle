@@ -7,72 +7,72 @@
  */
 
 plugins {
-  id "com.gradle.plugin-publish" version "0.12.0"
-  id 'java-gradle-plugin'
-  id 'checkstyle'
-  id "com.github.spotbugs" version "4.6.0"
-  id 'jacoco'
-  id "com.github.sakata1222.jacoco-markdown" version "1.0.0"
+    id "com.gradle.plugin-publish" version "0.12.0"
+    id 'java-gradle-plugin'
+    id 'checkstyle'
+    id "com.github.spotbugs" version "4.6.0"
+    id 'jacoco'
+    id "com.github.sakata1222.jacoco-markdown" version "1.1.0"
 }
 
 repositories {
-  // Use JCenter for resolving dependencies.
-  jcenter()
+    // Use JCenter for resolving dependencies.
+    jcenter()
 }
 
 tasks.withType(JavaCompile) {
-  options.compilerArgs.addAll(["--release", "8", "-Xlint:all", "-Werror"])
+    options.compilerArgs.addAll(["--release", "8", "-Xlint:all", "-Werror"])
 }
 
 checkstyle {
-  toolVersion = "8.38"
+    toolVersion = "8.38"
 }
 
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
-  reports {
-    xml.enabled = true
-    html.enabled = true
-  }
-  excludeFilter = file("${rootDir}/config/spotbugs/exclude.xml")
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    excludeFilter = file("${rootDir}/config/spotbugs/exclude.xml")
 }
 
 dependencies {
-  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
-  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
-  testImplementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
-  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
+    testImplementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
 }
 
-version = '1.1.0'
+version = '1.1.1'
 group = 'com.github.sakata1222'
 
 gradlePlugin {
-  // Define the plugin
-  plugins {
-    jacocoMd {
-      id = 'com.github.sakata1222.jacoco-markdown'
-      implementationClass = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownPlugin'
+    // Define the plugin
+    plugins {
+        jacocoMd {
+            id = 'com.github.sakata1222.jacoco-markdown'
+            implementationClass = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownPlugin'
+        }
     }
-  }
 }
 
 pluginBundle {
-  website = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
-  vcsUrl = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
-  description = 'Gradle plugin to parse jacoco report as a markdown'
-  tags = ['test', 'coverage', 'code coverage', 'jacoco', 'markdown']
+    website = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
+    vcsUrl = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
+    description = 'Gradle plugin to parse jacoco report as a markdown'
+    tags = ['test', 'coverage', 'code coverage', 'jacoco', 'markdown']
 
-  plugins {
-    jacocoMd {
-      displayName = 'jacoco markdown report plugin'
+    plugins {
+        jacocoMd {
+            displayName = 'jacoco markdown report plugin'
+        }
     }
-  }
 }
 
 // Add a source set for the functional test suite
 sourceSets {
-  functionalTest {
-  }
+    functionalTest {
+    }
 }
 
 gradlePlugin.testSourceSets(sourceSets.functionalTest)
@@ -80,27 +80,27 @@ configurations.functionalTestImplementation.extendsFrom(configurations.testImple
 
 // Add a task to run the functional tests
 tasks.register('functionalTest', Test) {
-  testClassesDirs = sourceSets.functionalTest.output.classesDirs
-  classpath = sourceSets.functionalTest.runtimeClasspath
-  it.useJUnitPlatform()
-  it.finalizedBy jacocoTestReport
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+    it.useJUnitPlatform()
+    it.finalizedBy jacocoTestReport
 }
 
 test {
-  useJUnitPlatform()
-  finalizedBy jacocoTestReport
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
-  dependsOn test, functionalTest
-  mustRunAfter test, functionalTest
-  reports {
-    xml.enabled = true
-    html.enabled = true
-  }
+    dependsOn test, functionalTest
+    mustRunAfter test, functionalTest
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
 
 tasks.named('check') {
-  // Run the functional tests as part of `check`
-  dependsOn(tasks.functionalTest)
+    // Run the functional tests as part of `check`
+    dependsOn(tasks.functionalTest)
 }

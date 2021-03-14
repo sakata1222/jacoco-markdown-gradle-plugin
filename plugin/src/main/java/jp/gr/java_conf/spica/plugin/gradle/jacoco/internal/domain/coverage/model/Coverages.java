@@ -13,12 +13,12 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.utils.CustomCollector
 
 public class Coverages {
 
-  static final String BRANCHES = "BRANCHES";
+  static final String BRANCH = "BRANCH";
   static final String INSTRUCTION = "INSTRUCTION";
 
   // BEGIN LONG LINE
   public static final Comparator<Coverages> BRANCH_MISSED_COMPARATOR = Comparator.<Coverages, Coverage>comparing(
-      c -> c.typeToCoverage.get(BRANCHES),
+      c -> c.typeToCoverage.get(BRANCH),
       nullsLast(Coverage.MISSED_COMPARATOR)
   ).thenComparing(
       c -> c.typeToCoverage.get(INSTRUCTION),
@@ -45,8 +45,8 @@ public class Coverages {
     return typeToCoverage;
   }
 
-  public Optional<Coverage> getBranches() {
-    return getByType(BRANCHES);
+  public Optional<Coverage> getBranch() {
+    return getByType(BRANCH);
   }
 
   public Optional<Coverage> getInstruction() {
@@ -76,7 +76,7 @@ public class Coverages {
   }
 
   public boolean hasMissednOC0C1() {
-    int c1Missed = getBranches().map(Coverage::getMissed).orElse(0);
+    int c1Missed = getBranch().map(Coverage::getMissed).orElse(0);
     int c0Missed = getInstruction().map(Coverage::getMissed).orElse(0);
     return c0Missed + c1Missed > 0;
   }
