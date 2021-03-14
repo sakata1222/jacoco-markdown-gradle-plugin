@@ -2,6 +2,6 @@ package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.mode
 
 public interface IOwnCoveragesWriteRepository {
 
-  void writeAll(Coverages coverages);
+  void writeAll(CoverageSummary coverages);
 
 }

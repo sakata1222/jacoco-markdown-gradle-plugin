@@ -14,8 +14,10 @@ import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.CoverageExportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.ExportRequest;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverageLimit;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
-import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageMarkdownReportService;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.ClassCoverageMarkdownReportService;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageSummaryMarkdownReportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.CoverageJsonRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.JacocoCoveragesXmlRepository;
 import org.gradle.api.DefaultTask;
@@ -56,6 +58,12 @@ public class JacocoMarkdownTask extends DefaultTask {
   @Input
   final Property<Boolean> stdout;
 
+  @Input
+  final Property<Boolean> classListEnabled;
+
+  @Input
+  final Property<Integer> classListLimit;
+
   @Optional
   @InputFile
   @PathSensitive(PathSensitivity.RELATIVE)
@@ -86,6 +94,8 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.enabled = objectFactory.property(Boolean.class).convention(true);
     this.diffEnabled = objectFactory.property(Boolean.class).convention(true);
     this.stdout = objectFactory.property(Boolean.class).convention(true);
+    this.classListEnabled = objectFactory.property(Boolean.class).convention(true);
+    this.classListLimit = objectFactory.property(Integer.class).convention(5);
     this.targetTypes = objectFactory.listProperty(String.class)
         .convention(Arrays.asList("INSTRUCTION", "BRANCH", "LINE"));
     this.enableOutputJson = objectFactory.property(Boolean.class).convention(true);
@@ -131,6 +141,8 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.enabled.convention(extension.enabled);
     this.diffEnabled.convention(extension.diffEnabled);
     this.stdout.convention(extension.stdout);
+    this.classListEnabled.convention(extension.classListEnabled);
+    this.classListLimit.convention(extension.classListLimit);
   }
 
   void configureByJacocoXml(Provider<RegularFile> jacocoXml) {
@@ -145,7 +157,8 @@ public class JacocoMarkdownTask extends DefaultTask {
           new JacocoCoveragesXmlRepository(new XmlParser(), jacocoXml()),
           new CoverageJsonRepository(resolvePreviousJson()),
           new CoverageJsonRepository(outputJsonAsFile()),
-          new CoverageMarkdownReportService(),
+          new CoverageSummaryMarkdownReportService(),
+          new ClassCoverageMarkdownReportService(),
           mdWriter,
           System.out
       );
@@ -153,6 +166,8 @@ public class JacocoMarkdownTask extends DefaultTask {
           new ExportRequest(
               diffEnabled(),
               stdout(),
+              classListEnabled(),
+              new ClassCoverageLimit(classListLimit()),
               new CoverageTypes(targetTypes()),
               enableOutputJson(),
               enableOutputMd())
@@ -198,6 +213,14 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   private boolean stdout() {
     return stdout.get();
+  }
+
+  private boolean classListEnabled() {
+    return classListEnabled.get();
+  }
+
+  private int classListLimit() {
+    return classListLimit.get();
   }
 
   private boolean enableOutputJson() {
@@ -248,6 +271,22 @@ public class JacocoMarkdownTask extends DefaultTask {
 
   public Property<Boolean> getStdout() {
     return stdout;
+  }
+
+  public void setClassListEnabled(boolean classListEnabled) {
+    this.classListEnabled.set(classListEnabled);
+  }
+
+  public Property<Boolean> getClassListEnabled() {
+    return classListEnabled;
+  }
+
+  public void setClassListLimit(int limit) {
+    this.classListLimit.set(limit);
+  }
+
+  public Property<Integer> getClassListLimit() {
+    return classListLimit;
   }
 
   public void setPreviousJson(File previousJson) {

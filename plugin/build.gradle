@@ -12,6 +12,7 @@ plugins {
   id 'checkstyle'
   id "com.github.spotbugs" version "4.6.0"
   id 'jacoco'
+  id "com.github.sakata1222.jacoco-markdown" version "1.0.0"
 }
 
 repositories {
