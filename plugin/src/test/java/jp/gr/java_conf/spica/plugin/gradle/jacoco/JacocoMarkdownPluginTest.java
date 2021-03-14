@@ -3,6 +3,7 @@ package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import groovy.lang.Closure;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -270,7 +271,13 @@ class JacocoMarkdownPluginTest {
     ).forEach(project.getPlugins()::apply);
     JacocoMarkdownExtension extension = project.getExtensions()
         .findByType(JacocoMarkdownExtension.class);
-    extension.setClassListLimit(1);
+    extension.setClassListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
+      @Override
+      public JacocoMarkdownClassListCondition call() {
+        ((JacocoMarkdownClassListCondition) getDelegate()).setLimit(1);
+        return null;
+      }
+    });
 
     // Verify the result
     Task task = project.getTasks().findByName("jacocoTestReportMarkdown");
