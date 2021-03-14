@@ -88,6 +88,10 @@ For default task:
 jacocoMarkdown {
     diffEnabled false // default true
     stdout false // default true
+    classListEnabled false // default true
+    classListCondition {
+        limit = 2 // default is 5
+    }
 }
 ```
 
@@ -98,6 +102,10 @@ myJacocoMarkdown {
     jacocoXml file("path-to-jacoco-xml")
     diffEnabled false
     stdout false
+    classListEnabled false
+    classListCondition {
+        limit = 5
+    }
     previousJson file("path-to-a-base-json-to-show-the-coverage-changes")
     targetTypes(["INSTRUCTION", "BRANCH", "LINE", "COMPLEXITY", "METHOD", "CLASS"])
     outputJson file("path-to-output-json")
