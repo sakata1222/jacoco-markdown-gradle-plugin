@@ -9,9 +9,17 @@ public class ClassCoverageLimit {
   }
 
   public int limit() {
-    if (limit <= 0) {
+    if (noLimit()) {
       return Integer.MAX_VALUE;
     }
     return limit;
+  }
+
+  public boolean hasLimit() {
+    return !noLimit();
+  }
+
+  public boolean noLimit() {
+    return limit <= 0;
   }
 }

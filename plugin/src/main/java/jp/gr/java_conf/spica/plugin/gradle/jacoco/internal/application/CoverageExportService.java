@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.io.Writer;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverageTitle;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageReport;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IJacocoCoverageRepository;
@@ -50,7 +51,8 @@ public class CoverageExportService {
     String formattedMd = markdown.toMarkdown();
     ClassCoverageMarkdownTable classMarkdown = buildClassTable(request, currentCoverages);
     String formattedClassCoverage = classMarkdown.toMarkdown();
-    String classCoverageTableTitle = "Worst missed branches classes";
+    ClassCoverageTitle classCoverageTableTitle = new ClassCoverageTitle(
+        request.classCoverageLimit());
     if (request.stdout()) {
       stdout.println(formattedMd);
       if (request.classListEnabled()) {
@@ -65,7 +67,7 @@ public class CoverageExportService {
       markdownWriter.write(formattedMd);
       if (request.classListEnabled()) {
         markdownWriter.write("\n");
-        markdownWriter.write(classCoverageTableTitle);
+        markdownWriter.write(classCoverageTableTitle.toString());
         markdownWriter.write("\n");
         markdownWriter.write(formattedClassCoverage);
       }
