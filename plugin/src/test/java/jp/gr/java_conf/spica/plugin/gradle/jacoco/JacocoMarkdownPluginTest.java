@@ -92,7 +92,7 @@ class JacocoMarkdownPluginTest {
         + "|BRANCH     |        3/34|  91.18%|\n"
         + "|LINE       |        5/69|  92.75%|\n"
         + "\n"
-        + "Worst missed branches classes\n"
+        + "Class list with less coverage (Worst 5)\n"
         + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
         + "|:---                                                             |            ---:|        ---:|\n"
         + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n";
