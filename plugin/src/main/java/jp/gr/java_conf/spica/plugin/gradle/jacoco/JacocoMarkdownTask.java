@@ -1,5 +1,6 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
+import groovy.lang.Closure;
 import groovy.util.XmlParser;
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class JacocoMarkdownTask extends DefaultTask {
   final Property<Boolean> classListEnabled;
 
   @Input
-  final Property<Integer> classListLimit;
+  final Property<JacocoMarkdownClassListCondition> classListCondition;
 
   @Optional
   @InputFile
@@ -95,7 +96,8 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.diffEnabled = objectFactory.property(Boolean.class).convention(true);
     this.stdout = objectFactory.property(Boolean.class).convention(true);
     this.classListEnabled = objectFactory.property(Boolean.class).convention(true);
-    this.classListLimit = objectFactory.property(Integer.class).convention(5);
+    this.classListCondition = objectFactory.property(JacocoMarkdownClassListCondition.class)
+        .convention(objectFactory.newInstance(JacocoMarkdownClassListCondition.class));
     this.targetTypes = objectFactory.listProperty(String.class)
         .convention(Arrays.asList("INSTRUCTION", "BRANCH", "LINE"));
     this.enableOutputJson = objectFactory.property(Boolean.class).convention(true);
@@ -142,7 +144,7 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.diffEnabled.convention(extension.diffEnabled);
     this.stdout.convention(extension.stdout);
     this.classListEnabled.convention(extension.classListEnabled);
-    this.classListLimit.convention(extension.classListLimit);
+    this.classListCondition.convention(extension.classListCondition);
   }
 
   void configureByJacocoXml(Provider<RegularFile> jacocoXml) {
@@ -167,7 +169,7 @@ public class JacocoMarkdownTask extends DefaultTask {
               diffEnabled(),
               stdout(),
               classListEnabled(),
-              new ClassCoverageLimit(classListLimit()),
+              new ClassCoverageLimit(classListCondition().getLimit()),
               new CoverageTypes(targetTypes()),
               enableOutputJson(),
               enableOutputMd())
@@ -219,8 +221,8 @@ public class JacocoMarkdownTask extends DefaultTask {
     return classListEnabled.get();
   }
 
-  private int classListLimit() {
-    return classListLimit.get();
+  private JacocoMarkdownClassListCondition classListCondition() {
+    return classListCondition.get();
   }
 
   private boolean enableOutputJson() {
@@ -281,12 +283,12 @@ public class JacocoMarkdownTask extends DefaultTask {
     return classListEnabled;
   }
 
-  public void setClassListLimit(int limit) {
-    this.classListLimit.set(limit);
+  public void setClassListCondition(Closure<JacocoMarkdownClassListCondition> closure) {
+    this.classListCondition.set(new JacocoMarkdownClassListCondition().configure(closure));
   }
 
-  public Property<Integer> getClassListLimit() {
-    return classListLimit;
+  public Property<JacocoMarkdownClassListCondition> getClassListCondition() {
+    return classListCondition;
   }
 
   public void setPreviousJson(File previousJson) {

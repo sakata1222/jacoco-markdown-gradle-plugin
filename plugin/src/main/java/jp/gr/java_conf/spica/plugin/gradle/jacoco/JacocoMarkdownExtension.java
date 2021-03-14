@@ -1,5 +1,6 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
+import groovy.lang.Closure;
 import javax.inject.Inject;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
@@ -10,7 +11,7 @@ public class JacocoMarkdownExtension {
   final Property<Boolean> diffEnabled;
   final Property<Boolean> stdout;
   final Property<Boolean> classListEnabled;
-  final Property<Integer> classListLimit;
+  final Property<JacocoMarkdownClassListCondition> classListCondition;
 
   @Inject
   public JacocoMarkdownExtension(ObjectFactory objectFactory) {
@@ -18,7 +19,8 @@ public class JacocoMarkdownExtension {
     this.diffEnabled = objectFactory.property(Boolean.class).convention(true);
     this.stdout = objectFactory.property(Boolean.class).convention(true);
     this.classListEnabled = objectFactory.property(Boolean.class).convention(true);
-    this.classListLimit = objectFactory.property(Integer.class).convention(5);
+    this.classListCondition = objectFactory.property(JacocoMarkdownClassListCondition.class)
+        .convention(new JacocoMarkdownClassListCondition());
   }
 
   public void setEnabled(boolean enabled) {
@@ -37,7 +39,7 @@ public class JacocoMarkdownExtension {
     this.classListEnabled.set(classListEnabled);
   }
 
-  public void setClassListLimit(int classListLimit) {
-    this.classListLimit.set(classListLimit);
+  public void setClassListCondition(Closure<JacocoMarkdownClassListCondition> closure) {
+    classListCondition.set(new JacocoMarkdownClassListCondition().configure(closure));
   }
 }

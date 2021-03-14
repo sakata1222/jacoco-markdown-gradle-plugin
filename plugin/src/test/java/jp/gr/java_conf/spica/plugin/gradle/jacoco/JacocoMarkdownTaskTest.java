@@ -2,6 +2,7 @@ package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import groovy.lang.Closure;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +70,7 @@ class JacocoMarkdownTaskTest {
     assertThat(task.getDiffEnabled().get()).isTrue();
     assertThat(task.getStdout().get()).isTrue();
     assertThat(task.getClassListEnabled().get()).isTrue();
-    assertThat(task.getClassListLimit().get()).isEqualTo(5);
+    assertThat(task.getClassListCondition().get().getLimit()).isEqualTo(5);
     assertThat(task.getPreviousJson().isPresent()).isFalse();
     File defaultPreviousJson = jacocoTest.resolve("previousJacocoSummary.json").toFile();
     Files.write(defaultPreviousJson.toPath(), "".getBytes(StandardCharsets.UTF_8));
@@ -108,8 +109,14 @@ class JacocoMarkdownTaskTest {
     task.setClassListEnabled(false);
     assertThat(task.getClassListEnabled().get()).isFalse();
 
-    task.setClassListLimit(10);
-    assertThat(task.getClassListLimit().get()).isEqualTo(10);
+    task.setClassListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
+      @Override
+      public JacocoMarkdownClassListCondition call() {
+        ((JacocoMarkdownClassListCondition) getDelegate()).setLimit(10);
+        return null;
+      }
+    });
+    assertThat(task.getClassListCondition().get().getLimit()).isEqualTo(10);
 
     task.setPreviousJson(projectRoot.resolve("previous.json").toFile());
     assertThat(task.getPreviousJson().getAsFile().get())
