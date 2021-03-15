@@ -1,6 +1,7 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application;
 
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverageLimit;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassListExportCondition;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
 
 public class ExportRequest {
@@ -8,18 +9,18 @@ public class ExportRequest {
   private final boolean diffEnabled;
   private final boolean stdout;
   private final boolean classListEnabled;
-  private final ClassCoverageLimit classCoverageLimit;
+  private final ClassListExportCondition listCondition;
   private final CoverageTypes targetTypes;
   private final boolean outputJson;
   private final boolean outputMd;
 
   public ExportRequest(boolean diffEnabled, boolean stdout, boolean classListEnabled,
-      ClassCoverageLimit classCoverageLimit,
+      ClassListExportCondition listCondition,
       CoverageTypes targetTypes, boolean outputJson, boolean outputMd) {
     this.diffEnabled = diffEnabled;
     this.stdout = stdout;
     this.classListEnabled = classListEnabled;
-    this.classCoverageLimit = classCoverageLimit;
+    this.listCondition = listCondition;
     this.targetTypes = targetTypes;
     this.outputJson = outputJson;
     this.outputMd = outputMd;
@@ -37,8 +38,12 @@ public class ExportRequest {
     return classListEnabled;
   }
 
+  public ClassListExportCondition classListExportCondition() {
+    return listCondition;
+  }
+
   public ClassCoverageLimit classCoverageLimit() {
-    return classCoverageLimit;
+    return listCondition.limit();
   }
 
   public CoverageTypes getTargetTypes() {

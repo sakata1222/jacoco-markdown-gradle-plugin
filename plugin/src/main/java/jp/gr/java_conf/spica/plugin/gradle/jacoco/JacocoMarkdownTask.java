@@ -11,11 +11,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.CoverageExportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.ExportRequest;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverageLimit;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassListExportCondition;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassNameExcludeFilter;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassNameFilterString;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.ClassCoverageMarkdownReportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageSummaryMarkdownReportService;
@@ -169,7 +173,12 @@ public class JacocoMarkdownTask extends DefaultTask {
               diffEnabled(),
               stdout(),
               classListEnabled(),
-              new ClassCoverageLimit(classListCondition().getLimit()),
+              new ClassListExportCondition(
+                  new ClassCoverageLimit(classListCondition().getLimit()),
+                  new ClassNameExcludeFilter(
+                      classListCondition().getExcludes().stream()
+                          .map(ClassNameFilterString::new).collect(Collectors.toList()))
+              ),
               new CoverageTypes(targetTypes()),
               enableOutputJson(),
               enableOutputMd())

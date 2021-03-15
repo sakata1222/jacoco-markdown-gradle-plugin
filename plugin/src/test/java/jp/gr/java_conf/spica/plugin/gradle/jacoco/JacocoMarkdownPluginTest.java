@@ -95,8 +95,8 @@ class JacocoMarkdownPluginTest {
         + "Class list with less coverage (Worst 5)\n"
         + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
         + "|:---                                                             |            ---:|        ---:|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList      |  0/119(100.00%)|2/22(90.91%)|\n"
-        + "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils|     3/9(66.67%)|           -|\n";
+        + "|jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList      |  0/119(100.00%)|2/22(90.91%)|\n"
+        + "|jp.gr.java_conf.saka.github.actions.sandbox.utilities.StringUtils|     3/9(66.67%)|           -|\n";
     // END LONG LINE
     assertThat(bos.toString(StandardCharsets.UTF_8.toString()).replace("\r\n", "\n"))
         .contains(expectedMd);
@@ -275,6 +275,10 @@ class JacocoMarkdownPluginTest {
     extension.setClassListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
       @Override
       public JacocoMarkdownClassListCondition call() {
+        JacocoMarkdownClassListCondition cond = (JacocoMarkdownClassListCondition) getDelegate();
+        cond.setLimit(1);
+        cond.setExcludes(Arrays.asList(
+            "jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList"));
         ((JacocoMarkdownClassListCondition) getDelegate()).setLimit(1);
         return null;
       }
@@ -304,9 +308,9 @@ class JacocoMarkdownPluginTest {
     assertThat(bos.toString(StandardCharsets.UTF_8.toString()).replace("\r\n", "\n"))
         .contains("|Missed/Total|Coverage|")
         .endsWith(""
-            + "|Class                                                      |Instructions(C0)|Branches(C1)|\n"
-            + "|:---                                                       |            ---:|        ---:|\n"
-            + "|jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList|  0/119(100.00%)|2/22(90.91%)|\n"
+            + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
+            + "|:---                                                             |            ---:|        ---:|\n"
+            + "|jp.gr.java_conf.saka.github.actions.sandbox.utilities.StringUtils|     3/9(66.67%)|           -|\n"
             + "\n"
         );
 

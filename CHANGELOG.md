@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2] - Unreleased
+
+### Add
+
+- Exclude filters for class list
+
+### Fix
+
+- The separator of class names should be `.` not `/'
+
 ## [1.1.1] - 2021-03-14
 
 ### Fix

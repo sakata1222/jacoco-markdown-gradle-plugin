@@ -28,7 +28,7 @@ public class ClassCoverageMarkdownRowBuilder {
 
   public static MarkdownTableRow classRow(ClassCoverage classCoverage) {
     return new MarkdownTableRow(Arrays.asList(
-        new MarkdownTableCol(classCoverage.classSimpleName()),
+        new MarkdownTableCol(classCoverage.classCanonicalName()),
         new MarkdownTableCol(
             classCoverage.getInstructionCoverage().map(Coverage::missedPerTotalAndPercentage)
                 .orElse("-")),

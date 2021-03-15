@@ -34,7 +34,7 @@ class JacocoCoveragesXmlRepositoryTest {
     Map<ClassName, Coverages> expectedClassToCoverages = new TreeMap<>(
         ClassName.CANONICAL_NAME_COMPARATOR);
     expectedClassToCoverages.put(
-        new ClassName("jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList$Node"),
+        new ClassName("jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList$Node"),
         new Coverages(Arrays.asList(
             new Coverage("INSTRUCTION", 6, 0),
             new Coverage("LINE", 3, 0),
@@ -44,7 +44,7 @@ class JacocoCoveragesXmlRepositoryTest {
         ))
     );
     expectedClassToCoverages.put(
-        new ClassName("jp/gr/java_conf/saka/github/actions/sandbox/list/LinkedList"),
+        new ClassName("jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList"),
         new Coverages(Arrays.asList(
             new Coverage("INSTRUCTION", 119, 0),
             new Coverage("BRANCH", 20, 2),
@@ -55,7 +55,7 @@ class JacocoCoveragesXmlRepositoryTest {
         ))
     );
     expectedClassToCoverages.put(
-        new ClassName("jp/gr/java_conf/saka/github/actions/sandbox/utilities/StringUtils"),
+        new ClassName("jp.gr.java_conf.saka.github.actions.sandbox.utilities.StringUtils"),
         new Coverages(Arrays.asList(
             new Coverage("INSTRUCTION", 6, 3),
             new Coverage("LINE", 2, 1),

@@ -19,6 +19,8 @@ import java.io.Writer;
 import java.util.Collections;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverageLimit;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverages;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassListExportCondition;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassNameExcludeFilter;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageReport;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageTypes;
@@ -62,7 +64,9 @@ class CoverageExportServiceTest {
     when(reportService.differenceReport(eq(types), same(previousSummary), same(currentSummary)))
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
-    when(classReportService.report(same(classCoverages), same(limit))).thenReturn(classMd);
+    ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("difference-report");
     when(classMd.toMarkdown()).thenReturn("");
 
@@ -75,7 +79,8 @@ class CoverageExportServiceTest {
         markdownWriter,
         stdout
     );
-    ExportRequest request = new ExportRequest(true, true, true, limit, types, true, true);
+    ExportRequest request = new ExportRequest(true, true, true, listCondition,
+        types, true, true);
 
     service.export(request);
 
@@ -114,7 +119,9 @@ class CoverageExportServiceTest {
     when(reportService.differenceReport(eq(types), same(previousSummary), same(currentSummary)))
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
-    when(classReportService.report(same(classCoverages), same(limit))).thenReturn(classMd);
+    ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("difference-report");
     when(classMd.toMarkdown()).thenReturn("");
 
@@ -127,7 +134,8 @@ class CoverageExportServiceTest {
         markdownWriter,
         stdout
     );
-    ExportRequest request = new ExportRequest(true, true, false, limit, types, false, true);
+    ExportRequest request = new ExportRequest(true, true, false,
+        listCondition, types, false, true);
 
     service.export(request);
 
@@ -165,7 +173,9 @@ class CoverageExportServiceTest {
     when(reportService.differenceReport(eq(types), same(previousSummary), same(currentSummary)))
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
-    when(classReportService.report(same(classCoverages), same(limit))).thenReturn(classMd);
+    ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("difference-report");
     when(classMd.toMarkdown()).thenReturn("");
 
@@ -178,7 +188,8 @@ class CoverageExportServiceTest {
         markdownWriter,
         stdout
     );
-    ExportRequest request = new ExportRequest(true, true, false, limit, types, true, false);
+    ExportRequest request = new ExportRequest(true, true, false,
+        listCondition, types, true, false);
 
     service.export(request);
 
@@ -214,7 +225,9 @@ class CoverageExportServiceTest {
     when(reportService.currentReport(eq(types), same(currentSummary)))
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
-    when(classReportService.report(same(classCoverages), same(limit))).thenReturn(classMd);
+    ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("current-report");
     when(classMd.toMarkdown()).thenReturn("");
 
@@ -228,7 +241,8 @@ class CoverageExportServiceTest {
         stdout
     );
 
-    ExportRequest request = new ExportRequest(false, false, false, limit, types, true, true);
+    ExportRequest request = new ExportRequest(false, false, false,
+        listCondition, types, true, true);
     service.export(request);
 
     verify(writeRepository, times(1)).writeAll(currentSummary);
@@ -263,7 +277,9 @@ class CoverageExportServiceTest {
     when(reportService.currentReport(eq(types), same(currentSummary)))
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
-    when(classReportService.report(same(classCoverages), same(limit))).thenReturn(classMd);
+    ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("current-report");
     when(classMd.toMarkdown()).thenReturn("");
     doThrow(new IOException()).when(markdownWriter).write(anyString());
@@ -278,7 +294,8 @@ class CoverageExportServiceTest {
         stdout
     );
 
-    ExportRequest request = new ExportRequest(false, false, false, limit, types, true, true);
+    ExportRequest request = new ExportRequest(false, false, false,
+        listCondition, types, true, true);
     assertThatThrownBy(() -> service.export(request))
         .isInstanceOf(UncheckedIOException.class);
   }

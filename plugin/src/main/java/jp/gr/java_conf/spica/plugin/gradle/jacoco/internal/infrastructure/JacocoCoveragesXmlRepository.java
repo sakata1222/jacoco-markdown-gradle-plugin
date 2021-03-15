@@ -49,7 +49,7 @@ public class JacocoCoveragesXmlRepository implements IJacocoCoverageRepository {
       Map<ClassName, Coverages> clazzToCoverages = ((List<Node>) root.get("package")).stream()
           .flatMap(pkgNode -> ((List<Node>) pkgNode.get("class")).stream())
           .collect(Collectors.toMap(
-              clazzNode -> new ClassName(clazzNode.get("@name").toString()),
+              clazzNode -> new ClassName(clazzNode.get("@name").toString().replace("/", ".")),
               clazzNode -> new Coverages(parseCounters(clazzNode))
           ));
       return new CoverageReport(
