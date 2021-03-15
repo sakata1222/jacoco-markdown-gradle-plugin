@@ -5,6 +5,7 @@
 ### Add
 
 - Exclude filters for class list
+- Branch coverage threshold
 
 ### Fix
 
