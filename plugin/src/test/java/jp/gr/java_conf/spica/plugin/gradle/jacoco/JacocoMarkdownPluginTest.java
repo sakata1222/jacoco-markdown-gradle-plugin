@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.gradle.api.Project;
@@ -279,7 +280,7 @@ class JacocoMarkdownPluginTest {
         cond.setLimit(1);
         cond.setExcludes(Arrays.asList(
             "jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList"));
-        ((JacocoMarkdownClassListCondition) getDelegate()).setLimit(1);
+        cond.setBranchCoverageLessThan(0);
         return null;
       }
     });

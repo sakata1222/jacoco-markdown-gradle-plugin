@@ -15,11 +15,13 @@ public class JacocoMarkdownClassListCondition implements Serializable,
 
   private int limit;
   private List<String> excludes;
+  private double branchCoverageLessThan;
 
   @Inject
   public JacocoMarkdownClassListCondition() {
     this.limit = 5;
     this.excludes = new ArrayList<>();
+    this.branchCoverageLessThan = 0;
   }
 
   public int getLimit() {
@@ -36,6 +38,14 @@ public class JacocoMarkdownClassListCondition implements Serializable,
 
   public void setExcludes(List<String> excludes) {
     this.excludes = excludes;
+  }
+
+  public double getBranchCoverageLessThan() {
+    return branchCoverageLessThan;
+  }
+
+  public void setBranchCoverageLessThan(double branchCoverageLessThan) {
+    this.branchCoverageLessThan = branchCoverageLessThan;
   }
 
   @Override
