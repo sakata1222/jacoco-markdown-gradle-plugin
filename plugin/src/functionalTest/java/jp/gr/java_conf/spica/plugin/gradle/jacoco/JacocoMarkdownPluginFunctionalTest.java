@@ -223,6 +223,74 @@ class JacocoMarkdownPluginFunctionalTest {
 
   @ParameterizedTest
   @CsvFileSource(resources = "/gradleVersions.csv")
+  void regex_can_be_used_as_exclude_filter(String gradleVersion) throws IOException {
+    writeString(projectDir.resolve("settings.gradle"), "");
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Path xml = jacocoReportPath.resolve("myJacocoTestReport.xml");
+    String xmlString = xml.toAbsolutePath().normalize().toString().replace("\\", "/");
+    Path previousJson = jacocoReportPath.resolve("myPreviousJacocoSummary.json");
+    String previousJsonString = previousJson.toAbsolutePath().toString().replace("\\", "/");
+    Path outputJson = jacocoReportPath.resolve("output.json");
+    String outputJsonString = outputJson.toAbsolutePath().normalize().toString().replace("\\", "/");
+    Path outputMd = jacocoReportPath.resolve("output.md");
+    String outputMdString = outputMd.toAbsolutePath().normalize().toString().replace("\\", "/");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'\n"
+            + "}\n"
+            + "\n"
+            + "jacocoTestReportMarkdown {\n"
+            + "  jacocoXml = file(\"" + xmlString + "\")\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
+            + "  classListEnabled = true\n"
+            + "  classListCondition {\n"
+            + "    limit = 3\n"
+            + "    excludes = [\n"
+            + "      \"/jp.gr.java_conf.saka.github.actions.sandbox.*/\""
+            + "    ]\n"
+            + "  }\n"
+            + "  previousJson = file(\"" + previousJsonString + "\")\n"
+            + "  targetTypes = [\"INSTRUCTION\", \"BRANCH\", \"ccc\"]\n"
+            + "  outputJson = file(\"" + outputJsonString + "\")\n"
+            + "  outputMd = file(\"" + outputMdString + "\")\n"
+            + "}\n"
+            + "");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("jacocoTestReportMarkdown", "--stacktrace");
+    runner.withProjectDir(projectDir.toFile());
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"), xml);
+    Files.copy(this.getClass().getResourceAsStream("/previousJacocoSummary.json"),
+        previousJson);
+    BuildResult result = runner.build();
+
+    String expected = ""
+        + "|Type       |Missed/Total|Coverage|\n"
+        + "|:---       |        ---:|    ---:|\n"
+        + "|INSTRUCTION|      15/245|  93.88%|\n"
+        + "|BRANCH     |        3/34|  91.18%|\n"
+        + "\n"
+        + "Class list with less coverage (Worst 3)\n"
+        + "|Class|Instructions(C0)|Branches(C1)|\n"
+        + "|:--- |            ---:|        ---:|\n";
+
+    assertThat(result.getOutput().replace("\r\n", "\n"))
+        .contains(expected)
+        .doesNotContain("|jp.");
+    assertThat(outputJson).exists();
+    assertThat(outputMd).hasContent(expected);
+  }
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
   void class_list_condition_can_be_configurable(String gradleVersion) throws IOException {
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
