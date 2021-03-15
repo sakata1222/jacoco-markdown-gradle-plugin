@@ -17,7 +17,7 @@ class ClassNameRegexExcludeFilterTest {
   @Test
   void matches_return_true_when_matches() {
     assertThat(
-        new ClassNameRegexExcludeFilter(new ClassNameFilterString("^foo.bar.MyClass$"))
+        new ClassNameRegexExcludeFilter(new ClassNameFilterString("/foo.bar.MyClass/"))
             .matches(new ClassName("foo.bar.MyClass")))
         .isTrue();
   }
@@ -25,7 +25,7 @@ class ClassNameRegexExcludeFilterTest {
   @Test
   void matches_return_false_when_matches_partially() {
     assertThat(
-        new ClassNameRegexExcludeFilter(new ClassNameFilterString("^foo.bar$"))
+        new ClassNameRegexExcludeFilter(new ClassNameFilterString("/foo.bar/"))
             .matches(new ClassName("foo.bar.MyClass")))
         .isFalse();
   }
@@ -33,7 +33,7 @@ class ClassNameRegexExcludeFilterTest {
   @Test
   void matches_return_true_when_regex_is_used() {
     assertThat(
-        new ClassNameRegexExcludeFilter(new ClassNameFilterString("^foo.bar.*$"))
+        new ClassNameRegexExcludeFilter(new ClassNameFilterString("/foo.bar.*/"))
             .matches(new ClassName("foo.bar.MyClass")))
         .isTrue();
   }
@@ -41,7 +41,7 @@ class ClassNameRegexExcludeFilterTest {
   @Test
   void matches_return_true_when_full_regex_is_used() {
     assertThat(
-        new ClassNameRegexExcludeFilter(new ClassNameFilterString("^foo.bar.*$"))
+        new ClassNameRegexExcludeFilter(new ClassNameFilterString("/foo.bar.*/"))
             .matches(new ClassName("foo.bar.MyClass")))
         .isTrue();
   }

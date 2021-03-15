@@ -12,7 +12,7 @@ class ClassNameExcludeFilterTest {
 
   private final List<ClassNameFilterString> filters = Arrays.asList(
       "foo.bar.MyExcludeClass",
-      "^foo.bar.exclude.pkg.*$")
+      "/foo.bar.exclude.pkg.*/")
       .stream()
       .map(ClassNameFilterString::new).collect(Collectors.toList());
   private final Coverages coverages = new Coverages(Collections.emptyList());

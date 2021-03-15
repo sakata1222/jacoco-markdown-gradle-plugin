@@ -11,7 +11,7 @@ public class ClassNameRegexExcludeFilter implements IClassNameExcludeFilter {
       throw new IllegalArgumentException(
           "exclude pattern(" + excludePattern + ") should be a pattern string");
     }
-    this.excludePattern = Pattern.compile(excludePattern.filterString());
+    this.excludePattern = Pattern.compile(excludePattern.regex());
   }
 
   @Override
