@@ -90,6 +90,6 @@ public class CoverageExportService {
   private ClassCoverageMarkdownTable buildClassTable(ExportRequest request,
       CoverageReport current) {
     return classCoverageReportService
-        .report(current.classToCoverages(), request.classCoverageLimit());
+        .report(current.classToCoverages(), request.classListExportCondition());
   }
 }

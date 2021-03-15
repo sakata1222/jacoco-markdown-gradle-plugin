@@ -20,8 +20,12 @@ public class ClassCoverage {
     this.coverages = coverages;
   }
 
-  public String classSimpleName() {
-    return className.simpleName();
+  public ClassName className() {
+    return className;
+  }
+
+  public String classCanonicalName() {
+    return className.canonicalName();
   }
 
   Coverages coverages() {

@@ -112,11 +112,15 @@ class JacocoMarkdownTaskTest {
     task.setClassListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
       @Override
       public JacocoMarkdownClassListCondition call() {
-        ((JacocoMarkdownClassListCondition) getDelegate()).setLimit(10);
+        JacocoMarkdownClassListCondition cond = (JacocoMarkdownClassListCondition) getDelegate();
+        cond.setLimit(10);
+        cond.setExcludes(Arrays.asList("a", "b", "c"));
         return null;
       }
     });
     assertThat(task.getClassListCondition().get().getLimit()).isEqualTo(10);
+    assertThat(task.getClassListCondition().get().getExcludes())
+        .isEqualTo(Arrays.asList("a", "b", "c"));
 
     task.setPreviousJson(projectRoot.resolve("previous.json").toFile());
     assertThat(task.getPreviousJson().getAsFile().get())
