@@ -12,7 +12,7 @@ plugins {
     id 'checkstyle'
     id "com.github.spotbugs" version "4.6.0"
     id 'jacoco'
-    id "com.github.sakata1222.jacoco-markdown" version "1.1.1"
+    id "com.github.sakata1222.jacoco-markdown" version "1.1.2"
 }
 
 repositories {
@@ -37,10 +37,10 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 }
 
 dependencies {
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.1'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
 }
 
 version = '1.1.2'
