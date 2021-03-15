@@ -24,7 +24,7 @@ $ ./gradlew build
 Class list with less coverage (Worst 5)
 |Class                                                 |Instructions(C0)|Branches(C1)|
 |:---                                                  |            ---:|        ---:|
-|jp/gr/java_conf/spica/plugin/gradle/jacoco/example/App|    8/29(72.41%)|0/4(100.00%)|
+|jp.gr.java_conf.spica.plugin.gradle.jacoco.example.App|    8/29(72.41%)|0/4(100.00%)|
 ```
 
 The markdown is output by a file, so you can put the coverage on a Pull Request by using some CI
@@ -95,7 +95,12 @@ jacocoMarkdown {
     stdout false // default true
     classListEnabled false // default true
     classListCondition {
-        limit = 2 // default is 5
+        limit = 2 // default is 5, 0 means no limit
+        excludes = [ // default is empty
+                     "com.example.MyClass", // when a class name exact matches this value, the class will be exclude
+                     "/com.example.exclude.package.*/" // regex can be used with "/regex/" style
+        ]
+        branchCoverageLessThan = 90 // default is 0, 0 means no filter by coverage
     }
 }
 ```
@@ -109,7 +114,12 @@ myJacocoMarkdown {
     stdout false
     classListEnabled false
     classListCondition {
-        limit = 5
+        limit = 2
+        excludes = [
+                "com.example.MyClass",
+                "/com.example.exclude.package.*/"
+        ]
+        branchCoverageLessThan = 90
     }
     previousJson file("path-to-a-base-json-to-show-the-coverage-changes")
     targetTypes(["INSTRUCTION", "BRANCH", "LINE", "COMPLEXITY", "METHOD", "CLASS"])
