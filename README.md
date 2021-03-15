@@ -117,3 +117,7 @@ myJacocoMarkdown {
     outputMd file("path-to-markdown")
 }
 ```
+
+#### Changelog
+
+See [CHANGELOG.md](CHANGELOG.md)
