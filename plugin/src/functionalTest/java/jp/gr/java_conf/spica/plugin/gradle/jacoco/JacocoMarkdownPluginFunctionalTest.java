@@ -236,6 +236,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "  classListEnabled true\n"
             + "  classListCondition {\n"
             + "    limit = 2\n"
+            + "    branchCoverageLessThan = 90"
             + "  }\n"
             + "}\n"
             + "");
@@ -263,7 +264,6 @@ class JacocoMarkdownPluginFunctionalTest {
         + "Class list with less coverage (Worst 2)\n"
         + "|Class                                                           |Instructions(C0)|Branches(C1)|\n"
         + "|:---                                                            |            ---:|        ---:|\n"
-        + "|jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList     |  0/119(100.00%)|2/22(90.91%)|\n"
         + "|jp.gr.java_conf.saka.github.actions.sandbox.utilities.SplitUtils|    3/64(95.31%)| 1/8(87.50%)|\n"
     ).doesNotContain(
         "jp/gr/java_conf/saka/github/actions/sandbox/app/App"

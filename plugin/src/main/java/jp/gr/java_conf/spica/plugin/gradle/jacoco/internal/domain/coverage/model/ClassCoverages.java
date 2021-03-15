@@ -26,14 +26,13 @@ public class ClassCoverages {
         )));
   }
 
-  public List<ClassCoverage> branchMissedWorstN(
-      ClassCoverageLimit limit,
-      ClassNameExcludeFilter excludeFilter) {
+  public List<ClassCoverage> branchMissedWorstN(ClassListExportCondition condition) {
     return classToCoverages.values().stream()
-        .filter(excludeFilter)
+        .filter(condition.branchCoverageLessThan())
+        .filter(condition.excludeFilter())
         .filter(ClassCoverage::hasMissedOnOC0C1)
         .sorted(ClassCoverage.BRANCH_MISSED_COMPARATOR)
-        .limit(limit.limit())
+        .limit(condition.limit().limit())
         .collect(Collectors.toList());
   }
 }

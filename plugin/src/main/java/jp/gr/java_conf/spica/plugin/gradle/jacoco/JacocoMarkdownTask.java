@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.CoverageExportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.ExportRequest;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassBranchCoveragesLessThanFilter;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverageLimit;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassListExportCondition;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassNameExcludeFilter;
@@ -177,7 +178,9 @@ public class JacocoMarkdownTask extends DefaultTask {
                   new ClassCoverageLimit(classListCondition().getLimit()),
                   new ClassNameExcludeFilter(
                       classListCondition().getExcludes().stream()
-                          .map(ClassNameFilterString::new).collect(Collectors.toList()))
+                          .map(ClassNameFilterString::new).collect(Collectors.toList())),
+                  new ClassBranchCoveragesLessThanFilter(
+                      classListCondition().getBranchCoverageLessThan())
               ),
               new CoverageTypes(targetTypes()),
               enableOutputJson(),

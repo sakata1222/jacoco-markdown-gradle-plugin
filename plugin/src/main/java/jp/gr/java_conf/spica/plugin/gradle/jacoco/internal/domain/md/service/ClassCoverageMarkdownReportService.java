@@ -10,7 +10,7 @@ public class ClassCoverageMarkdownReportService {
   public ClassCoverageMarkdownTable report(ClassCoverages classCoverages,
       ClassListExportCondition condition) {
     ClassCoverageMarkdownTable md = new ClassCoverageMarkdownTable();
-    classCoverages.branchMissedWorstN(condition.limit(), condition.excludeFilter()).stream()
+    classCoverages.branchMissedWorstN(condition).stream()
         .map(ClassCoverageMarkdownRowBuilder::classRow)
         .forEach(md::addRow);
     return md;

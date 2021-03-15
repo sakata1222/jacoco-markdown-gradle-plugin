@@ -33,7 +33,7 @@ public class ClassCoverageMarkdownRowBuilder {
             classCoverage.getInstructionCoverage().map(Coverage::missedPerTotalAndPercentage)
                 .orElse("-")),
         new MarkdownTableCol(
-            classCoverage.getBranchesCoverage().map(Coverage::missedPerTotalAndPercentage)
+            classCoverage.getBranchCoverage().map(Coverage::missedPerTotalAndPercentage)
                 .orElse("-")
         ))
     );

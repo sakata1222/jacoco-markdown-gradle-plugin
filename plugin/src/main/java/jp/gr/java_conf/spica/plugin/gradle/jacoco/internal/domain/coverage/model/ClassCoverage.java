@@ -36,7 +36,7 @@ public class ClassCoverage {
     return coverages.getInstruction();
   }
 
-  public Optional<Coverage> getBranchesCoverage() {
+  public Optional<Coverage> getBranchCoverage() {
     return coverages.getBranch();
   }
 

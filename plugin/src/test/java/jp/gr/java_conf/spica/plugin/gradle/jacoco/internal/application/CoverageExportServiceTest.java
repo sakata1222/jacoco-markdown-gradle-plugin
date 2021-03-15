@@ -17,6 +17,7 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Collections;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassBranchCoveragesLessThanFilter;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverageLimit;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassListExportCondition;
@@ -65,7 +66,12 @@ class CoverageExportServiceTest {
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
     ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
-    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    // BEGIN LONG LINE
+    ClassBranchCoveragesLessThanFilter branchCoveragesThreshold = new ClassBranchCoveragesLessThanFilter(
+        0);
+    // END LONG LINE
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter,
+        branchCoveragesThreshold);
     when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("difference-report");
     when(classMd.toMarkdown()).thenReturn("");
@@ -120,7 +126,12 @@ class CoverageExportServiceTest {
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
     ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
-    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    // BEGIN LONG LINE
+    ClassBranchCoveragesLessThanFilter branchCoveragesThreshold = new ClassBranchCoveragesLessThanFilter(
+        0);
+    // END LONG LINE
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter,
+        branchCoveragesThreshold);
     when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("difference-report");
     when(classMd.toMarkdown()).thenReturn("");
@@ -174,7 +185,12 @@ class CoverageExportServiceTest {
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
     ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
-    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    // BEGIN LONG LINE
+    ClassBranchCoveragesLessThanFilter branchCoveragesThreshold = new ClassBranchCoveragesLessThanFilter(
+        0);
+    // END LONG LINE
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter,
+        branchCoveragesThreshold);
     when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("difference-report");
     when(classMd.toMarkdown()).thenReturn("");
@@ -226,7 +242,12 @@ class CoverageExportServiceTest {
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
     ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
-    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    // BEGIN LONG LINE
+    ClassBranchCoveragesLessThanFilter branchCoveragesThreshold = new ClassBranchCoveragesLessThanFilter(
+        0);
+    // END LONG LINE
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter,
+        branchCoveragesThreshold);
     when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("current-report");
     when(classMd.toMarkdown()).thenReturn("");
@@ -278,7 +299,12 @@ class CoverageExportServiceTest {
         .thenReturn(md);
     ClassCoverageLimit limit = new ClassCoverageLimit(1);
     ClassNameExcludeFilter excludeFilter = new ClassNameExcludeFilter(Collections.emptyList());
-    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter);
+    // BEGIN LONG LINE
+    ClassBranchCoveragesLessThanFilter branchCoveragesThreshold = new ClassBranchCoveragesLessThanFilter(
+        0);
+    // END LONG LINE
+    ClassListExportCondition listCondition = new ClassListExportCondition(limit, excludeFilter,
+        branchCoveragesThreshold);
     when(classReportService.report(same(classCoverages), same(listCondition))).thenReturn(classMd);
     when(md.toMarkdown()).thenReturn("current-report");
     when(classMd.toMarkdown()).thenReturn("");
