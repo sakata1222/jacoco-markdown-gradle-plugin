@@ -1,13 +1,16 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure;
 
-import groovy.util.Node;
-import groovy.util.XmlParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassName;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
@@ -15,43 +18,43 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.IJacocoCoverageRepository;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 
 public class JacocoCoveragesXmlRepository implements IJacocoCoverageRepository {
 
-  private final XmlParser xmlParser;
+  private final DocumentBuilder documentBuilder;
   private final File jacocoXmlFile;
 
-  public JacocoCoveragesXmlRepository(XmlParser xmlParser, File jacocoXmlFile) {
-    this.xmlParser = xmlParser;
+  public JacocoCoveragesXmlRepository(DocumentBuilderFactory documentBuilderFactory,
+      File jacocoXmlFile) throws ParserConfigurationException {
+    documentBuilderFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+    documentBuilderFactory.setFeature("http://xml.org/sax/features/validation", false);
+    documentBuilderFactory
+        .setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+    documentBuilderFactory
+        .setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+    this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
     this.jacocoXmlFile = jacocoXmlFile;
-    initParser();
-  }
-
-  private void initParser() {
-    try {
-      this.xmlParser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
-      this.xmlParser
-          .setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-    } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
-      throw new IllegalStateException(e);
-    }
   }
 
   @Override
   public CoverageReport readAll() {
     try {
-      Node root = xmlParser.parse(jacocoXmlFile);
-      List<Coverage> summaryCoverages = parseCounters(root);
-      @SuppressWarnings("unchecked")
-      Map<ClassName, Coverages> clazzToCoverages = ((List<Node>) root.get("package")).stream()
-          .flatMap(pkgNode -> ((List<Node>) pkgNode.get("class")).stream())
+      Document doc = documentBuilder.parse(jacocoXmlFile);
+      Element rootReport = doc.getDocumentElement();
+      List<Coverage> summaryCoverages = parseCounters(rootReport);
+      Map<ClassName, Coverages> clazzToCoverages = nodeListAsStream(
+          rootReport.getElementsByTagName("package"))
+          .map(Element.class::cast)
+          .flatMap(pkgNode -> nodeListAsStream(pkgNode.getElementsByTagName("class")))
+          .map(Element.class::cast)
           .collect(Collectors.toMap(
-              clazzNode -> new ClassName(clazzNode.get("@name").toString().replace("/", ".")),
-              clazzNode -> new Coverages(parseCounters(clazzNode))
-          ));
+              clazzNode -> new ClassName(clazzNode.getAttribute("name").replace("/", ".")),
+              clazzNode -> new Coverages(parseCounters(clazzNode))));
       return new CoverageReport(
           new CoverageSummary(summaryCoverages),
           new ClassCoverages(clazzToCoverages)
@@ -63,14 +66,21 @@ public class JacocoCoveragesXmlRepository implements IJacocoCoverageRepository {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  private List<Coverage> parseCounters(Node counterHolder) {
-    return ((List<Node>) counterHolder.get("counter")).stream()
-        .map(node -> new Coverage(
-            node.get("@type").toString(),
-            Integer.parseInt(node.get("@covered").toString()),
-            Integer.parseInt(node.get("@missed").toString())))
+  private List<Coverage> parseCounters(Element counterHolder) {
+    NodeList childNodes = counterHolder.getChildNodes();
+    return nodeListAsStream(childNodes)
+        .filter(node -> node.getNodeName().equals("counter"))
+        .map(Element.class::cast)
+        .map(element ->
+            new Coverage(
+                element.getAttribute("type"),
+                Integer.parseInt(element.getAttribute("covered")),
+                Integer.parseInt(element.getAttribute("missed"))))
         .collect(Collectors.toList());
   }
 
+  private Stream<Node> nodeListAsStream(NodeList nodeList) {
+    return IntStream.range(0, nodeList.getLength())
+        .mapToObj(nodeList::item);
+  }
 }
