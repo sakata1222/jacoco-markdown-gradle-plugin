@@ -1,7 +1,6 @@
 package jp.gr.java_conf.spica.plugin.gradle.jacoco;
 
 import groovy.lang.Closure;
-import groovy.util.XmlParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.CoverageExportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.application.ExportRequest;
@@ -46,7 +46,6 @@ import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.testing.jacoco.tasks.JacocoReport;
-import org.xml.sax.SAXException;
 
 @CacheableTask
 public class JacocoMarkdownTask extends DefaultTask {
@@ -161,7 +160,9 @@ public class JacocoMarkdownTask extends DefaultTask {
     try (Writer mdWriter = Files
         .newBufferedWriter(outputMdAsFile().toPath(), StandardCharsets.UTF_8)) {
       CoverageExportService exportService = new CoverageExportService(
-          new JacocoCoveragesXmlRepository(new XmlParser(), jacocoXml()),
+          new JacocoCoveragesXmlRepository(
+              DocumentBuilderFactory.newInstance(),
+              jacocoXml()),
           new CoverageJsonRepository(resolvePreviousJson()),
           new CoverageJsonRepository(outputJsonAsFile()),
           new CoverageSummaryMarkdownReportService(),
@@ -187,7 +188,7 @@ public class JacocoMarkdownTask extends DefaultTask {
               enableOutputMd())
       );
       copyOutputJson();
-    } catch (ParserConfigurationException | SAXException e) {
+    } catch (ParserConfigurationException e) {
       throw new IllegalStateException(e);
     }
   }

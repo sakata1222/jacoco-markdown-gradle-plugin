@@ -2,11 +2,11 @@ package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure;
 
 import static jp.gr.java_conf.spica.plugin.gradle.jacoco.test.assertions.CustomAssertions.assertThat;
 
-import groovy.util.XmlParser;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassCoverages;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.ClassName;
@@ -16,16 +16,15 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 
 class JacocoCoveragesXmlRepositoryTest {
 
   private JacocoCoveragesXmlRepository repository;
 
   @BeforeEach
-  void beforeEach() throws ParserConfigurationException, SAXException {
+  void beforeEach() throws ParserConfigurationException {
     repository = new JacocoCoveragesXmlRepository(
-        new XmlParser(),
+        DocumentBuilderFactory.newInstance(),
         new File(this.getClass().getResource("/sample.xml").getFile()));
   }
 
