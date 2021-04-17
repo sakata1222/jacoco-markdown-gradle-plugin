@@ -27,7 +27,7 @@ public class Coverage {
 
   public String missedPerTotalAndPercentage() {
     return String.format(Locale.ENGLISH,
-        missedPerTotal() + "(%.2f%%)", coveragePercentAsFloat());
+        "%s(%.2f%%)", missedPerTotal(), coveragePercentAsFloat());
   }
 
   private int total() {

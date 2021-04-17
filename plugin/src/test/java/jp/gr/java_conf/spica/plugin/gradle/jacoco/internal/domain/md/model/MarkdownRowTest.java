@@ -3,6 +3,7 @@ package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.model;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class MarkdownRowTest {
@@ -15,11 +16,12 @@ class MarkdownRowTest {
             new MarkdownTableCol("2"),
             new MarkdownTableCol("3"))
     );
+    List<MarkdownTableColAlignment> list = Arrays.asList(
+        MarkdownTableColAlignment.LEFT,
+        MarkdownTableColAlignment.LEFT,
+        MarkdownTableColAlignment.LEFT);
     assertThatThrownBy(() -> row.toFormattedMarkdownLine(
-        Arrays.asList(
-            MarkdownTableColAlignment.LEFT,
-            MarkdownTableColAlignment.LEFT,
-            MarkdownTableColAlignment.LEFT),
+        list,
         new int[]{0, 0, 0, 4}))
         .isInstanceOf(IllegalArgumentException.class);
   }

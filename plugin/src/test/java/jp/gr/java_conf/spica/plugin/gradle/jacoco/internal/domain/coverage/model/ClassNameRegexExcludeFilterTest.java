@@ -9,8 +9,9 @@ class ClassNameRegexExcludeFilterTest {
 
   @Test
   void constructor_throws_Exception_when_argument_is_not_enclosed_hat_and_dollar() {
+    ClassNameFilterString filterString = new ClassNameFilterString("foo.bar.MyClass");
     assertThatThrownBy(() ->
-        new ClassNameRegexExcludeFilter(new ClassNameFilterString("foo.bar.MyClass")))
+        new ClassNameRegexExcludeFilter(filterString))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
