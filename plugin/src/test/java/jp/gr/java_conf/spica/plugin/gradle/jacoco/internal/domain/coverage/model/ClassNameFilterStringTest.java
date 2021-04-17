@@ -24,7 +24,8 @@ class ClassNameFilterStringTest {
 
   @Test
   void regex_throws_Exception_when_the_string_is_not_regex() {
-    assertThatThrownBy(() -> new ClassNameFilterString("/aa").regex())
+    ClassNameFilterString filter = new ClassNameFilterString("/aa");
+    assertThatThrownBy(() -> filter.regex())
         .isInstanceOf(IllegalStateException.class);
   }
 
