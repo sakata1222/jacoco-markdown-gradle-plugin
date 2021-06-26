@@ -173,7 +173,7 @@ class JacocoMarkdownTaskTest {
   @Test
   void run_copies_previous_json_when_previous_is_default() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -189,7 +189,7 @@ class JacocoMarkdownTaskTest {
   @Test
   void run_does_not_copy_previous_json_when_diff_disabled() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -206,7 +206,7 @@ class JacocoMarkdownTaskTest {
   @Test
   void run_does_not_copy_previous_json_when_previous_is_not_default() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -224,7 +224,7 @@ class JacocoMarkdownTaskTest {
   @Test
   void run_does_not_copy_previous_json_when_output_disabled() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -246,7 +246,7 @@ class JacocoMarkdownTaskTest {
   @Test
   void only_if_returns_true() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    Path xml = jacocoTask.getReports().getXml().getDestination().toPath();
+    Path xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get().toPath();
     Files.write(xml, "".getBytes(StandardCharsets.UTF_8));
 
     assertThat(task.getOnlyIf().isSatisfiedBy(task)).isTrue();
@@ -255,7 +255,7 @@ class JacocoMarkdownTaskTest {
   @Test
   void only_if_returns_false_when_it_disable() throws IOException {
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    Path xml = jacocoTask.getReports().getXml().getDestination().toPath();
+    Path xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get().toPath();
     Files.write(xml, "".getBytes(StandardCharsets.UTF_8));
 
     task.setEnabled(false);
