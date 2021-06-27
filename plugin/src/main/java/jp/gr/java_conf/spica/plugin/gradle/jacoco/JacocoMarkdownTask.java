@@ -358,8 +358,9 @@ public class JacocoMarkdownTask extends DefaultTask {
     ConfigurableReport xml = jacocoReport.getReports().getXml();
     Project project = getProject();
     this.jacocoXml.convention(
-        project.getLayout().file(project.provider(xml::getDestination)));
-    xml.setEnabled(true);
+        project.getLayout()
+            .file(project.provider(() -> xml.getOutputLocation().get().getAsFile())));
+    xml.getRequired().set(true);
     jacocoReport.finalizedBy(this);
   }
 

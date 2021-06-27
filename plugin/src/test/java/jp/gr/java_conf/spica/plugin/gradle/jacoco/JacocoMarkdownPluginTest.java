@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collections;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.gradle.api.Project;
@@ -74,7 +73,7 @@ class JacocoMarkdownPluginTest {
     JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
 
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -169,7 +168,7 @@ class JacocoMarkdownPluginTest {
     JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
 
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -207,7 +206,7 @@ class JacocoMarkdownPluginTest {
     JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
 
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -244,7 +243,7 @@ class JacocoMarkdownPluginTest {
     JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
 
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {
@@ -293,7 +292,7 @@ class JacocoMarkdownPluginTest {
     JacocoMarkdownTask mdTask = (JacocoMarkdownTask) task;
 
     JacocoReport jacocoTask = (JacocoReport) project.getTasks().findByName("jacocoTestReport");
-    File xml = jacocoTask.getReports().getXml().getDestination();
+    File xml = jacocoTask.getReports().getXml().getOutputLocation().getAsFile().get();
     Files.createDirectories(xml.getParentFile().toPath());
     try (Writer writer = Files.newBufferedWriter(xml.toPath(), StandardCharsets.UTF_8);
         InputStream is = this.getClass().getResourceAsStream("/sample.xml")) {

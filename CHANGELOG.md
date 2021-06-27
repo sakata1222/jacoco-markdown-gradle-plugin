@@ -1,14 +1,24 @@
 # Changelog
 
+## [1.3.0] - Not released
+
+## Added
+
+- Support Gradle 7.0
+
+## Removed
+
+- Gradle 5.x and 6.0.x is no longer supported
+
 ## [1.2.0] - 2021-04-10
 
-## Add
+## Added
 
 - Support Gradle 7.0
 
 ## [1.1.2] - 2021-03-15
 
-### Add
+### Added
 
 - Exclude filters for class list
 - Branch coverage threshold
