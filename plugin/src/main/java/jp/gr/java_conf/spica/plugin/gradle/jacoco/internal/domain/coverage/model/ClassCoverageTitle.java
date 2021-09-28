@@ -11,6 +11,6 @@ public class ClassCoverageTitle {
   @Override
   public String toString() {
     return "Class list with less coverage"
-        + (limit.hasLimit() ? " (Worst " + limit.limit() + ")" : "");
+        + (limit.hasLimit() ? " (Worst " + limit.limit() + ")" : "") + "\n";
   }
 }
