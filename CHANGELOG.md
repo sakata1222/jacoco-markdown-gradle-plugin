@@ -1,10 +1,12 @@
 # Changelog
 
-## [1.3.0] - Not released
+## [1.3.0] - 2021-10-03
 
-## Added
+## Fixed
 
-- Support Gradle 7.0
+- Deprecation warning occurs in Gradle 7.0
+- Add new line between a text and a table. Thank you for
+  the [contribution](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/pull/49).
 
 ## Removed
 
