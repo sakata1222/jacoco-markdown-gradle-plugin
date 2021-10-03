@@ -22,6 +22,7 @@ $ ./gradlew build
 |LINE       |  ~~2/6~~ 2/8|    ~~66.67~~ 75.00%|
 
 Class list with less coverage (Worst 5)
+
 |Class                                                 |Instructions(C0)|Branches(C1)|
 |:---                                                  |            ---:|        ---:|
 |jp.gr.java_conf.spica.plugin.gradle.jacoco.example.App|    8/29(72.41%)|0/4(100.00%)|
