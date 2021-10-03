@@ -57,6 +57,7 @@ public class CoverageExportService {
       stdout.println(formattedMd);
       if (request.classListEnabled()) {
         stdout.println(classCoverageTableTitle);
+        stdout.println();
         stdout.println(formattedClassCoverage);
       }
     }
@@ -68,6 +69,7 @@ public class CoverageExportService {
       if (request.classListEnabled()) {
         markdownWriter.write("\n");
         markdownWriter.write(classCoverageTableTitle.toString());
+        markdownWriter.write("\n");
         markdownWriter.write("\n");
         markdownWriter.write(formattedClassCoverage);
       }

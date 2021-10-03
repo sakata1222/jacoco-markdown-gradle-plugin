@@ -85,7 +85,8 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|BRANCH     |        3/34|  91.18%|\n"
         + "|LINE       |        5/69|  92.75%|\n"
         + "\n"
-        + "Class list with less coverage (Worst 5)\n\n"
+        + "Class list with less coverage (Worst 5)\n"
+        + "\n"
         + "|Class                                                            |Instructions(C0)|Branches(C1)|\n"
         + "|:---                                                             |            ---:|        ---:|\n"
         + "|jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList      |  0/119(100.00%)|2/22(90.91%)|\n"
@@ -278,7 +279,8 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|INSTRUCTION|      15/245|  93.88%|\n"
         + "|BRANCH     |        3/34|  91.18%|\n"
         + "\n"
-        + "Class list with less coverage (Worst 3)\n\n"
+        + "Class list with less coverage (Worst 3)\n"
+        + "\n"
         + "|Class|Instructions(C0)|Branches(C1)|\n"
         + "|:--- |            ---:|        ---:|\n";
 
@@ -329,7 +331,8 @@ class JacocoMarkdownPluginFunctionalTest {
         + "|BRANCH     |        3/34|  91.18%|\n"
         + "|LINE       |        5/69|  92.75%|\n"
         + "\n"
-        + "Class list with less coverage (Worst 2)\n\n"
+        + "Class list with less coverage (Worst 2)\n"
+        + "\n"
         + "|Class                                                           |Instructions(C0)|Branches(C1)|\n"
         + "|:---                                                            |            ---:|        ---:|\n"
         + "|jp.gr.java_conf.saka.github.actions.sandbox.utilities.SplitUtils|    3/64(95.31%)| 1/8(87.50%)|\n"
@@ -439,18 +442,19 @@ class JacocoMarkdownPluginFunctionalTest {
     BuildResult result = runner.build();
     // BEGIN LONG LINE
     assertThat(result.getOutput().replace("\r\n", "\n")).contains(""
-        + "|Type       |Missed/Total|Coverage|\n"
-        + "|:---       |        ---:|    ---:|\n"
-        + "|INSTRUCTION|      15/245|  93.88%|\n"
-        + "|BRANCH     |        3/34|  91.18%|\n"
-        + "|LINE       |        5/69|  92.75%|\n"
-        + "\n"
-        + "Class list with less coverage (Worst 3)\n\n"
-        + "|Class                                                          |Instructions(C0)|Branches(C1)|\n"
-        + "|:---                                                           |            ---:|        ---:|\n"
-        + "|jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList    |  0/119(100.00%)|2/22(90.91%)|\n"
-        + "|jp.gr.java_conf.saka.github.actions.sandbox.utilities.JoinUtils|    3/31(90.32%)|0/4(100.00%)|\n"
-        + "|jp.gr.java_conf.saka.github.actions.sandbox.app.MessageUtils   |     3/5(40.00%)|           -|")
+            + "|Type       |Missed/Total|Coverage|\n"
+            + "|:---       |        ---:|    ---:|\n"
+            + "|INSTRUCTION|      15/245|  93.88%|\n"
+            + "|BRANCH     |        3/34|  91.18%|\n"
+            + "|LINE       |        5/69|  92.75%|\n"
+            + "\n"
+            + "Class list with less coverage (Worst 3)\n"
+            + "\n"
+            + "|Class                                                          |Instructions(C0)|Branches(C1)|\n"
+            + "|:---                                                           |            ---:|        ---:|\n"
+            + "|jp.gr.java_conf.saka.github.actions.sandbox.list.LinkedList    |  0/119(100.00%)|2/22(90.91%)|\n"
+            + "|jp.gr.java_conf.saka.github.actions.sandbox.utilities.JoinUtils|    3/31(90.32%)|0/4(100.00%)|\n"
+            + "|jp.gr.java_conf.saka.github.actions.sandbox.app.MessageUtils   |     3/5(40.00%)|           -|")
         .doesNotContain(
             "|jp/gr/java_conf/saka/github/actions/sandbox/utilities/JoinUtils  |    3/31(90.32%)|           -|");
     // END LONG INE
