@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.Y.Z] - Not released
+
+## Added
+
+- Support Gradle 7.3
+
 ## [1.3.0] - 2021-10-03
 
 ## Fixed
