@@ -4,7 +4,7 @@
 
 ## Added
 
-- Support Gradle 7.3
+- Support Gradle 7.3, 7.3.1
 
 ## [1.3.0] - 2021-10-03
 
