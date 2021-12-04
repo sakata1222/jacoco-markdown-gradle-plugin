@@ -94,8 +94,8 @@ jacocoTestReport {
     dependsOn test, functionalTest
     mustRunAfter test, functionalTest
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
 
