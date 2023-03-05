@@ -1,12 +1,21 @@
 # Changelog
 
-## [1.Y.Z] - Not released
+## [1.4.0] - Not released
 
 ## Added
 
-- Support Gradle 7.3.x, 7.4.x, 7.5.x, 7.6.x
+- Support Gradle New Versions:
+    - 8.0.x
 
 ## [1.3.0] - 2021-10-03
+
+## Added
+
+- Support Gradle New Versions:
+    - 7.3.x
+    - 7.4.x
+    - 7.5.x
+    - 7.6.x
 
 ## Fixed
 
