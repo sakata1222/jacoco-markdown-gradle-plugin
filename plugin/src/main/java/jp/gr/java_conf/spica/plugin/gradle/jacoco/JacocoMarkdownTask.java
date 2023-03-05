@@ -26,6 +26,7 @@ import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.Cla
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.md.service.CoverageSummaryMarkdownReportService;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.CoverageJsonRepository;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure.JacocoCoveragesXmlRepository;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.utils.GradleVersionSupport;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.file.ProjectLayout;
@@ -359,7 +360,8 @@ public class JacocoMarkdownTask extends DefaultTask {
     Project project = getProject();
     this.jacocoXml.convention(
         project.getLayout()
-            .file(project.provider(() -> xml.getOutputLocation().get().getAsFile())));
+            .file(project.provider(
+                () -> GradleVersionSupport.getOutputLocation(xml).get().getAsFile())));
     xml.getRequired().set(true);
     jacocoReport.finalizedBy(this);
   }
