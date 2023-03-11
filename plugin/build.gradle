@@ -51,7 +51,7 @@ gradlePlugin {
     vcsUrl = 'https://github.com/sakata1222/jacoco-markdown-gradle-plugin'
     plugins {
         jacocoMd {
-            id = 'gradle.plugin.com.github.sakata1222.jacoco-markdown'
+            id = 'com.github.sakata1222.jacoco-markdown'
             implementationClass = 'jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownPlugin'
             displayName = 'jacoco markdown report plugin'
             description = 'Gradle plugin to parse jacoco report as a markdown'
