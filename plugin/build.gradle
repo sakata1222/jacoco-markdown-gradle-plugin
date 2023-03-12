@@ -43,7 +43,7 @@ dependencies {
 }
 
 version = '1.4.0'
-group = 'com.github.sakata1222'
+group = 'gradle.plugin.com.github.sakata1222'
 
 gradlePlugin {
     // Define the plugin
