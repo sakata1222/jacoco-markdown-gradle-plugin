@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.utils.GradleVersionSupport;
 import org.gradle.util.Configurable;
 
 public class JacocoMarkdownClassListCondition implements Serializable,
@@ -48,12 +49,8 @@ public class JacocoMarkdownClassListCondition implements Serializable,
   }
 
   @Override
-  @SuppressWarnings({"rawtypes", "deprecation"}) // the interface is defined with rawtypes..
+  @SuppressWarnings("rawtypes")// the interface is defined with rawtypes..
   public JacocoMarkdownClassListCondition configure(Closure closure) {
-    // org.gradle.util.ConfigureUtil is deprecated,
-    // but org.gradle.util.internal.ConfigureUtil which is available in gradle 7.1 or later
-    // is not deprecated
-    org.gradle.util.ConfigureUtil.configureSelf(closure, this);
-    return this;
+    return GradleVersionSupport.configureSelf(closure, this);
   }
 }

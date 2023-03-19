@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.x] - Not released
+
+### Refactor
+
+- [#74](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/pull/74) Do not
+  use `org.gradle.util.ConfigureUtil.configureSelf` which is deprecated.
+
 ## [1.4.0] - 2023-03-12
 
 ## Added
