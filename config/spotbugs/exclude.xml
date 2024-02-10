@@ -7,4 +7,10 @@
     </AND>
     <Bug code="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
   </Match>
+  <Match>
+    <OR>
+      <Bug code="CT_CONSTRUCTOR_THROW"/>
+      <Bug code="EI_EXPOSE_REP"/>
+    </OR>
+  </Match>
 </FindBugsFilter>
