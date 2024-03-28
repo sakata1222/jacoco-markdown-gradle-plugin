@@ -25,6 +25,8 @@ public class App {
   }
 
   public static void main(String[] args) {
-    LOGGER.info(new App().getGreeting(args));
+    LOGGER.atInfo()
+        .setMessage("{}")
+        .addArgument(() -> new App().getGreeting(args));
   }
 }
