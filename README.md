@@ -29,7 +29,7 @@ Class list with less coverage (Worst 5)
 ```
 
 The markdown is output by a file, so you can put the coverage on a Pull Request by using some CI
-tools. For Github actions, you can use [github-script](https://github.com/actions/github-script) to
+tools. For GitHub actions, you can use [github-script](https://github.com/actions/github-script) to
 read the markdown and put it to the PR.
 
 Gradle versions:
