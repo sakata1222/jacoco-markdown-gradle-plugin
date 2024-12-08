@@ -37,7 +37,9 @@ jobs:
       - name: Build
         run: ./gradlew build --stacktrace
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           file: plugin/build/reports/jacoco/test/jacocoTestReport.xml
           flags: unittests

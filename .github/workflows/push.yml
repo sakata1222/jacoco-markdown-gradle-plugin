@@ -61,7 +61,9 @@ jobs:
         # the plugin:functionalTest task uses older gradle which does not support JDK17
         run: ./gradlew sonar -x plugin:functionalTest --stacktrace
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           file: plugin/build/reports/jacoco/test/jacocoTestReport.xml
           flags: unittests
