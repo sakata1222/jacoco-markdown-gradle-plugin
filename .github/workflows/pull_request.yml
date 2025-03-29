@@ -37,7 +37,14 @@ jobs:
       - name: Build
         run: ./gradlew build --stacktrace
 
-      - uses: codecov/codecov-action@v5
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: plugin/build/reports/jacoco/test/jacocoTestReport.xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
