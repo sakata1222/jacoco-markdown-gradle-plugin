@@ -48,7 +48,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-version = '1.4.0'
+version = '1.5.0'
 group = 'gradle.plugin.com.github.sakata1222'
 
 gradlePlugin {
