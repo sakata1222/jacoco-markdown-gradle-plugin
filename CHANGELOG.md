@@ -4,7 +4,7 @@
 
 ### Added
 
-- Support Gradle 9.0
+- Support Gradle 9.0.0
 
 ### Breaking Changes
 
