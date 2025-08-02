@@ -1,10 +1,19 @@
 # Changelog
 
-## [1.4.x] - Not released
+## [1.5.0] - Not released
+
+### Added
+
+- Support Gradle 9.0.0
+
+### Breaking Changes
+
+- Versions earlier than 7.3 are no longer supported.
 
 ### Refactor
 
-- [#74](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/pull/74) Do not use `org.gradle.util.ConfigureUtil.configureSelf` which is deprecated.
+- [#74](https://github.com/sakata1222/jacoco-markdown-gradle-plugin/pull/74) Do not use
+  `org.gradle.util.ConfigureUtil.configureSelf` which is deprecated.
 
 ## [1.4.0] - 2023-03-12
 

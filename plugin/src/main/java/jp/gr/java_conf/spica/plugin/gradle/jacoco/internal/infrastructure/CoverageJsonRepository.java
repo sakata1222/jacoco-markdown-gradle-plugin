@@ -8,6 +8,7 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
@@ -49,11 +50,14 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
     return fromMap((Map<String, Map<String, Object>>) jsonSlurper.parse(jsonFile));
   }
 
-  private Map<String, CoverageJson> toMap(CoverageSummary coverages) {
+  private Map<String, Map<String, Object>> toMap(CoverageSummary coverages) {
     return coverages.typeToCoverage().entrySet().stream()
         .collect(CustomCollectors.toUniqueLinkedHashMap(
             Map.Entry::getKey,
-            e -> new CoverageJson(e.getValue())
+            e -> {
+              CoverageJson json = new CoverageJson(e.getValue());
+              return json.toMap();
+            }
         ));
   }
 
@@ -79,8 +83,8 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
 
     public CoverageJson(Map<String, Object> map) {
       this.type = (String) map.get("type");
-      this.covered = (int) map.get("covered");
-      this.missed = (int) map.get("missed");
+      this.covered = (int) map.getOrDefault("covered", -1);
+      this.missed = (int) map.getOrDefault("missed", -1);
     }
 
     public Coverage toCoverage() {
@@ -91,19 +95,14 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
       );
     }
 
-    @SuppressWarnings("unused")
-    private String getType() {
-      return type;
-    }
+    Map<String, Object> toMap() {
+      // use LinkedHashMap to keep the order of JSON.
+      Map<String, Object> map = new LinkedHashMap<>();
+      map.put("type", type);
+      map.put("missed", missed);
+      map.put("covered", covered);
 
-    @SuppressWarnings("unused")
-    private int getCovered() {
-      return covered;
-    }
-
-    @SuppressWarnings("unused")
-    private int getMissed() {
-      return missed;
+      return map;
     }
   }
 }
