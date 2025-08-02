@@ -49,4 +49,13 @@ public class Coverage {
   public int getMissed() {
     return missed;
   }
+
+  @Override
+  public String toString() {
+    return "Coverage{" +
+        "type='" + type + '\'' +
+        ", covered=" + covered +
+        ", missed=" + missed +
+        '}';
+  }
 }
