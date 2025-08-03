@@ -13,7 +13,7 @@ plugins {
     // FIXME re-apply spotbugs plugin once the plugin supports Gradle 9
 /*    id "com.github.spotbugs" version "6.2.1" */
     id 'jacoco'
-    id "com.github.sakata1222.jacoco-markdown" version "1.4.0"
+    id "com.github.sakata1222.jacoco-markdown" version "1.5.2"
 }
 
 repositories {
