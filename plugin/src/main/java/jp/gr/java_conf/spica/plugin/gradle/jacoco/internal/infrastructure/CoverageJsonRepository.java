@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
@@ -62,11 +63,17 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
   }
 
   private CoverageSummary fromMap(Map<String, Map<String, Object>> map) {
-    return new CoverageSummary(map.values().stream()
-        .map(CoverageJson::new)
-        .map(CoverageJson::toCoverage)
-        .collect(Collectors.toList())
-    );
+    try {
+      return new CoverageSummary(map.values().stream()
+          .filter(value -> !value.isEmpty())
+          .map(CoverageJson::new)
+          .map(CoverageJson::toCoverage)
+          .collect(Collectors.toList())
+      );
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException(
+          String.format(Locale.ENGLISH, "Unexpected error occurred. Input %s", map), e);
+    }
   }
 
   static class CoverageJson {
@@ -99,9 +106,8 @@ public class CoverageJsonRepository implements IOwnCoveragesReadRepository,
       // use LinkedHashMap to keep the order of JSON.
       Map<String, Object> map = new LinkedHashMap<>();
       map.put("type", type);
-      map.put("missed", missed);
       map.put("covered", covered);
-
+      map.put("missed", missed);
       return map;
     }
   }

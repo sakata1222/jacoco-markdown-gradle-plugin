@@ -2,15 +2,18 @@ package jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.infrastructure;
 
 import static jp.gr.java_conf.spica.plugin.gradle.jacoco.test.assertions.CustomAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.Coverage;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.internal.domain.coverage.model.CoverageSummary;
 import jp.gr.java_conf.spica.plugin.gradle.jacoco.test.TestPaths;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class CoverageJsonRepositoryTest {
@@ -42,6 +45,34 @@ class CoverageJsonRepositoryTest {
     );
     assertThat(coverages)
         .isEqualTo(expected);
+  }
+
+  @Test
+  @DisplayName("plugin version v1.4.0 or earlier write empty summary with Gradle 9,"
+      + " so newer plugin should be able to read it")
+  void readAllEmpty() {
+    CoverageJsonRepository repository = new CoverageJsonRepository(
+        TestPaths.testData().resolve("jacocoSummaryEmpty.json").toFile());
+    CoverageSummary coverages = repository.readAll();
+    CoverageSummary expected = new CoverageSummary(new ArrayList<>());
+    assertThat(coverages)
+        .isEqualTo(expected);
+  }
+
+  @Test
+  @DisplayName("Just for test, read all throws detailed exception")
+  void readAllThrowsDetailedException() {
+    CoverageJsonRepository repository = new CoverageJsonRepository(
+        TestPaths.testData().resolve("jacocoSummaryInvalid.json").toFile());
+    // BEGIN LONG LINE
+    assertThatThrownBy(() -> repository.readAll())
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining(
+            "Unexpected error occurred. Input {INSTRUCTION={missed=15, covered=230}, BRANCH={missed=3, covered=31}}")
+        .cause()
+        .hasMessageContaining(
+            "Duplicated keys are detected. Values of the duplicated key:Coverage{type='null', covered=230, missed=15}, Coverage{type='null', covered=31, missed=3}");
+    // END LONG LINE
   }
 
   @Test

@@ -52,10 +52,7 @@ public class Coverage {
 
   @Override
   public String toString() {
-    return "Coverage{" +
-        "type='" + type + '\'' +
-        ", covered=" + covered +
-        ", missed=" + missed +
-        '}';
+    return "Coverage{"
+        + "type='" + type + '\'' + ", covered=" + covered + ", missed=" + missed + '}';
   }
 }

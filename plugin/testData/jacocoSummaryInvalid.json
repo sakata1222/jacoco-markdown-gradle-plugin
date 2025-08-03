@@ -1,0 +1,10 @@
+{
+    "INSTRUCTION": {
+        "missed": 15,
+        "covered": 230
+    },
+    "BRANCH": {
+        "missed": 3,
+        "covered": 31
+    }
+}
