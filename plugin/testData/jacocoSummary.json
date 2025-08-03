@@ -1,32 +1,32 @@
 {
     "INSTRUCTION": {
         "type": "INSTRUCTION",
-        "missed": 15,
-        "covered": 230
+        "covered": 230,
+        "missed": 15
     },
     "BRANCH": {
         "type": "BRANCH",
-        "missed": 3,
-        "covered": 31
+        "covered": 31,
+        "missed": 3
     },
     "LINE": {
         "type": "LINE",
-        "missed": 5,
-        "covered": 64
+        "covered": 64,
+        "missed": 5
     },
     "COMPLEXITY": {
         "type": "COMPLEXITY",
-        "missed": 8,
-        "covered": 30
+        "covered": 30,
+        "missed": 8
     },
     "METHOD": {
         "type": "METHOD",
-        "missed": 5,
-        "covered": 16
+        "covered": 16,
+        "missed": 5
     },
     "CLASS": {
         "type": "CLASS",
-        "missed": 0,
-        "covered": 7
+        "covered": 7,
+        "missed": 0
     }
 }
