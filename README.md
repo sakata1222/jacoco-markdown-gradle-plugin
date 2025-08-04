@@ -34,9 +34,9 @@ read the markdown and put it to the PR.
 
 Gradle versions:
 
+- 9.0
 - 8.x
-- 7.x
-- 6.1 or later
+- 7.3 or later
 
 Java versions:
 
