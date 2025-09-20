@@ -40,10 +40,10 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 */
 
 dependencies {
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.13.3'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
-    testImplementation group: 'commons-io', name: 'commons-io', version: '2.19.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.18.0'
+    testImplementation "org.junit.jupiter:junit-jupiter:5.13.3"
+    testImplementation "org.assertj:assertj-core:3.27.3"
+    testImplementation "commons-io:commons-io:2.19.0"
+    testImplementation "org.mockito:mockito-core:5.18.0"
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

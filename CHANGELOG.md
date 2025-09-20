@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.5.3—]Not released
+
+- Support Gradle 9.1.0
+
 ## [1.5.2] - 2025-08-03
 
 ### Added

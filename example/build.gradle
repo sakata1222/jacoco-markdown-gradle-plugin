@@ -21,8 +21,8 @@ repositories {
 
 dependencies {
     // This dependency is used by the application.
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.3'
+    implementation "org.slf4j:slf4j-api:2.0.12"
+    implementation "ch.qos.logback:logback-classic:1.5.3"
 
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
