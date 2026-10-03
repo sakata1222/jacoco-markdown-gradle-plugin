@@ -7,11 +7,10 @@
  */
 
 plugins {
-    id "com.gradle.plugin-publish" version "1.1.0"
+    id "com.gradle.plugin-publish" version "2.2.1"
     id 'java-gradle-plugin'
     id 'checkstyle'
-    // FIXME re-apply spotbugs plugin once the plugin supports Gradle 9
-/*    id "com.github.spotbugs" version "6.2.1" */
+    id "com.github.spotbugs" version "6.5.12"
     id 'jacoco'
     id "com.github.sakata1222.jacoco-markdown" version "1.5.2"
 }
@@ -28,16 +27,13 @@ checkstyle {
     toolVersion = "8.38"
 }
 
-// FIXME re-apply spotbugs plugin once the plugin supports Gradle 9
-/*
-tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
     excludeFilter = file("${rootDir}/config/spotbugs/exclude.xml")
 }
-*/
 
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.13.3"
