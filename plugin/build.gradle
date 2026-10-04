@@ -24,7 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 checkstyle {
-    toolVersion = "8.38"
+    // Checkstyle 11+ requires JDK 21, while functional tests must run on JDK 17 to exercise Gradle 7.3.
+    toolVersion = "10.26.1"
 }
 
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
@@ -36,10 +37,11 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
 }
 
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter:5.13.3"
-    testImplementation "org.assertj:assertj-core:3.27.3"
-    testImplementation "commons-io:commons-io:2.19.0"
-    testImplementation "org.mockito:mockito-core:5.18.0"
+    // JUnit 6 requires Java 17, so stay on 5.x to keep test code on --release 8
+    testImplementation "org.junit.jupiter:junit-jupiter:5.14.4"
+    testImplementation "org.assertj:assertj-core:3.27.7"
+    testImplementation "commons-io:commons-io:2.22.0"
+    testImplementation "org.mockito:mockito-core:5.24.0"
     testImplementation gradleApi()
     testImplementation localGroovy()
 
