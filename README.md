@@ -93,9 +93,9 @@ For default task:
 
 ```groovy
 jacocoMarkdown {
-    diffEnabled false // default true
-    stdout false // default true
-    classListEnabled false // default true
+    diffEnabled = false // default true
+    stdout = false // default true
+    classListEnabled = false // default true
     classListCondition {
         limit = 2 // default is 5, 0 means no limit
         excludes = [ // default is empty
@@ -111,10 +111,10 @@ For a specific task:
 
 ```groovy
 myJacocoMarkdown {
-    jacocoXml file("path-to-jacoco-xml")
-    diffEnabled false
-    stdout false
-    classListEnabled false
+    jacocoXml = file("path-to-jacoco-xml")
+    diffEnabled = false
+    stdout = false
+    classListEnabled = false
     classListCondition {
         limit = 2
         excludes = [
@@ -123,12 +123,17 @@ myJacocoMarkdown {
         ]
         branchCoverageLessThan = 90
     }
-    previousJson file("path-to-a-base-json-to-show-the-coverage-changes")
-    targetTypes(["INSTRUCTION", "BRANCH", "LINE", "COMPLEXITY", "METHOD", "CLASS"])
-    outputJson file("path-to-output-json")
-    outputMd file("path-to-markdown")
+    previousJson = file("path-to-a-base-json-to-show-the-coverage-changes")
+    targetTypes = ["INSTRUCTION", "BRANCH", "LINE", "COMPLEXITY", "METHOD", "CLASS"]
+    outputJson = file("path-to-output-json")
+    outputMd = file("path-to-markdown")
 }
 ```
+
+#### Migrating to Gradle 10
+
+Gradle 10 removes the `propName value` syntax (e.g. `diffEnabled false`). Use `propName = value`
+instead. See [MIGRATION.md](MIGRATION.md).
 
 #### Changelog
 

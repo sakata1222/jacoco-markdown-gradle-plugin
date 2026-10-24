@@ -145,6 +145,34 @@ class JacocoMarkdownTaskTest {
   }
 
   @Test
+  void classListCondition_can_be_configured_by_block() {
+    task.classListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
+      @Override
+      public JacocoMarkdownClassListCondition call() {
+        JacocoMarkdownClassListCondition cond = (JacocoMarkdownClassListCondition) getDelegate();
+        cond.setLimit(10);
+        return null;
+      }
+    });
+    assertThat(task.getClassListCondition().get().getLimit()).isEqualTo(10);
+  }
+
+  @Test
+  void extension_classListCondition_can_be_configured_by_block() {
+    JacocoMarkdownExtension extension = project.getExtensions()
+        .findByType(JacocoMarkdownExtension.class);
+    extension.classListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
+      @Override
+      public JacocoMarkdownClassListCondition call() {
+        JacocoMarkdownClassListCondition cond = (JacocoMarkdownClassListCondition) getDelegate();
+        cond.setLimit(10);
+        return null;
+      }
+    });
+    assertThat(extension.classListCondition.get().getLimit()).isEqualTo(10);
+  }
+
+  @Test
   void autoConfigureByJacocoReportTask() {
     JacocoMarkdownTask task = project.getTasks().register(
         "myJacocoMd",

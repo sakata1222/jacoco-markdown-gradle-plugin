@@ -303,7 +303,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoTestReportMarkdown {\n"
-            + "  classListEnabled true\n"
+            + "  classListEnabled = true\n"
             + "  classListCondition {\n"
             + "    limit = 2\n"
             + "    branchCoverageLessThan = 90"
@@ -414,9 +414,9 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoMarkdown {\n"
-            + "  diffEnabled false\n"
-            + "  stdout true\n"
-            + "  classListEnabled true\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
+            + "  classListEnabled = true\n"
             + "  classListCondition {\n"
             + "    limit = 3\n"
             + "    excludes = [\n"
@@ -472,9 +472,9 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoMarkdown {\n"
-            + "  enabled false\n"
-            + "  diffEnabled false\n"
-            + "  stdout true\n"
+            + "  enabled = false\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
             + "}\n"
             + "");
 
@@ -494,6 +494,67 @@ class JacocoMarkdownPluginFunctionalTest {
     BuildResult result = runner.build();
 
     assertThat(result.getOutput()).contains("Task :jacocoTestReportMarkdown SKIPPED");
+  }
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/gradleVersions.csv")
+  void assignment_style_dsl_does_not_use_deprecated_features(String gradleVersion)
+      throws IOException {
+    // The syntax recommended in README and MIGRATION.md
+    writeString(projectDir.resolve("settings.gradle"), "");
+    writeString(projectDir.resolve("build.gradle"),
+        "plugins {"
+            + "  id 'java'\n"
+            + "  id 'jacoco'\n"
+            + "  id 'com.github.sakata1222.jacoco-markdown'\n"
+            + "}\n"
+            + "\n"
+            + "jacocoMarkdown {\n"
+            + "  enabled = true\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
+            + "  classListEnabled = true\n"
+            + "  classListCondition {\n"
+            + "    limit = 3\n"
+            + "  }\n"
+            + "}\n"
+            + "\n"
+            + "task myJacocoMarkdown("
+            + "type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {\n"
+            + "  jacocoXml = file('build/reports/jacoco/test/jacocoTestReport.xml')\n"
+            + "  enabled = true\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
+            + "  classListEnabled = true\n"
+            + "  classListCondition {\n"
+            + "    limit = 3\n"
+            + "  }\n"
+            + "  previousJson = file('build/reports/jacoco/test/previous.json')\n"
+            + "  targetTypes = ['INSTRUCTION', 'BRANCH', 'LINE']\n"
+            + "  enableOutputJson = true\n"
+            + "  enableOutputMd = true\n"
+            + "  outputJson = file('build/reports/jacoco/test/my.json')\n"
+            + "  outputMd = file('build/reports/jacoco/test/my.md')\n"
+            + "}\n");
+
+    GradleRunner runner = GradleRunner.create();
+    runner.withGradleVersion(gradleVersion);
+    runner.forwardOutput();
+    runner.withPluginClasspath();
+    runner.withArguments("myJacocoMarkdown", "--stacktrace", "--warning-mode", "all");
+    runner.withProjectDir(projectDir.toFile());
+    Path jacocoReportPath = projectDir.resolve("build").resolve("reports").resolve("jacoco")
+        .resolve("test");
+    Files.createDirectories(jacocoReportPath);
+    Files.copy(this.getClass().getResourceAsStream("/sample.xml"),
+        jacocoReportPath.resolve("jacocoTestReport.xml"));
+    Files.copy(this.getClass().getResourceAsStream("/previousJacocoSummary.json"),
+        jacocoReportPath.resolve("previous.json"));
+    BuildResult result = runner.build();
+
+    assertThat(result.getOutput())
+        .contains("|INSTRUCTION|      15/245|  93.88%|")
+        .doesNotContain("deprecated");
   }
 
   private void writeString(Path path, String string) throws IOException {

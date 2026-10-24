@@ -42,4 +42,8 @@ public class JacocoMarkdownExtension {
   public void setClassListCondition(Closure<JacocoMarkdownClassListCondition> closure) {
     classListCondition.set(new JacocoMarkdownClassListCondition().configure(closure));
   }
+
+  public void classListCondition(Closure<JacocoMarkdownClassListCondition> closure) {
+    setClassListCondition(closure);
+  }
 }

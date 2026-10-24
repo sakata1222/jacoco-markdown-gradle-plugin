@@ -301,6 +301,10 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.classListCondition.set(new JacocoMarkdownClassListCondition().configure(closure));
   }
 
+  public void classListCondition(Closure<JacocoMarkdownClassListCondition> closure) {
+    setClassListCondition(closure);
+  }
+
   public Property<JacocoMarkdownClassListCondition> getClassListCondition() {
     return classListCondition;
   }
