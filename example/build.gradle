@@ -48,7 +48,7 @@ jacocoTestReport {
 }
 
 //jacocoTestReportMarkdown {
-//    enabled false
+//    enabled = false
 //}
 
 //task myJacocoMarkdown(type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {

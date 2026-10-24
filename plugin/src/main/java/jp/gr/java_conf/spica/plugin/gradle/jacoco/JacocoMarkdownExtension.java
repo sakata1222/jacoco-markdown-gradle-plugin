@@ -27,32 +27,16 @@ public class JacocoMarkdownExtension {
     this.enabled.set(enabled);
   }
 
-  public void enabled(boolean enabled) {
-    setEnabled(enabled);
-  }
-
   public void setDiffEnabled(boolean diffEnabled) {
     this.diffEnabled.set(diffEnabled);
-  }
-
-  public void diffEnabled(boolean diffEnabled) {
-    setDiffEnabled(diffEnabled);
   }
 
   public void setStdout(boolean stdout) {
     this.stdout.set(stdout);
   }
 
-  public void stdout(boolean stdout) {
-    setStdout(stdout);
-  }
-
   public void setClassListEnabled(boolean classListEnabled) {
     this.classListEnabled.set(classListEnabled);
-  }
-
-  public void classListEnabled(boolean classListEnabled) {
-    setClassListEnabled(classListEnabled);
   }
 
   public void setClassListCondition(Closure<JacocoMarkdownClassListCondition> closure) {

@@ -259,10 +259,6 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.jacocoXml.set(jacocoXml);
   }
 
-  public void jacocoXml(File jacocoXml) {
-    setJacocoXml(jacocoXml);
-  }
-
   public RegularFileProperty getJacocoXml() {
     return jacocoXml;
   }
@@ -270,10 +266,6 @@ public class JacocoMarkdownTask extends DefaultTask {
   @Override
   public void setEnabled(boolean enabled) {
     this.enabled.set(enabled);
-  }
-
-  public void enabled(boolean enabled) {
-    setEnabled(enabled);
   }
 
   @Override
@@ -285,10 +277,6 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.diffEnabled.set(diffEnabled);
   }
 
-  public void diffEnabled(boolean diffEnabled) {
-    setDiffEnabled(diffEnabled);
-  }
-
   public Property<Boolean> getDiffEnabled() {
     return diffEnabled;
   }
@@ -297,20 +285,12 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.stdout.set(stdout);
   }
 
-  public void stdout(boolean stdout) {
-    setStdout(stdout);
-  }
-
   public Property<Boolean> getStdout() {
     return stdout;
   }
 
   public void setClassListEnabled(boolean classListEnabled) {
     this.classListEnabled.set(classListEnabled);
-  }
-
-  public void classListEnabled(boolean classListEnabled) {
-    setClassListEnabled(classListEnabled);
   }
 
   public Property<Boolean> getClassListEnabled() {
@@ -333,20 +313,12 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.previousJson.set(previousJson);
   }
 
-  public void previousJson(File previousJson) {
-    setPreviousJson(previousJson);
-  }
-
   public RegularFileProperty getPreviousJson() {
     return previousJson;
   }
 
   public void setTargetTypes(List<String> targetTypes) {
     this.targetTypes.set(targetTypes);
-  }
-
-  public void targetTypes(List<String> targetTypes) {
-    setTargetTypes(targetTypes);
   }
 
   public ListProperty<String> getTargetTypes() {
@@ -357,20 +329,12 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.enableOutputJson.set(enableOutputJson);
   }
 
-  public void enableOutputJson(boolean enableOutputJson) {
-    setEnableOutputJson(enableOutputJson);
-  }
-
   public Property<Boolean> getEnableOutputJson() {
     return enableOutputJson;
   }
 
   public void setEnableOutputMd(boolean enableOutputMd) {
     this.enableOutputMd.set(enableOutputMd);
-  }
-
-  public void enableOutputMd(boolean enableOutputMd) {
-    setEnableOutputMd(enableOutputMd);
   }
 
   public Property<Boolean> getEnableOutputMd() {
@@ -381,20 +345,12 @@ public class JacocoMarkdownTask extends DefaultTask {
     this.outputJson.set(outputJson);
   }
 
-  public void outputJson(File outputJson) {
-    setOutputJson(outputJson);
-  }
-
   public RegularFileProperty getOutputJson() {
     return outputJson;
   }
 
   public void setOutputMd(File outputMd) {
     this.outputMd.set(outputMd);
-  }
-
-  public void outputMd(File outputMd) {
-    setOutputMd(outputMd);
   }
 
   public RegularFileProperty getOutputMd() {

@@ -3,8 +3,10 @@
 ## [1.5.3—]Not released
 
 - Support Gradle 9.1.0
-- Prepare for Gradle 10: provide DSL methods such as `diffEnabled false` so that build scripts keep
-  working after Gradle 10 removes the generated `propName value` syntax. Tested with Gradle 9.9.0-milestone-2.
+- Prepare for Gradle 10. Tested with Gradle 9.9.0-milestone-2.
+- Gradle 10 removes the `propName value` syntax (e.g. `diffEnabled false`). Use `diffEnabled = false`
+  instead. See [MIGRATION.md](MIGRATION.md).
+- `classListCondition { ... }` is now a method of the plugin, so the block no longer prints a deprecation warning.
 
 ## [1.5.2] - 2025-08-03
 

@@ -303,7 +303,7 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoTestReportMarkdown {\n"
-            + "  classListEnabled true\n"
+            + "  classListEnabled = true\n"
             + "  classListCondition {\n"
             + "    limit = 2\n"
             + "    branchCoverageLessThan = 90"
@@ -414,9 +414,9 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoMarkdown {\n"
-            + "  diffEnabled false\n"
-            + "  stdout true\n"
-            + "  classListEnabled true\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
+            + "  classListEnabled = true\n"
             + "  classListCondition {\n"
             + "    limit = 3\n"
             + "    excludes = [\n"
@@ -472,9 +472,9 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoMarkdown {\n"
-            + "  enabled false\n"
-            + "  diffEnabled false\n"
-            + "  stdout true\n"
+            + "  enabled = false\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
             + "}\n"
             + "");
 
@@ -498,9 +498,9 @@ class JacocoMarkdownPluginFunctionalTest {
 
   @ParameterizedTest
   @CsvFileSource(resources = "/gradleVersions.csv")
-  void method_style_dsl_does_not_use_deprecated_features(String gradleVersion)
+  void assignment_style_dsl_does_not_use_deprecated_features(String gradleVersion)
       throws IOException {
-    // Gradle 10 removes the generated 'propName value' syntax, so the plugin provides its own methods
+    // The syntax recommended in README and MIGRATION.md
     writeString(projectDir.resolve("settings.gradle"), "");
     writeString(projectDir.resolve("build.gradle"),
         "plugins {"
@@ -510,10 +510,10 @@ class JacocoMarkdownPluginFunctionalTest {
             + "}\n"
             + "\n"
             + "jacocoMarkdown {\n"
-            + "  enabled true\n"
-            + "  diffEnabled false\n"
-            + "  stdout true\n"
-            + "  classListEnabled true\n"
+            + "  enabled = true\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
+            + "  classListEnabled = true\n"
             + "  classListCondition {\n"
             + "    limit = 3\n"
             + "  }\n"
@@ -521,20 +521,20 @@ class JacocoMarkdownPluginFunctionalTest {
             + "\n"
             + "task myJacocoMarkdown("
             + "type: jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask) {\n"
-            + "  jacocoXml file('build/reports/jacoco/test/jacocoTestReport.xml')\n"
-            + "  enabled true\n"
-            + "  diffEnabled false\n"
-            + "  stdout true\n"
-            + "  classListEnabled true\n"
+            + "  jacocoXml = file('build/reports/jacoco/test/jacocoTestReport.xml')\n"
+            + "  enabled = true\n"
+            + "  diffEnabled = false\n"
+            + "  stdout = true\n"
+            + "  classListEnabled = true\n"
             + "  classListCondition {\n"
             + "    limit = 3\n"
             + "  }\n"
-            + "  previousJson file('build/reports/jacoco/test/previous.json')\n"
-            + "  targetTypes(['INSTRUCTION', 'BRANCH', 'LINE'])\n"
-            + "  enableOutputJson true\n"
-            + "  enableOutputMd true\n"
-            + "  outputJson file('build/reports/jacoco/test/my.json')\n"
-            + "  outputMd file('build/reports/jacoco/test/my.md')\n"
+            + "  previousJson = file('build/reports/jacoco/test/previous.json')\n"
+            + "  targetTypes = ['INSTRUCTION', 'BRANCH', 'LINE']\n"
+            + "  enableOutputJson = true\n"
+            + "  enableOutputMd = true\n"
+            + "  outputJson = file('build/reports/jacoco/test/my.json')\n"
+            + "  outputMd = file('build/reports/jacoco/test/my.md')\n"
             + "}\n");
 
     GradleRunner runner = GradleRunner.create();

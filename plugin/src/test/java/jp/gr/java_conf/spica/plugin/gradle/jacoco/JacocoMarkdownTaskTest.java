@@ -145,23 +145,7 @@ class JacocoMarkdownTaskTest {
   }
 
   @Test
-  void customize_with_dsl_methods() {
-    task.jacocoXml(projectRoot.resolve("a.xml").toFile());
-    assertThat(task.getJacocoXml().getAsFile().get())
-        .isEqualTo(projectRoot.resolve("a.xml").toFile());
-
-    task.enabled(false);
-    assertThat(task.getEnabled()).isFalse();
-
-    task.diffEnabled(false);
-    assertThat(task.getDiffEnabled().get()).isFalse();
-
-    task.stdout(false);
-    assertThat(task.getStdout().get()).isFalse();
-
-    task.classListEnabled(false);
-    assertThat(task.getClassListEnabled().get()).isFalse();
-
+  void classListCondition_can_be_configured_by_block() {
     task.classListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
       @Override
       public JacocoMarkdownClassListCondition call() {
@@ -171,37 +155,12 @@ class JacocoMarkdownTaskTest {
       }
     });
     assertThat(task.getClassListCondition().get().getLimit()).isEqualTo(10);
-
-    task.previousJson(projectRoot.resolve("previous.json").toFile());
-    assertThat(task.getPreviousJson().getAsFile().get())
-        .isEqualTo(projectRoot.resolve("previous.json").toFile());
-
-    task.targetTypes(Arrays.asList("INSTRUCTION", "BRANCH"));
-    assertThat(task.getTargetTypes().get()).containsExactly("INSTRUCTION", "BRANCH");
-
-    task.enableOutputJson(false);
-    assertThat(task.getEnableOutputJson().get()).isFalse();
-
-    task.enableOutputMd(false);
-    assertThat(task.getEnableOutputMd().get()).isFalse();
-
-    task.outputJson(projectRoot.resolve("output.json").toFile());
-    assertThat(task.getOutputJson().getAsFile().get())
-        .isEqualTo(projectRoot.resolve("output.json").toFile());
-
-    task.outputMd(jacocoTest.resolve("output.md").toFile());
-    assertThat(task.getOutputMd().getAsFile().get())
-        .isEqualTo(jacocoTest.resolve("output.md").toFile());
   }
 
   @Test
-  void extension_can_be_customized_with_dsl_methods() {
+  void extension_classListCondition_can_be_configured_by_block() {
     JacocoMarkdownExtension extension = project.getExtensions()
         .findByType(JacocoMarkdownExtension.class);
-    extension.enabled(false);
-    extension.diffEnabled(false);
-    extension.stdout(false);
-    extension.classListEnabled(false);
     extension.classListCondition(new Closure<JacocoMarkdownClassListCondition>(this) {
       @Override
       public JacocoMarkdownClassListCondition call() {
@@ -210,11 +169,6 @@ class JacocoMarkdownTaskTest {
         return null;
       }
     });
-
-    assertThat(extension.enabled.get()).isFalse();
-    assertThat(extension.diffEnabled.get()).isFalse();
-    assertThat(extension.stdout.get()).isFalse();
-    assertThat(extension.classListEnabled.get()).isFalse();
     assertThat(extension.classListCondition.get().getLimit()).isEqualTo(10);
   }
 
